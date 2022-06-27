@@ -1,9 +1,9 @@
 {
-	"name": "cornercutter-ui",
-	"private": true,
-	"scripts": {
-		"dev": "vite",
-		"build": "tsc && vite build",
-		"preview": "vite preview"
-	}
+    "name": "cornercutter-ui",
+    "private": true,
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "preview": "vite preview"
+    }
 }
