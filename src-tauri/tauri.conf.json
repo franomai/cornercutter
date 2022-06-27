@@ -4,7 +4,7 @@
 		"beforeBuildCommand": "npm run build",
 		"beforeDevCommand": "npm run dev",
 		"devPath": "http://localhost:3000",
-		"distDir": "../frontend/build"
+		"distDir": "../frontend/dist"
 	},
 	"package": {
 		"productName": "cornercutter",
@@ -29,7 +29,7 @@
 				"icons/icon.icns",
 				"icons/icon.ico"
 			],
-			"identifier": "com.tauri.dev",
+			"identifier": "cornercutter.nz",
 			"longDescription": "",
 			"macOS": {
 				"entitlements": null,
