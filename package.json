@@ -1,0 +1,16 @@
+{
+	"name": "cornercutter",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"tauri": "tauri",
+		"dev": "npm run dev --prefix frontend",
+		"build": "npm run build --prefix frontend"
+	},
+	"devDependencies": {
+		"@tauri-apps/cli": "^1.0.0",
+		"@types/node": "^18.0.0",
+		"vite": "^2.9.9",
+		"@vitejs/plugin-react": "^1.3.0"
+	}
+}
