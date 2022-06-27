@@ -4,6 +4,7 @@
 	"private": true,
 	"scripts": {
 		"tauri": "tauri",
+		"client": "tauri dev",
 		"dev": "npm run dev --prefix frontend",
 		"build": "npm run build --prefix frontend"
 	},
