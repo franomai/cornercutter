@@ -9,6 +9,8 @@
 		"build": "npm run build --prefix frontend"
 	},
 	"dependencies": {
+		"@mantine/core": "^4.2.11",
+		"@mantine/hooks": "^4.2.11",
 		"react": "^18.0.0",
 		"react-dom": "^18.0.0"
 	},
