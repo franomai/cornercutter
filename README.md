@@ -1,6 +1,6 @@
-# cornercutter
+# Cornercutter
 
-Corner cutter is a modding tool for the game [Going Under](), that allows for complete customisation of skills and items within the dungeons.  
+Cornercutter is a modding tool for the game [Going Under](https://aggrocrab.com/Going-Under), that allows for complete customisation of skills and items within the dungeons.  
 
 ## Development
 
@@ -14,7 +14,7 @@ This web application uses Tauri. Follow their instructions [here](https://tauri.
 2. Install the Prettier extension for your IDE of choice.
    - [VSCode](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
-### Running Corner Cutter
+### Running Cornercutter
 
 - `npm run client` - A development option that starts the application with hotswapping. **Note:** This is equivalent to `npm run tauri dev`.
   

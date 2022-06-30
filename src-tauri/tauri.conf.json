@@ -7,7 +7,7 @@
 		"distDir": "../frontend/dist"
 	},
 	"package": {
-		"productName": "cornercutter",
+		"productName": "Cornercutter",
 		"version": "0.1.0"
 	},
 	"tauri": {
@@ -58,7 +58,7 @@
 				"fullscreen": false,
 				"height": 600,
 				"resizable": true,
-				"title": "Corner Cutter",
+				"title": "Cornercutter",
 				"width": 800
 			}
 		]
