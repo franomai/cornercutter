@@ -1,0 +1,29 @@
+{
+	"name": "cornercutter",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"tauri": "tauri",
+		"client": "tauri dev",
+		"dev": "npm run dev --prefix frontend",
+		"build": "npm run build --prefix frontend"
+	},
+	"dependencies": {
+		"@chakra-ui/react": "^2.2.1",
+		"@emotion/react": "^11.9.3",
+		"@emotion/styled": "^11.9.3",
+		"framer-motion": "^6.3.16",
+		"react": "^18.0.0",
+		"react-dom": "^18.0.0"
+	},
+	"devDependencies": {
+		"@tauri-apps/cli": "^1.0.0",
+		"@types/node": "^18.0.0",
+		"@types/react": "^18.0.0",
+		"@types/react-dom": "^18.0.0",
+		"@vitejs/plugin-react": "^1.3.0",
+		"prettier": "^2.7.1",
+		"typescript": "^4.6.3",
+		"vite": "^2.9.9"
+	}
+}
