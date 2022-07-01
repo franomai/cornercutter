@@ -29,7 +29,7 @@
 				"icons/icon.icns",
 				"icons/icon.ico"
 			],
-			"identifier": "cornercutter.nz",
+			"identifier": "cornercutter",
 			"longDescription": "",
 			"macOS": {
 				"entitlements": null,
