@@ -3,10 +3,16 @@ import './App.css';
 import { Button, Checkbox, Container, Stack } from '@chakra-ui/react';
 import Configuration from './types/Configuration';
 import { invoke } from '@tauri-apps/api';
+import { convertKeysToSnakeCase } from './utility/Utils';
+
+const EMPTY_CONFIG: Configuration = {
+    disableHp: false,
+    disableOtherDrops: false,
+};
 
 function App() {
     const [response, setResponse] = useState<string>('');
-    const [config, setConfig] = useState<Configuration>({});
+    const [config, setConfig] = useState<Configuration>(EMPTY_CONFIG);
 
     useEffect(() => {
         console.log(config);
@@ -21,8 +27,7 @@ function App() {
     }
 
     async function submitConfig() {
-        setConfig({});
-        const res = await invoke<string>('submitConfig', { config: config });
+        const res = await invoke<string>('accept_config', { config: convertKeysToSnakeCase(config) });
         setResponse(res);
     }
 
@@ -30,11 +35,11 @@ function App() {
         <div className="App">
             <Container>
                 <Stack spacing={5} my={4}>
-                    <Checkbox isChecked={config.disableHp === true} onChange={(e) => updateConfig('disableHp', e)}>
+                    <Checkbox isChecked={config.disableHp} onChange={(e) => updateConfig('disableHp', e)}>
                         Disable HP
                     </Checkbox>
                     <Checkbox
-                        isChecked={config.disableOtherDrops === true}
+                        isChecked={config.disableOtherDrops}
                         onChange={(e) => updateConfig('disableOtherDrops', e)}
                     >
                         Disable other drops
