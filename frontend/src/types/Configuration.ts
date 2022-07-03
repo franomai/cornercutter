@@ -1,4 +1,4 @@
 export default interface Configuration {
-    disableHp?: boolean;
-    disableOtherDrops?: boolean;
+    disableHp: boolean;
+    disableOtherDrops: boolean;
 }
