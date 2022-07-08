@@ -3,15 +3,11 @@ import { Box, Button, Checkbox, Container, FormLabel, Radio, RadioGroup, Stack, 
 import Configuration from '../types/Configuration';
 import { invoke } from '@tauri-apps/api';
 import { convertKeysToSnakeCase } from '../utility/Utils';
-
-const EMPTY_CONFIG: Configuration = {
-    disableHp: false,
-    disableOtherDrops: false,
-};
+import useConfigContext from '../context/ConfigContext';
 
 const GeneralConfig: FC = () => {
     const [response, setResponse] = useState<string>('');
-    const [config, setConfig] = useState<Configuration>(EMPTY_CONFIG);
+    const [config, setConfig] = useConfigContext();
 
     function updateConfig(field: keyof Configuration, e: React.ChangeEvent<HTMLInputElement>) {
         setConfig((config) => {
