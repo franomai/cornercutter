@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Button, Checkbox, Container, Radio, RadioGroup, Stack, Text } from '@chakra-ui/react';
+import { Button, Checkbox, Container, FormLabel, Radio, RadioGroup, Stack, Text } from '@chakra-ui/react';
 import Configuration from '../types/Configuration';
 import { invoke } from '@tauri-apps/api';
 import { convertKeysToSnakeCase } from '../utility/Utils';
@@ -31,7 +31,7 @@ const GeneralConfig: FC = () => {
             <Container my={4}>
                 <Stack spacing={4}>
                     <div>
-                        <Text fontSize="lg">Spawns</Text>
+                        <FormLabel>Spawns</FormLabel>
                         <RadioGroup defaultValue="1">
                             <Stack direction="row" spacing={4}>
                                 <Radio value="1">Looped</Radio>
@@ -40,7 +40,7 @@ const GeneralConfig: FC = () => {
                         </RadioGroup>
                     </div>
                     <div>
-                        <Text fontSize="lg">Curse spawns</Text>
+                        <FormLabel>Curse spawns</FormLabel>
                         <RadioGroup defaultValue="1">
                             <Stack direction="row" spacing={4}>
                                 <Radio value="1">Random</Radio>
@@ -50,14 +50,14 @@ const GeneralConfig: FC = () => {
                         </RadioGroup>
                     </div>
                     <div>
-                        <Text fontSize="lg">Configure per</Text>
+                        <FormLabel>Configure per</FormLabel>
                         <Stack direction="row" spacing={4}>
                             <Checkbox>Floor</Checkbox>
                             <Checkbox>Room</Checkbox>
                         </Stack>
                     </div>
                     <Stack spacing={1}>
-                        <Text fontSize="lg">Other options</Text>
+                        <FormLabel>Other options</FormLabel>
                         <Checkbox isChecked={config.disableHp} onChange={(e) => updateConfig('disableHp', e)}>
                             Disable HP
                         </Checkbox>
@@ -71,8 +71,6 @@ const GeneralConfig: FC = () => {
                         <Checkbox>Disable pinned</Checkbox>
                         <Checkbox>Award per level</Checkbox>
                     </Stack>
-                </Stack>
-                <Stack spacing={4}>
                     <Button onClick={submitConfig}>Test sending to Tauri Core!</Button>
                     {response.length !== 0 && <div>{response}</div>}
                 </Stack>
