@@ -9,6 +9,15 @@ const GeneralConfig: FC = () => {
     const [response, setResponse] = useState<string>('');
     const [config, setConfig] = useConfigContext();
 
+    function set<T extends keyof Configuration>(field: T, value: Configuration[T]) {
+        setConfig((config) => {
+            return {
+                ...config,
+                [field]: value,
+            };
+        });
+    }
+
     async function submitConfig() {
         const res = await invoke<string>('accept_config', { config: convertKeysToSnakeCase(config) });
         setResponse(res);
@@ -43,23 +52,30 @@ const GeneralConfig: FC = () => {
             </div>
             <Stack spacing={1}>
                 <FormLabel>Other options</FormLabel>
-                <Checkbox>Configure spawns per floor</Checkbox>
-                <Checkbox>Configure spawns per room</Checkbox>
-                <Checkbox
-                    isChecked={config.disableHp}
-                    onChange={(e) => setConfig({ ...config, disableHp: e.target.checked })}
-                >
+                <Checkbox isChecked={config.configPerFloor} onChange={(e) => set('configPerFloor', e.target.checked)}>
+                    Configure spawns per floor
+                </Checkbox>
+                <Checkbox isChecked={config.configPerRoom} onChange={(e) => set('configPerRoom', e.target.checked)}>
+                    Configure spawns per room
+                </Checkbox>
+                <Checkbox isChecked={config.disableHp} onChange={(e) => set('disableHp', e.target.checked)}>
                     Disable HP
                 </Checkbox>
                 <Checkbox
                     isChecked={config.disableOtherDrops}
-                    onChange={(e) => setConfig({ ...config, disableOtherDrops: e.target.checked })}
+                    onChange={(e) => set('disableOtherDrops', e.target.checked)}
                 >
                     Disable other drops
                 </Checkbox>
-                <Checkbox>Blank on empty</Checkbox>
-                <Checkbox>Disable pinned abilities</Checkbox>
-                <Checkbox>Award weapons at level start</Checkbox>
+                <Checkbox isChecked={config.blankOnEmpty} onChange={(e) => set('blankOnEmpty', e.target.checked)}>
+                    Blank on empty
+                </Checkbox>
+                <Checkbox isChecked={config.disablePinned} onChange={(e) => set('disablePinned', e.target.checked)}>
+                    Disable pinned abilities
+                </Checkbox>
+                <Checkbox isChecked={config.awardPerLevel} onChange={(e) => set('awardPerLevel', e.target.checked)}>
+                    Award weapons at level start
+                </Checkbox>
             </Stack>
             <Button onClick={submitConfig}>Test sending to Tauri Core!</Button>
             {response.length !== 0 && <div>{response}</div>}
