@@ -1,6 +1,7 @@
 import { Grid, GridItem } from '@chakra-ui/react';
 import { FC } from 'react';
 import SearchColumn from '../components/SearchColumn';
+import { Items } from '../data/TestItems';
 
 const StartingConfig: FC = () => {
     return (
@@ -9,7 +10,7 @@ const StartingConfig: FC = () => {
                 <div>Starting configuration!</div>
             </GridItem>
             <GridItem colSpan={1}>
-                <SearchColumn items={[]} />
+                <SearchColumn items={Items} />
             </GridItem>
         </Grid>
     );
