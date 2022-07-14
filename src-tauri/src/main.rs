@@ -7,10 +7,15 @@ use serde::Deserialize;
 
 #[derive(Deserialize)]
 struct Configuration  {
-    disable_hp: bool,
-    disable_other_drops: bool,
     spawns: SpawnType,
     curse_spawns: CurseSpawnType,
+    config_per_floor: bool,
+    config_per_room: bool,
+    disable_hp: bool,
+    disable_other_drops: bool,
+    blank_on_empty: bool,
+    disable_pinned: bool,
+    award_per_level: bool,
 
 }
 
@@ -28,7 +33,20 @@ enum CurseSpawnType {
 
 #[tauri::command]
 fn accept_config(config: Configuration) -> String {
-    return format!("You submitted: spawns: {:?}, curse spawns: {:?}", config.spawns, config.curse_spawns);
+    return format!(
+        "Spawns: {:?}, \
+         Curse spawns: {:?}, \
+         Config per floor: {}, \
+         Config per room: {}, \
+         Disable HP: {}, \
+         Disable other drops: {}, \
+         Blank on empty: {}, \
+         Disabled pinned: {}, \
+         Award per level: {}
+        ", config.spawns, config.curse_spawns, config.config_per_floor,
+         config.config_per_room, config.disable_hp, config.disable_other_drops,
+         config.blank_on_empty, config.disable_pinned, config.award_per_level
+    );
 }
 
 fn main() {
