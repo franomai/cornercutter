@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Box, Button, Checkbox, Container, FormLabel, Radio, RadioGroup, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Checkbox, FormLabel, Radio, RadioGroup, Stack } from '@chakra-ui/react';
 import Configuration, { CurseSpawnType, SpawnType } from '../types/Configuration';
 import { invoke } from '@tauri-apps/api';
 import { convertKeysToSnakeCase } from '../utility/Utils';
