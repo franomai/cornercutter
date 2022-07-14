@@ -25,7 +25,11 @@ const SearchColumn: FC<Props> = (props) => {
         }
 
         return filteredResults.map((item) => {
-            return <div key={item.id}>{item.render}</div>;
+            return (
+                <Box px={4} py={1} rounded="sm" _hover={{ background: 'whiteAlpha.100' }} key={item.id}>
+                    {item.render}
+                </Box>
+            );
         });
     }
 
