@@ -25,7 +25,7 @@ const GeneralConfig: FC = () => {
     return (
         <Stack spacing={4}>
             <div>
-                <FormLabel>Spawns</FormLabel>
+                <FormLabel>Weapon spawns</FormLabel>
                 <RadioGroup defaultValue="1">
                     <Stack direction="row" spacing={4}>
                         <Radio value="1">Looped</Radio>
@@ -34,24 +34,19 @@ const GeneralConfig: FC = () => {
                 </RadioGroup>
             </div>
             <div>
-                <FormLabel>Curse spawns</FormLabel>
+                <FormLabel>Curse rooms spawn</FormLabel>
                 <RadioGroup defaultValue="1">
                     <Stack direction="row" spacing={4}>
-                        <Radio value="1">Random</Radio>
+                        <Radio value="1">Randomly</Radio>
                         <Radio value="2">Always</Radio>
                         <Radio value="3">Never</Radio>
                     </Stack>
                 </RadioGroup>
             </div>
-            <div>
-                <FormLabel>Configure per</FormLabel>
-                <Stack direction="row" spacing={4}>
-                    <Checkbox>Floor</Checkbox>
-                    <Checkbox>Room</Checkbox>
-                </Stack>
-            </div>
             <Stack spacing={1}>
                 <FormLabel>Other options</FormLabel>
+                <Checkbox>Configure spawns per floor</Checkbox>
+                <Checkbox>Configure spawns per room</Checkbox>
                 <Checkbox isChecked={config.disableHp} onChange={(e) => updateConfig('disableHp', e)}>
                     Disable HP
                 </Checkbox>
@@ -59,8 +54,8 @@ const GeneralConfig: FC = () => {
                     Disable other drops
                 </Checkbox>
                 <Checkbox>Blank on empty</Checkbox>
-                <Checkbox>Disable pinned</Checkbox>
-                <Checkbox>Award per level</Checkbox>
+                <Checkbox>Disable pinned abilities</Checkbox>
+                <Checkbox>Award weapons at level start</Checkbox>
             </Stack>
             <Button onClick={submitConfig}>Test sending to Tauri Core!</Button>
             {response.length !== 0 && <div>{response}</div>}
