@@ -1,9 +1,9 @@
 import { ItemType } from '../types/ItemTypes';
-import Skill from './dragdrop/Skill';
+import ItemRender from './dragdrop/ItemRender';
 
 export const ItemTypes: Record<string, ItemType> = {
     SKILL: {
         id: 'skill',
-        render: (item) => <Skill id={item.id} name={item.name} />,
+        render: (item) => <ItemRender item={item} ref={null} />,
     },
 };

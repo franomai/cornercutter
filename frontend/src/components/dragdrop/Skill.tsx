@@ -3,18 +3,19 @@ import { FC } from 'react';
 import { useDrag } from 'react-dnd';
 import { Item } from '../../types/ItemTypes';
 import { ItemTypes } from '../ItemTypeDefinitions';
+import ItemRender from './ItemRender';
 
-const Skill: FC<Item> = (props) => {
+interface Props {
+    item: Item;
+}
+
+const Skill: FC<Props> = (props) => {
     const [, dragRef] = useDrag(() => ({
         type: ItemTypes.SKILL.id,
-        item: props,
+        item: props.item,
     }));
 
-    return (
-        <Box px={4} py={1} ref={dragRef} style={{ cursor: 'move' }}>
-            {props.name}
-        </Box>
-    );
+    return <ItemRender ref={dragRef} item={props.item} style={{ cursor: 'move' }} />;
 };
 
 export default Skill;
