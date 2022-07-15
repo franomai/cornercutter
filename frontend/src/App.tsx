@@ -2,7 +2,6 @@ import { Box, Container, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra
 import './App.css';
 import GeneralConfig from './pages/GeneralConfig';
 import StartingConfig from './pages/StartingConfig';
-import Test from './pages/Test';
 
 function App() {
     return (
@@ -13,7 +12,6 @@ function App() {
                         <TabList>
                             <Tab fontWeight="semibold">General Config</Tab>
                             <Tab fontWeight="semibold">Starting Config</Tab>
-                            <Tab fontWeight="semibold">Test</Tab>
                         </TabList>
                         <TabPanels>
                             <TabPanel>
@@ -21,9 +19,6 @@ function App() {
                             </TabPanel>
                             <TabPanel>
                                 <StartingConfig />
-                            </TabPanel>
-                            <TabPanel>
-                                <Test />
                             </TabPanel>
                         </TabPanels>
                     </Tabs>

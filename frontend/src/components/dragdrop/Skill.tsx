@@ -1,11 +1,12 @@
 import { Box } from '@chakra-ui/react';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { useDrag } from 'react-dnd';
-import { ItemType, Item } from '../../types/ItemTypes';
+import { Item } from '../../types/ItemTypes';
+import { ItemTypes } from '../ItemTypeDefinitions';
 
 const Skill: FC<Item> = (props) => {
     const [, dragRef] = useDrag(() => ({
-        type: ItemType.SKILL,
+        type: ItemTypes.SKILL.id,
         item: props,
     }));
 
