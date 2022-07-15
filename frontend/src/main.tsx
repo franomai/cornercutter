@@ -9,13 +9,11 @@ import './index.css';
 import theme from './theme';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-        <ChakraProvider theme={theme}>
-            <DndProvider backend={HTML5Backend}>
-                <ConfigContextProvider>
-                    <App />
-                </ConfigContextProvider>
-            </DndProvider>
-        </ChakraProvider>
-    </React.StrictMode>,
+    <ChakraProvider theme={theme}>
+        <DndProvider backend={HTML5Backend}>
+            <ConfigContextProvider>
+                <App />
+            </ConfigContextProvider>
+        </DndProvider>
+    </ChakraProvider>,
 );

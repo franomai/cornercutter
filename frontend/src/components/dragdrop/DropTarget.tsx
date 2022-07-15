@@ -9,23 +9,29 @@ interface Props {
 }
 
 const DropTarget: FC<Props> = (props) => {
-    const [{ isOver, item }, dropRef] = useDrop(() => ({
+    const [{ isOver, canDrop }, dropRef] = useDrop(() => ({
         accept: ItemTypes.SKILL,
-        drop: () => console.log('dropped'),
+        drop: () => console.log('dropped item!'),
         collect: (monitor) => ({
-            isOver: monitor.isOver(),
-            item: monitor.getItem(),
+            isOver: monitor.isOver({ shallow: true }),
+            canDrop: monitor.canDrop(),
         }),
+        hover: (item) => console.log('Hovering', item),
     }));
 
     useEffect(() => {
-        console.log('is over!', isOver, '-', item);
+        console.log('is over!', isOver);
     }, [isOver]);
 
     return (
-        <div ref={dropRef} style={{ border: '1px dashed', padding: '10px' }}>
+        <Box
+            ref={dropRef}
+            border="1px dashed"
+            p={5}
+            borderColor={isOver ? 'orange.200' : canDrop ? 'teal.200' : undefined}
+        >
             {props.children}
-        </div>
+        </Box>
     );
 };
 

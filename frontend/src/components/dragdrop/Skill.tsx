@@ -1,7 +1,11 @@
 import { Box } from '@chakra-ui/react';
-import { FC, ReactNode, useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from './ItemTypes';
+
+interface DropResult {
+    name: string;
+}
 
 interface Props {
     id: string;
@@ -11,6 +15,11 @@ interface Props {
 const Skill: FC<Props> = (props) => {
     const [{ isDragging }, dragRef] = useDrag(() => ({
         type: ItemTypes.SKILL,
+        item: props,
+        end: (item, monitor) => {
+            const dropResult = monitor.getDropResult<DropResult>();
+            console.log(`End! ${item} ${dropResult}`);
+        },
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),
