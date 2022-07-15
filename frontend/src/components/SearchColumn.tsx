@@ -1,6 +1,7 @@
 import { Box, Divider, Input, Stack, Text } from '@chakra-ui/react';
 import { FC, ReactNode, useEffect, useState } from 'react';
 import SearchColumnItem from '../types/SearchColumnItem';
+import Skill from './dragdrop/Skill';
 
 interface Props {
     items: SearchColumnItem[];
@@ -26,7 +27,7 @@ const SearchColumn: FC<Props> = (props) => {
 
         return filteredResults.map((item) => {
             return (
-                <Box px={4} py={1} rounded="sm" _hover={{ background: 'whiteAlpha.100' }} key={item.id}>
+                <Box key={item.id} rounded="sm" _hover={{ background: 'whiteAlpha.100' }}>
                     {item.render}
                 </Box>
             );
