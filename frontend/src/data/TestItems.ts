@@ -1,24 +1,24 @@
 import SearchColumnItem from '../types/SearchColumnItem';
 
-export const Items: SearchColumnItem[] = [
+export const Skills: SearchColumnItem[] = [
     {
         id: '1',
-        name: 'Dolly',
-        render: 'Dolly',
+        name: 'Action-Oriented',
+        render: 'Action-Oriented',
     },
     {
         id: '2',
-        name: 'Dynamite',
-        render: 'Dynamite',
+        name: 'Aggressive',
+        render: 'Aggressive',
     },
     {
         id: '3',
-        name: 'Jobo Sword',
-        render: 'Jobo Sword',
+        name: 'Agile',
+        render: 'Agile',
     },
     {
         id: '4',
-        name: 'Jobo Warhammer',
-        render: 'Jobo Warhammer',
+        name: "Aggro Crab's Blessing",
+        render: "Aggro Crab's Blessing",
     },
 ];
