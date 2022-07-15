@@ -1,7 +1,6 @@
 import { Box, Divider, Input, Stack, Text } from '@chakra-ui/react';
 import { FC, ReactNode, useEffect, useState } from 'react';
 import SearchColumnItem from '../types/SearchColumnItem';
-import Skill from './dragdrop/Skill';
 
 interface Props {
     items: SearchColumnItem[];
