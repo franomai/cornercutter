@@ -1,27 +1,30 @@
 import { Box } from '@chakra-ui/react';
-import { FC, ReactNode, useEffect } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import { useDrop } from 'react-dnd';
-import { ItemTypes } from './ItemTypes';
+import { ItemType, Item } from '../../types/ItemTypes';
+import Skill from './Skill';
 
 interface Props {
-    children?: ReactNode;
+    itemType: ItemType;
     onItemDropped: (dragItem: string) => void;
 }
 
-const DropTarget: FC<Props> = (props) => {
-    const [{ isOver, canDrop }, dropRef] = useDrop(() => ({
-        accept: ItemTypes.SKILL,
-        drop: () => console.log('dropped item!'),
+interface DropProps {
+    isOver: boolean;
+    canDrop: boolean;
+}
+
+const DropZone: FC<Props> = (props) => {
+    const [item, setItem] = useState<Item | null>(null);
+
+    const [{ isOver, canDrop }, dropRef] = useDrop<Item, unknown, DropProps>(() => ({
+        accept: props.itemType,
+        drop: (item) => setItem(item),
         collect: (monitor) => ({
-            isOver: monitor.isOver({ shallow: true }),
+            isOver: monitor.isOver(),
             canDrop: monitor.canDrop(),
         }),
-        hover: (item) => console.log('Hovering', item),
     }));
-
-    useEffect(() => {
-        console.log('is over!', isOver);
-    }, [isOver]);
 
     return (
         <Box
@@ -30,9 +33,9 @@ const DropTarget: FC<Props> = (props) => {
             p={5}
             borderColor={isOver ? 'orange.200' : canDrop ? 'teal.200' : undefined}
         >
-            {props.children}
+            {item ? <Skill id={item.id} name={item.name} /> : 'Drop stuff here!'}
         </Box>
     );
 };
 
-export default DropTarget;
+export default DropZone;

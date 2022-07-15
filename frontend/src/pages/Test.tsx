@@ -1,11 +1,12 @@
 import { FC } from 'react';
-import DropTarget from '../components/dragdrop/DropTarget';
+import DropZone from '../components/dragdrop/DropTarget';
 import Skill from '../components/dragdrop/Skill';
+import { ItemType } from '../types/ItemTypes';
 
 const Test: FC = () => {
     return (
         <div>
-            <DropTarget onItemDropped={console.log}>Drop stuff here!</DropTarget>
+            <DropZone itemType={ItemType.SKILL} onItemDropped={console.log} />
             <Skill id="1" name="Test skill" />
         </div>
     );
