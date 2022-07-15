@@ -21,5 +21,5 @@ export const Skills: SearchColumnItem[] = [
 ].map((skill) => ({
     id: skill.id,
     name: skill.name,
-    render: <Skill id={skill.id} name={skill.name} />,
+    render: <Skill item={skill} />,
 }));
