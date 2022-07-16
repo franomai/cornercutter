@@ -1,4 +1,4 @@
-import { Box, Center } from '@chakra-ui/react';
+import { Box, Center, Text } from '@chakra-ui/react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, ReactNode, useState } from 'react';
@@ -7,7 +7,7 @@ import { ItemType, Item } from '../../types/ItemTypes';
 
 interface Props {
     itemType: ItemType;
-    onItemDropped: (dragItem: string) => void;
+    onItemDropped?: (item: Item) => void;
 }
 
 interface DropProps {
@@ -20,7 +20,10 @@ const Dropzone: FC<Props> = (props) => {
 
     const [{ isOver, canDrop }, dropRef] = useDrop<Item, unknown, DropProps>(() => ({
         accept: props.itemType.id,
-        drop: (item) => setItem(item),
+        drop: (item) => {
+            if (props.onItemDropped) props.onItemDropped(item);
+            setItem(item);
+        },
         collect: (monitor) => ({
             isOver: monitor.isOver(),
             canDrop: monitor.canDrop(),
@@ -28,12 +31,17 @@ const Dropzone: FC<Props> = (props) => {
     }));
 
     function renderDropzone(): ReactNode {
-        if (isOver) return <FontAwesomeIcon icon={faPlus} size="2x" />;
+        if (isOver && canDrop)
+            return (
+                <Text color="blue.300">
+                    <FontAwesomeIcon icon={faPlus} size="2x" />
+                </Text>
+            );
         return item ? props.itemType.render(item) : 'Drop stuff here!';
     }
 
     return (
-        <Box w={40} h={40} ref={dropRef} border="1px dashed" p={3} m={2} borderColor={canDrop ? 'teal.200' : undefined}>
+        <Box w={40} h={40} ref={dropRef} border="1px dashed" p={3} borderColor={canDrop ? 'blue.300' : undefined}>
             <Center p={2} background={isOver ? 'whiteAlpha.100' : undefined} w="full" h="full">
                 {renderDropzone()}
             </Center>
