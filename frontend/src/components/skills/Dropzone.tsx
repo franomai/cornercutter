@@ -1,7 +1,7 @@
 import { Box, Center, Text } from '@chakra-ui/react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FC, ReactNode, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { useDrop } from 'react-dnd';
 import { ItemType, Item } from '../../types/ItemTypes';
 

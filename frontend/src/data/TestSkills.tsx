@@ -1,4 +1,4 @@
-import Skill from '../components/dragdrop/Skill';
+import Skill from '../components/skills/Skill';
 import { Item } from '../types/ItemTypes';
 import SearchColumnItem from '../types/SearchColumnItem';
 
