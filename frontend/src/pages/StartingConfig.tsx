@@ -3,9 +3,12 @@ import { FC } from 'react';
 import Dropzone from '../components/dragdrop/Dropzone';
 import { ItemTypes } from '../components/ItemTypeDefinitions';
 import SearchColumn from '../components/SearchColumn';
+import useConfigContext from '../context/ConfigContext';
 import { Skills } from '../data/TestSkills';
 
 const StartingConfig: FC = () => {
+    const [config, setConfig] = useConfigContext();
+
     return (
         <Grid templateColumns="repeat(4, 1fr)" gap={4}>
             <GridItem colSpan={3}>

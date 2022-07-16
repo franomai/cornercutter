@@ -11,18 +11,18 @@ struct Configuration  {
     curse_spawns: CurseSpawnType,
     config_per_floor: bool,
     config_per_room: bool,
-    disable_hp: bool,
-    disable_other_drops: bool,
-    blank_on_empty: bool,
+    remove_healing_items: bool,
+    disable_mentor_abilities: bool,
+    disable_gift_of_intern: bool,
     disable_pinned: bool,
-    award_per_level: bool,
-
+    award_skills_per_level: bool,
+    starting_skill_ids: Vec<i32>,
 }
 
 #[derive(Debug)]
 #[derive(Deserialize)]
 enum SpawnType {
-    Looped, Weighted
+    Looped, Weighted, Consecutive
 }
 
 #[derive(Debug)]
@@ -38,14 +38,16 @@ fn accept_config(config: Configuration) -> String {
          Curse spawns: {:?}, \
          Config per floor: {}, \
          Config per room: {}, \
-         Disable HP: {}, \
-         Disable other drops: {}, \
-         Blank on empty: {}, \
+         Remove healing items: {}, \
+         Disable mentor abilties: {}, \
+         Disable gift of the intern: {}, \
          Disabled pinned: {}, \
-         Award per level: {}
+         Award skills per level: {}, \
+         starting skill ids: {:?}
         ", config.spawns, config.curse_spawns, config.config_per_floor,
-         config.config_per_room, config.disable_hp, config.disable_other_drops,
-         config.blank_on_empty, config.disable_pinned, config.award_per_level
+         config.config_per_room, config.remove_healing_items, config.disable_mentor_abilities,
+         config.disable_gift_of_intern, config.disable_pinned, config.award_skills_per_level,
+         config.starting_skill_ids
     );
 }
 

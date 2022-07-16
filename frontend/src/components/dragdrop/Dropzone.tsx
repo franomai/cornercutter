@@ -1,11 +1,12 @@
 import { Box, Center, Text } from '@chakra-ui/react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FC, ReactNode, useState } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { ItemType, Item } from '../../types/ItemTypes';
 
 interface Props {
+    item?: Item;
     itemType: ItemType;
     onItemDropped?: (item: Item) => void;
 }
@@ -16,7 +17,11 @@ interface DropProps {
 }
 
 const Dropzone: FC<Props> = (props) => {
-    const [item, setItem] = useState<Item | null>(null);
+    const [item, setItem] = useState<Item | null>(props.item ?? null);
+
+    useEffect(() => {
+        setItem(props.item ?? null);
+    }, [props.item]);
 
     const [{ isOver, canDrop }, dropRef] = useDrop<Item, unknown, DropProps>(() => ({
         accept: props.itemType.id,

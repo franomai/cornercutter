@@ -3,16 +3,18 @@ export default interface Configuration {
     curseSpawns: CurseSpawnType;
     configPerFloor: boolean;
     configPerRoom: boolean;
-    disableHp: boolean;
-    disableOtherDrops: boolean;
-    blankOnEmpty: boolean;
+    removeHealingItems: boolean;
+    disableMentorAbilities: boolean;
+    disableGiftOfIntern: boolean;
     disablePinned: boolean;
-    awardPerLevel: boolean;
+    awardSkillsPerLevel: boolean;
+    startingSkillIds: number[];
 }
 
 export enum SpawnType {
     Looped = 'Looped',
     Weighted = 'Weighted',
+    Consecutive = 'Consecutive',
 }
 
 export enum CurseSpawnType {
@@ -26,9 +28,10 @@ export const DEFAULT_CONFIG: Configuration = {
     curseSpawns: CurseSpawnType.Randomly,
     configPerFloor: false,
     configPerRoom: false,
-    disableHp: false,
-    disableOtherDrops: false,
-    blankOnEmpty: false,
+    removeHealingItems: false,
+    disableMentorAbilities: false,
+    disableGiftOfIntern: false,
     disablePinned: false,
-    awardPerLevel: false,
+    awardSkillsPerLevel: false,
+    startingSkillIds: [],
 };
