@@ -1,4 +1,3 @@
-import { Box } from '@chakra-ui/react';
 import { FC } from 'react';
 import { useDrag } from 'react-dnd';
 import { Item } from '../../types/ItemTypes';

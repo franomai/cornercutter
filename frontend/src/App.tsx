@@ -6,7 +6,7 @@ import StartingConfig from './pages/StartingConfig';
 function App() {
     return (
         <div className="App">
-            <Container my={4} maxW="800px">
+            <Container my={4} maxW="80%">
                 <Box borderWidth="1px" py={5} px={8} borderRadius="lg">
                     <Tabs>
                         <TabList>
