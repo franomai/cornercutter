@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 export default interface SearchColumnItem {
-    id: string;
+    id: number;
     name: string;
     render: ReactNode;
 }

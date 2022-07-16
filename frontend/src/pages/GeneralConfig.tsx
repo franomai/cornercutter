@@ -34,6 +34,7 @@ const GeneralConfig: FC = () => {
                     <Stack direction="row" spacing={4}>
                         <Radio value="Looped">Looped</Radio>
                         <Radio value="Weighted">Weighted</Radio>
+                        <Radio value="Consecutive">Consecutive</Radio>
                     </Stack>
                 </RadioGroup>
             </div>
@@ -58,23 +59,32 @@ const GeneralConfig: FC = () => {
                 <Checkbox isChecked={config.configPerRoom} onChange={(e) => set('configPerRoom', e.target.checked)}>
                     Configure spawns per room
                 </Checkbox>
-                <Checkbox isChecked={config.disableHp} onChange={(e) => set('disableHp', e.target.checked)}>
-                    Disable HP
+                <Checkbox
+                    isChecked={config.removeHealingItems}
+                    onChange={(e) => set('removeHealingItems', e.target.checked)}
+                >
+                    Remove healing items
                 </Checkbox>
                 <Checkbox
-                    isChecked={config.disableOtherDrops}
-                    onChange={(e) => set('disableOtherDrops', e.target.checked)}
+                    isChecked={config.disableMentorAbilities}
+                    onChange={(e) => set('disableMentorAbilities', e.target.checked)}
                 >
-                    Disable other drops
+                    Disable mentor abilities
                 </Checkbox>
-                <Checkbox isChecked={config.blankOnEmpty} onChange={(e) => set('blankOnEmpty', e.target.checked)}>
-                    Blank on empty
+                <Checkbox
+                    isChecked={config.disableGiftOfIntern}
+                    onChange={(e) => set('disableGiftOfIntern', e.target.checked)}
+                >
+                    Disable gift of the intern
                 </Checkbox>
                 <Checkbox isChecked={config.disablePinned} onChange={(e) => set('disablePinned', e.target.checked)}>
-                    Disable pinned abilities
+                    Disable pinned skills
                 </Checkbox>
-                <Checkbox isChecked={config.awardPerLevel} onChange={(e) => set('awardPerLevel', e.target.checked)}>
-                    Award weapons at level start
+                <Checkbox
+                    isChecked={config.awardSkillsPerLevel}
+                    onChange={(e) => set('awardSkillsPerLevel', e.target.checked)}
+                >
+                    Award starting skills per floor
                 </Checkbox>
             </Stack>
             <Button onClick={submitConfig}>Test sending to Tauri Core!</Button>

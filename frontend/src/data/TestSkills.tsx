@@ -3,19 +3,19 @@ import SearchColumnItem from '../types/SearchColumnItem';
 
 export const Skills: SearchColumnItem[] = [
     {
-        id: '1',
+        id: 1,
         name: 'Action-Oriented',
     },
     {
-        id: '2',
+        id: 2,
         name: 'Aggressive',
     },
     {
-        id: '3',
+        id: 3,
         name: 'Agile',
     },
     {
-        id: '4',
+        id: 4,
         name: "Aggro Crab's Blessing",
     },
 ].map((skill) => ({
