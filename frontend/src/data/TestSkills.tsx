@@ -1,7 +1,8 @@
 import Skill from '../components/dragdrop/Skill';
+import { Item } from '../types/ItemTypes';
 import SearchColumnItem from '../types/SearchColumnItem';
 
-export const Skills: SearchColumnItem[] = [
+const Skills: SearchColumnItem[] = [
     {
         id: 1,
         name: 'Action-Oriented',
@@ -23,3 +24,17 @@ export const Skills: SearchColumnItem[] = [
     name: skill.name,
     render: <Skill item={skill} />,
 }));
+
+const mappedSkills = new Map<number, Item>();
+Skills.forEach((skill) => mappedSkills.set(skill.id, skill));
+
+function skillFromId(id: number): Item {
+    const skill = mappedSkills.get(id);
+    if (!skill) {
+        // Sanity check - This should never be thrown
+        throw new Error(`There is no skill with the id ${id}`);
+    }
+    return skill;
+}
+
+export { Skills, skillFromId };

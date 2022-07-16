@@ -6,7 +6,6 @@ import { useDrop } from 'react-dnd';
 import { ItemType, Item } from '../../types/ItemTypes';
 
 interface Props {
-    item?: Item;
     itemType: ItemType;
     onItemDropped?: (item: Item) => void;
 }
@@ -17,17 +16,10 @@ interface DropProps {
 }
 
 const Dropzone: FC<Props> = (props) => {
-    const [item, setItem] = useState<Item | null>(props.item ?? null);
-
-    useEffect(() => {
-        setItem(props.item ?? null);
-    }, [props.item]);
-
     const [{ isOver, canDrop }, dropRef] = useDrop<Item, unknown, DropProps>(() => ({
         accept: props.itemType.id,
         drop: (item) => {
             if (props.onItemDropped) props.onItemDropped(item);
-            setItem(item);
         },
         collect: (monitor) => ({
             isOver: monitor.isOver(),
@@ -35,20 +27,21 @@ const Dropzone: FC<Props> = (props) => {
         }),
     }));
 
-    function renderDropzone(): ReactNode {
-        if (isOver && canDrop)
-            return (
-                <Text color="blue.200">
-                    <FontAwesomeIcon icon={faPlus} size="2x" />
-                </Text>
-            );
-        return item ? props.itemType.render(item) : 'Drop stuff here!';
-    }
+    const enabled = isOver && canDrop;
 
     return (
-        <Box w={40} h={40} ref={dropRef} border="1px dashed" p={3} borderColor={canDrop ? 'blue.200' : undefined}>
-            <Center p={2} background={isOver ? 'whiteAlpha.100' : undefined} w="full" h="full">
-                {renderDropzone()}
+        <Box
+            p={3}
+            ref={dropRef}
+            border="1px dashed"
+            borderColor={canDrop ? 'blue.200' : undefined}
+            rounded="lg"
+            className="square"
+        >
+            <Center p={2} background={enabled ? 'whiteAlpha.100' : undefined} w="full" h="full" rounded="md">
+                <Text color={canDrop ? 'blue.200' : undefined}>
+                    <FontAwesomeIcon icon={faPlus} size="2x" />
+                </Text>
             </Center>
         </Box>
     );
