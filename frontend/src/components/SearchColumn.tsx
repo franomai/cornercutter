@@ -48,8 +48,8 @@ const SearchColumn: FC<Props> = (props) => {
 
     return (
         <Stack direction="row" h="full">
-            <Divider orientation="vertical" />
-            <Box pl={2}>
+            <Divider orientation="vertical" justifyContent="flex-end" />
+            <Box pl={2} w="full">
                 <InputGroup>
                     <Input
                         ref={inputRef}
