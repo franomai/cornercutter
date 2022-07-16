@@ -33,7 +33,7 @@ const Dropzone: FC<Props> = (props) => {
     function renderDropzone(): ReactNode {
         if (isOver && canDrop)
             return (
-                <Text color="blue.300">
+                <Text color="blue.200">
                     <FontAwesomeIcon icon={faPlus} size="2x" />
                 </Text>
             );
@@ -41,7 +41,7 @@ const Dropzone: FC<Props> = (props) => {
     }
 
     return (
-        <Box w={40} h={40} ref={dropRef} border="1px dashed" p={3} borderColor={canDrop ? 'blue.300' : undefined}>
+        <Box w={40} h={40} ref={dropRef} border="1px dashed" p={3} borderColor={canDrop ? 'blue.200' : undefined}>
             <Center p={2} background={isOver ? 'whiteAlpha.100' : undefined} w="full" h="full">
                 {renderDropzone()}
             </Center>
