@@ -47,28 +47,25 @@ const SearchColumn: FC<Props> = (props) => {
     }
 
     return (
-        <Stack direction="row" h="full">
-            <Divider orientation="vertical" justifyContent="flex-end" />
-            <Box pl={2} w="full">
-                <InputGroup>
-                    <Input
-                        ref={inputRef}
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        variant="filled"
-                        placeholder="Search by name..."
-                    />
-                    {search !== '' && (
-                        <InputRightElement>
-                            <CloseButton title="Clear search" onClick={handleClearSearch} />
-                        </InputRightElement>
-                    )}
-                </InputGroup>
-                <Stack spacing={2} mt={2}>
-                    {renderItems()}
-                </Stack>
-            </Box>
-        </Stack>
+        <Box pl={4} w="300px" borderLeft="1px" borderColor="chakra-border-color">
+            <InputGroup>
+                <Input
+                    ref={inputRef}
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    variant="filled"
+                    placeholder="Search by name..."
+                />
+                {search !== '' && (
+                    <InputRightElement>
+                        <CloseButton title="Clear search" onClick={handleClearSearch} />
+                    </InputRightElement>
+                )}
+            </InputGroup>
+            <Stack spacing={2} mt={2}>
+                {renderItems()}
+            </Stack>
+        </Box>
     );
 };
 
