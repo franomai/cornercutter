@@ -13,7 +13,11 @@ const StartingConfig: FC = () => {
         setConfig((config) => ({ ...config, startingSkillIds: [...config.startingSkillIds, skill.id] }));
     }
 
-    function removeSkill(index: number) {}
+    function removeSkill(index: number) {
+        // The '1' in splice shows we only want to remove 1 element at the specified index
+        config.startingSkillIds.splice(index, 1);
+        setConfig((config) => ({ ...config, startingSkillIds: [...config.startingSkillIds] }));
+    }
 
     return (
         <Flex gap={4}>
