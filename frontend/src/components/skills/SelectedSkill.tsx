@@ -1,4 +1,6 @@
 import { Box, Center } from '@chakra-ui/react';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC } from 'react';
 import { Item } from '../../types/ItemTypes';
 import ItemRender from './ItemRender';
@@ -10,7 +12,10 @@ interface Props {
 const SelectedSkill: FC<Props> = (props) => {
     return (
         <Box border="1px" p={3} rounded="lg" className="square">
-            <Center p={2} w="full" h="full">
+            <Center p={2} w="full" h="full" position="relative">
+                <Box position="absolute" right={0} top={-1} _hover={{ textColor: 'blue.200' }}>
+                    <FontAwesomeIcon icon={faTrash} />
+                </Box>
                 <ItemRender item={props.item} />
             </Center>
         </Box>
