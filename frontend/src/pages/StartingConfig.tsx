@@ -18,10 +18,15 @@ const StartingConfig: FC = () => {
     return (
         <Flex gap={4}>
             <Box width="full">
-                <Heading size="md">Select your starting skills</Heading>
-                <SimpleGrid mt={4} columns={[1, null, 2, 3, 4, 6]} gap={4}>
-                    <SkillSelector skillIds={config.startingSkillIds} addSkill={addSkill} removeSkill={removeSkill} />
-                </SimpleGrid>
+                <Heading size="md" mb={4}>
+                    Select your starting skills
+                </Heading>
+                <SkillSelector
+                    skillIds={config.startingSkillIds}
+                    addSkill={addSkill}
+                    removeSkill={removeSkill}
+                    columns={[1, null, 2, 3, 4, 6]}
+                />
             </Box>
             <SearchColumn items={Skills} />
         </Flex>
