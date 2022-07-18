@@ -1,13 +1,14 @@
 import { Box, Center, Text } from '@chakra-ui/react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { useDrop } from 'react-dnd';
 import { ItemType, Item } from '../../types/ItemTypes';
 
 interface Props {
     itemType: ItemType;
     onItemDropped?: (item: Item) => void;
+    children?: ReactNode;
 }
 
 interface DropProps {
@@ -31,18 +32,23 @@ const Dropzone: FC<Props> = (props) => {
 
     return (
         <Box
-            p={3}
+            p={2}
             ref={dropRef}
-            border="1px dashed"
+            border={canDrop ? '1px dashed' : undefined}
             borderColor={canDrop ? 'blue.200' : undefined}
+            background={canDrop ? 'whiteAlpha.100' : undefined}
             rounded="lg"
-            className="square"
+            position="relative"
         >
-            <Center p={2} background={enabled ? 'whiteAlpha.100' : undefined} w="full" h="full" rounded="md">
-                <Text color={canDrop ? 'blue.200' : undefined}>
-                    <FontAwesomeIcon icon={faPlus} size="2x" />
-                </Text>
-            </Center>
+            {canDrop && (
+                <Center p={2} position="absolute" w="full" h="full">
+                    <Text color={canDrop ? 'blue.200' : undefined}>
+                        <FontAwesomeIcon icon={faPlus} size="2x" />
+                    </Text>
+                </Center>
+            )}
+
+            {props.children}
         </Box>
     );
 };

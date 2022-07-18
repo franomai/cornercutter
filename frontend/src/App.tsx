@@ -5,9 +5,9 @@ import StartingConfig from './pages/StartingConfig';
 
 function App() {
     return (
-        <div className="App">
+        <Box className="App">
             <Container my={4} maxW="80%">
-                <Box borderWidth="1px" py={5} px={8} borderRadius="lg">
+                <Box borderWidth="1px" py={5} px={8} borderRadius="lg" h="full">
                     <Tabs>
                         <TabList>
                             <Tab fontWeight="semibold">General Config</Tab>
@@ -24,7 +24,7 @@ function App() {
                     </Tabs>
                 </Box>
             </Container>
-        </div>
+        </Box>
     );
 }
 

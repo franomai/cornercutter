@@ -1,3 +1,4 @@
+import { ResponsiveValue, SimpleGrid } from '@chakra-ui/react';
 import { FC, ReactNode } from 'react';
 import { skillFromId } from '../../data/TestSkills';
 import { Item } from '../../types/ItemTypes';
@@ -9,6 +10,7 @@ interface Props {
     skillIds: number[];
     addSkill: (skill: Item) => void;
     removeSkill: (index: number) => void;
+    columns?: ResponsiveValue<number>;
 }
 
 const SkillSelector: FC<Props> = (props) => {
@@ -17,10 +19,11 @@ const SkillSelector: FC<Props> = (props) => {
     }
 
     return (
-        <>
-            <Dropzone itemType={ItemTypes.SKILL} onItemDropped={props.addSkill} />
-            {renderSkills()}
-        </>
+        <Dropzone itemType={ItemTypes.SKILL} onItemDropped={props.addSkill}>
+            <SimpleGrid columns={props.columns} gap={4}>
+                {renderSkills()}
+            </SimpleGrid>
+        </Dropzone>
     );
 };
 
