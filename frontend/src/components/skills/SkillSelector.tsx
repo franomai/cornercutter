@@ -15,7 +15,9 @@ interface Props {
 
 const SkillSelector: FC<Props> = (props) => {
     function renderSkills(): ReactNode {
-        return props.skillIds.map((itemId, index) => <SelectedSkill key={index} item={skillFromId(itemId)} />);
+        return props.skillIds.map((itemId, index) => (
+            <SelectedSkill key={index} item={skillFromId(itemId)} onRemoveSkill={() => props.removeSkill(index)} />
+        ));
     }
 
     return (
