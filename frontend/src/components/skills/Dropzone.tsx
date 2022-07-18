@@ -34,20 +34,13 @@ const Dropzone: FC<Props> = (props) => {
         <Box
             p={2}
             ref={dropRef}
-            border={canDrop ? '1px dashed' : undefined}
-            borderColor={canDrop ? 'blue.200' : undefined}
-            background={canDrop ? 'whiteAlpha.100' : undefined}
+            border={canDrop ? '1px dashed' : '1px'}
+            borderColor={canDrop ? 'blue.200' : 'transparent'}
+            background={canDrop ? 'blackAlpha.300' : undefined}
             rounded="lg"
-            position="relative"
+            w="full"
+            h="full"
         >
-            {canDrop && (
-                <Center p={2} position="absolute" w="full" h="full">
-                    <Text color={canDrop ? 'blue.200' : undefined}>
-                        <FontAwesomeIcon icon={faPlus} size="2x" />
-                    </Text>
-                </Center>
-            )}
-
             {props.children}
         </Box>
     );
