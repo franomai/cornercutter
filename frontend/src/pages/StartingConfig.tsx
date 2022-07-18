@@ -10,14 +10,14 @@ const StartingConfig: FC = () => {
     const [config, setConfig] = useConfigContext();
 
     function addSkill(skill: Item) {
-        setConfig((config) => ({ ...config, startingSkillIds: [skill.id, ...config.startingSkillIds] }));
+        setConfig((config) => ({ ...config, startingSkillIds: [...config.startingSkillIds, skill.id] }));
     }
 
     function removeSkill(index: number) {}
 
     return (
         <Flex gap={4}>
-            <Box width="full">
+            <Box width="full" h="full">
                 <Heading size="md" mb={4}>
                     Select your starting skills
                 </Heading>
