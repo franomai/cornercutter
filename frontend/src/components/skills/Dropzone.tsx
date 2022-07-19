@@ -1,12 +1,9 @@
-import { Box, Center, Text } from '@chakra-ui/react';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Children, FC, ReactNode } from 'react';
+import { Box } from '@chakra-ui/react';
+import { FC, ReactNode } from 'react';
 import { useDrop } from 'react-dnd';
-import { ItemType, Item } from '../../types/ItemTypes';
+import { Item, ItemType } from '../../types/ItemTypes';
 
 interface Props {
-    itemType: ItemType;
     onItemDropped?: (item: Item) => void;
     children?: ReactNode;
 }
@@ -17,7 +14,7 @@ interface DropProps {
 
 const Dropzone: FC<Props> = (props) => {
     const [{ canDrop }, dropRef] = useDrop<Item, unknown, DropProps>(() => ({
-        accept: props.itemType.id,
+        accept: ItemType.SKILL,
         drop: (item) => {
             if (props.onItemDropped) props.onItemDropped(item);
         },

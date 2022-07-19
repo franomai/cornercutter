@@ -1,9 +1,11 @@
-import { Box, CloseButton, Divider, Input, InputGroup, InputRightElement, Stack, Text } from '@chakra-ui/react';
+import { Box, CloseButton, Input, InputGroup, InputRightElement, Stack, Text } from '@chakra-ui/react';
 import { FC, ReactNode, useEffect, useRef, useState } from 'react';
-import SearchColumnItem from '../types/SearchColumnItem';
+import { Item } from '../types/ItemTypes';
+import DraggableSkill from './skills/Skill';
+import Skill from './skills/Skill';
 
 interface Props {
-    items: SearchColumnItem[];
+    items: Item[];
 }
 
 const SearchColumn: FC<Props> = (props) => {
@@ -34,7 +36,7 @@ const SearchColumn: FC<Props> = (props) => {
         return filteredResults.map((item) => {
             return (
                 <Box key={item.id} rounded="sm" _hover={{ background: 'whiteAlpha.100' }}>
-                    {item.render}
+                    <DraggableSkill item={item} />
                 </Box>
             );
         });
