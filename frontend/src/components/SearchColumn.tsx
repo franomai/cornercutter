@@ -47,7 +47,7 @@ const SearchColumn: FC<Props> = (props) => {
     }
 
     return (
-        <Box pl={4} w="300px" borderLeft="1px" borderColor="chakra-border-color">
+        <Box pl={4} w="300px" borderLeft="1px" borderColor="chakra-border-color" h="full">
             <InputGroup>
                 <Input
                     ref={inputRef}
