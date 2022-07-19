@@ -34,6 +34,8 @@ const Dropzone: FC<Props> = (props) => {
             rounded="lg"
             w="full"
             h="full"
+            maxH="full"
+            overflowY="auto"
         >
             {props.children}
         </Box>
