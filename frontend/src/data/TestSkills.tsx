@@ -1,8 +1,6 @@
-import Skill from '../components/skills/Skill';
 import { Item } from '../types/ItemTypes';
-import SearchColumnItem from '../types/SearchColumnItem';
 
-const Skills: SearchColumnItem[] = [
+const Skills: Item[] = [
     {
         id: 1,
         name: 'Action-Oriented',
@@ -19,11 +17,7 @@ const Skills: SearchColumnItem[] = [
         id: 4,
         name: "Aggro Crab's Blessing",
     },
-].map((skill) => ({
-    id: skill.id,
-    name: skill.name,
-    render: <Skill item={skill} />,
-}));
+];
 
 const mappedSkills = new Map<number, Item>();
 Skills.forEach((skill) => mappedSkills.set(skill.id, skill));

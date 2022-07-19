@@ -7,7 +7,7 @@ interface Props {
     style?: CSSProperties;
 }
 
-const ItemRender: ForwardRefRenderFunction<HTMLDivElement, Props> = (props, ref) => {
+const Skill: ForwardRefRenderFunction<HTMLDivElement, Props> = (props, ref) => {
     return (
         <Box px={4} py={1} ref={ref} style={props.style}>
             {props.item.name}
@@ -15,4 +15,4 @@ const ItemRender: ForwardRefRenderFunction<HTMLDivElement, Props> = (props, ref)
     );
 };
 
-export default forwardRef(ItemRender);
+export default forwardRef(Skill);

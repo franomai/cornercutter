@@ -3,7 +3,7 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC } from 'react';
 import { Item } from '../../types/ItemTypes';
-import ItemRender from './ItemRender';
+import Skill from './ItemRender';
 
 interface Props {
     item: Item;
@@ -17,7 +17,7 @@ const SelectedSkill: FC<Props> = (props) => {
                 <Box position="absolute" right={0} top={-1} _hover={{ textColor: 'blue.200' }} rounded="full">
                     <FontAwesomeIcon icon={faTrash} title="Remove skill" onClick={props.onRemoveSkill} />
                 </Box>
-                <ItemRender item={props.item} />
+                <Skill item={props.item} />
             </Center>
         </Box>
     );
