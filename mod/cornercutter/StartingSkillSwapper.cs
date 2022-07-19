@@ -10,7 +10,7 @@ namespace cornercutter
     {
         static void Postfix(ref DungeonManager __instance)
         {
-            FloorConfig floorConfig = CutterConfig.GetInstance().GetFloorConfig(__instance.currentFloor + 1);
+            FloorConfig floorConfig = CutterConfig.Instance.GetFloorConfig(__instance.currentFloor + 1);
             if (floorConfig.StartingSkills == null) return;
 
             Console.WriteLine("Starting skills found, attaching...");

@@ -26,7 +26,7 @@
         public FloorConfig(Floor floor)
         {
             Floor = floor;
-            ConfigOptions options  = CutterConfig.GetInstance().Options;
+            ConfigOptions options  = CutterConfig.Instance.Options;
             bool loopSpawns = options.HasFlag(ConfigOptions.LoopSpawns);
 
             // Config option refers to if starting skills should be given for every floor

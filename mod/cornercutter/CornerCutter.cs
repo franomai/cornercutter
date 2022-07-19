@@ -25,7 +25,7 @@ namespace cornercutter
             // This method fires when a new dungeon is started - meaning new mods won't be hotloaded,
             // but instead will be picked up on the next run.
             Console.WriteLine("Loading current cornercutter config ...");
-            CutterConfig.GetInstance().LoadCurrentConfig();
+            CutterConfig.Instance.LoadCurrentConfig();
             Console.WriteLine("Config loaded, let's rumble!");
         }
     }

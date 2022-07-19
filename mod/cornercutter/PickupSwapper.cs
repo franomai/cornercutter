@@ -21,7 +21,7 @@ namespace cornercutter
             if (parent == null) return true;
 
             SpawnCollection collectionToCheck = null;
-            FloorConfig floorConfig = CutterConfig.GetInstance().GetFloorConfig(Singleton<DungeonManager>.instance.currentFloor + 1);
+            FloorConfig floorConfig = CutterConfig.Instance.GetFloorConfig(Singleton<DungeonManager>.instance.currentFloor + 1);
 
             if (__instance.name == "ItemSpawnSpot")
             {

@@ -53,7 +53,7 @@ namespace cornercutter
             {
                 // Take the current index item
                 selectedSkill = Skills[currentIndex].Skill;
-                currentIndex = currentIndex == Skills.Count - 1 ? 0 : currentIndex + 1;
+                currentIndex = (currentIndex + 1) % Skills.Count;
             }
             else
             {
@@ -62,13 +62,12 @@ namespace cornercutter
                 int rollingWeight = 0;
                 foreach (WeightedSkill weightedSkill in Skills)
                 {
-                    int newWeight = rollingWeight + weightedSkill.Weight;
-                    if (newWeight > selectedWeight)
+                    rollingWeight += weightedSkill.Weight;
+                    if (rollingWeight > selectedWeight)
                     {
                         selectedSkill = weightedSkill.Skill;
                         break;
                     }
-                    rollingWeight = newWeight;
                 }
             }
             return selectedSkill;

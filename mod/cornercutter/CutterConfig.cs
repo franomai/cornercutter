@@ -6,17 +6,12 @@ namespace cornercutter
 {
     class CutterConfig
     {
-        private static readonly CutterConfig instance = new CutterConfig();
+        public static CutterConfig Instance { get; } = new CutterConfig();
         public ConfigOptions Options { get; private set; }
         private Dictionary<Floor, FloorConfig> floorConfigs;
 
         private CutterConfig()
         {
-        }
-
-        public static CutterConfig GetInstance()
-        {
-            return instance;
         }
 
         public void LoadCurrentConfig()
