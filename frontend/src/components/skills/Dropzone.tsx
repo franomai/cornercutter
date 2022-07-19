@@ -12,23 +12,19 @@ interface Props {
 }
 
 interface DropProps {
-    isOver: boolean;
     canDrop: boolean;
 }
 
 const Dropzone: FC<Props> = (props) => {
-    const [{ isOver, canDrop }, dropRef] = useDrop<Item, unknown, DropProps>(() => ({
+    const [{ canDrop }, dropRef] = useDrop<Item, unknown, DropProps>(() => ({
         accept: props.itemType.id,
         drop: (item) => {
             if (props.onItemDropped) props.onItemDropped(item);
         },
         collect: (monitor) => ({
-            isOver: monitor.isOver(),
             canDrop: monitor.canDrop(),
         }),
     }));
-
-    const enabled = isOver && canDrop;
 
     return (
         <Box
@@ -42,7 +38,7 @@ const Dropzone: FC<Props> = (props) => {
             w="full"
             h="full"
         >
-            {Children.count(props.children) === 0 ? <Text>Drag skills here!</Text> : props.children}
+            {props.children}
         </Box>
     );
 };
