@@ -20,18 +20,16 @@ const StartingConfig: FC = () => {
     }
 
     return (
-        <Flex gap={4}>
-            <Box width="full" h="full">
-                <Heading size="md" mb={4}>
-                    Select your starting skills
-                </Heading>
+        <Flex gap={4} h="full">
+            <Flex w="full" h="full" direction="column" gap={4}>
+                <Heading size="md">Select your starting skills</Heading>
                 <SkillSelector
                     skillIds={config.startingSkillIds}
                     addSkill={addSkill}
                     removeSkill={removeSkill}
                     columns={[1, null, 2, 3, 4, 6]}
                 />
-            </Box>
+            </Flex>
             <SearchColumn items={Skills} />
         </Flex>
     );

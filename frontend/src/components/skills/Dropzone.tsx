@@ -1,7 +1,7 @@
 import { Box, Center, Text } from '@chakra-ui/react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FC, ReactNode } from 'react';
+import { Children, FC, ReactNode } from 'react';
 import { useDrop } from 'react-dnd';
 import { ItemType, Item } from '../../types/ItemTypes';
 
@@ -33,6 +33,7 @@ const Dropzone: FC<Props> = (props) => {
     return (
         <Box
             p={2}
+            m={-2}
             ref={dropRef}
             border={canDrop ? '1px dashed' : '1px'}
             borderColor={canDrop ? 'blue.200' : 'transparent'}
@@ -41,7 +42,7 @@ const Dropzone: FC<Props> = (props) => {
             w="full"
             h="full"
         >
-            {props.children}
+            {Children.count(props.children) === 0 ? <Text>Drag skills here!</Text> : props.children}
         </Box>
     );
 };
