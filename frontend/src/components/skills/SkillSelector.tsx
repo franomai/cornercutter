@@ -1,4 +1,4 @@
-import { ResponsiveValue, SimpleGrid } from '@chakra-ui/react';
+import { Center, ResponsiveValue, SimpleGrid, Text } from '@chakra-ui/react';
 import { FC, ReactNode } from 'react';
 import { skillFromId } from '../../data/TestSkills';
 import { Item } from '../../types/ItemTypes';
@@ -22,9 +22,15 @@ const SkillSelector: FC<Props> = (props) => {
 
     return (
         <Dropzone itemType={ItemTypes.SKILL} onItemDropped={props.addSkill}>
-            <SimpleGrid columns={props.columns} gap={4}>
-                {renderSkills()}
-            </SimpleGrid>
+            {props.skillIds.length !== 0 ? (
+                <SimpleGrid columns={props.columns} gap={4}>
+                    {renderSkills()}
+                </SimpleGrid>
+            ) : (
+                <Center h="full">
+                    <Text fontSize="xl">Drag skills here to select them</Text>
+                </Center>
+            )}
         </Dropzone>
     );
 };
