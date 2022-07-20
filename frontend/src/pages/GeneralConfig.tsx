@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { Box, Button, Checkbox, FormLabel, Radio, RadioGroup, Stack } from '@chakra-ui/react';
-import Configuration, { CurseSpawnType, SpawnType } from '../types/Configuration';
+import Configuration, { CurseSpawnType, SpawnType, Options } from '../types/Configuration';
 import { invoke } from '@tauri-apps/api';
 import { convertKeysToSnakeCase } from '../utility/Utils';
 import useConfigContext from '../context/ConfigContext';
@@ -14,6 +14,28 @@ const GeneralConfig: FC = () => {
             return {
                 ...config,
                 [field]: value,
+            };
+        });
+    }
+
+    function optionsHasValue(flag: Options) {
+        return flag === (config.options & flag);
+    }
+
+    function setConfigOption(flag: Options, isSet: boolean) {
+        let newOptions:Options = config.options;
+        if (isSet) {
+            // Append flag
+            newOptions |= flag;
+        } else {
+            // Remove flag
+            newOptions &= ~flag;
+        }
+
+        setConfig((config) => {
+            return {
+                ...config,
+                options : newOptions,
             };
         });
     }
@@ -53,36 +75,36 @@ const GeneralConfig: FC = () => {
             </div>
             <Stack spacing={1}>
                 <FormLabel>Other options</FormLabel>
-                <Checkbox isChecked={config.configPerFloor} onChange={(e) => set('configPerFloor', e.target.checked)}>
+                <Checkbox isChecked={optionsHasValue(Options.ConfigPerFloor)} onChange={(e) => setConfigOption(Options.ConfigPerFloor, e.target.checked)}>
                     Configure spawns per floor
                 </Checkbox>
-                <Checkbox isChecked={config.configPerRoom} onChange={(e) => set('configPerRoom', e.target.checked)}>
+                <Checkbox isChecked={optionsHasValue(Options.ConfigPerRoom)} onChange={(e) => setConfigOption(Options.ConfigPerRoom, e.target.checked)}>
                     Configure spawns per room
                 </Checkbox>
                 <Checkbox
-                    isChecked={config.removeHealingItems}
-                    onChange={(e) => set('removeHealingItems', e.target.checked)}
+                    isChecked={optionsHasValue(Options.RemoveHealingItems)}
+                    onChange={(e) => setConfigOption(Options.RemoveHealingItems, e.target.checked)}
                 >
                     Remove healing items
                 </Checkbox>
                 <Checkbox
-                    isChecked={config.disableMentorAbilities}
-                    onChange={(e) => set('disableMentorAbilities', e.target.checked)}
+                    isChecked={optionsHasValue(Options.DisableMentorAbilities)}
+                    onChange={(e) => setConfigOption(Options.DisableMentorAbilities, e.target.checked)}
                 >
                     Disable mentor abilities
                 </Checkbox>
                 <Checkbox
-                    isChecked={config.disableGiftOfIntern}
-                    onChange={(e) => set('disableGiftOfIntern', e.target.checked)}
+                    isChecked={optionsHasValue(Options.DisableGiftOfIntern)}
+                    onChange={(e) => setConfigOption(Options.DisableGiftOfIntern, e.target.checked)}
                 >
                     Disable gift of the intern
                 </Checkbox>
-                <Checkbox isChecked={config.disablePinned} onChange={(e) => set('disablePinned', e.target.checked)}>
+                <Checkbox isChecked={optionsHasValue(Options.DisablePinned)} onChange={(e) => setConfigOption(Options.DisablePinned, e.target.checked)}>
                     Disable pinned skills
                 </Checkbox>
                 <Checkbox
-                    isChecked={config.awardSkillsPerLevel}
-                    onChange={(e) => set('awardSkillsPerLevel', e.target.checked)}
+                    isChecked={optionsHasValue(Options.AwardSkillsPerLevel)}
+                    onChange={(e) => setConfigOption(Options.AwardSkillsPerLevel, e.target.checked)}
                 >
                     Award starting skills per floor
                 </Checkbox>
