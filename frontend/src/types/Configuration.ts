@@ -1,4 +1,8 @@
-export default interface Configuration {
+export default interface Configuration extends GeneralConfig {
+    startingSkillIds: number[];
+}
+
+interface GeneralConfig {
     spawns: SpawnType;
     curseSpawns: CurseSpawnType;
     configPerFloor: boolean;
@@ -8,7 +12,6 @@ export default interface Configuration {
     disableGiftOfIntern: boolean;
     disablePinned: boolean;
     awardSkillsPerLevel: boolean;
-    startingSkillIds: number[];
 }
 
 export enum SpawnType {
@@ -22,6 +25,26 @@ export enum CurseSpawnType {
     Always = 'Always',
     Never = 'Never',
 }
+
+export enum Floor {
+    AllFloors,
+    FirstFloor,
+    SecondFloor,
+    ThirdFloor,
+    Boss,
+}
+
+export const DEFAULT_GENERAL_CONFIG: GeneralConfig = {
+    spawns: SpawnType.Looped,
+    curseSpawns: CurseSpawnType.Randomly,
+    configPerFloor: false,
+    configPerRoom: false,
+    removeHealingItems: false,
+    disableMentorAbilities: false,
+    disableGiftOfIntern: false,
+    disablePinned: false,
+    awardSkillsPerLevel: false,
+};
 
 export const DEFAULT_CONFIG: Configuration = {
     spawns: SpawnType.Looped,
