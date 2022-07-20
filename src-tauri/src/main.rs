@@ -4,35 +4,50 @@
 )]
 
 use serde::Deserialize;
+use bitflags::bitflags;
+use integer_encoding::VarInt;
+use base64::{encode, decode};
+use num_derive::FromPrimitive;
+use num_traits::FromPrimitive;
 
 #[derive(Deserialize)]
 struct Configuration  {
     spawns: SpawnType,
     curse_spawns: CurseSpawnType,
-    config_per_floor: bool,
-    config_per_room: bool,
-    remove_healing_items: bool,
-    disable_mentor_abilities: bool,
-    disable_gift_of_intern: bool,
-    disable_pinned: bool,
-    award_skills_per_level: bool,
-    starting_skill_ids: Vec<i32>,
+    options: u32,
+    starting_skill_ids: Vec<u32>,
 }
 
 #[derive(Debug)]
-#[derive(Deserialize)]
+#[derive(Deserialize, Copy, Clone, FromPrimitive)]
 enum SpawnType {
-    Looped, Weighted, Consecutive
+    None = 0, Looped = 1, Weighted = 2, Consecutive = 3
 }
 
 #[derive(Debug)]
-#[derive(Deserialize)]
+#[derive(Deserialize, Copy, Clone, FromPrimitive)]
 enum CurseSpawnType {
-    Randomly, Always, Never
+    None = 0, Randomly = 1, Always = 2, Never = 3
+}
+
+bitflags! {
+    struct Options: u32 {
+        const NONE_SELECTED = 0;
+        const CONFIG_PER_FLOOR = 1 << 0;
+        const CONFIG_PER_ROOM = 1 << 1;
+        const REMOVE_HEALING_ITEMS = 1 << 2;
+        const DISABLE_MENTOR_ABILITIES = 1 << 3;
+        const DISABLE_GIFT_OF_INTERN = 1 << 4;
+        const DISABLE_PINNED = 1 << 5;
+        const AWARD_SKILLS_PER_LEVEL = 1 << 6;
+    }
 }
 
 #[tauri::command]
 fn accept_config(config: Configuration) -> String {
+    let configString = encodeConfiguration(&config);
+    let newConfig = decodeConfiguration(&configString);
+    let options = Options::from_bits(newConfig.options).unwrap();
     return format!(
         "Spawns: {:?}, \
          Curse spawns: {:?}, \
@@ -43,12 +58,84 @@ fn accept_config(config: Configuration) -> String {
          Disable gift of the intern: {}, \
          Disabled pinned: {}, \
          Award skills per level: {}, \
-         starting skill ids: {:?}
-        ", config.spawns, config.curse_spawns, config.config_per_floor,
-         config.config_per_room, config.remove_healing_items, config.disable_mentor_abilities,
-         config.disable_gift_of_intern, config.disable_pinned, config.award_skills_per_level,
-         config.starting_skill_ids
+         starting skill ids: {:?}, \
+         config code: {:?}
+        ", newConfig.spawns, newConfig.curse_spawns, options.contains(Options::CONFIG_PER_FLOOR),
+         options.contains(Options::CONFIG_PER_ROOM), options.contains(Options::REMOVE_HEALING_ITEMS),
+         options.contains(Options::DISABLE_MENTOR_ABILITIES), options.contains(Options::DISABLE_GIFT_OF_INTERN),
+         options.contains(Options::DISABLE_PINNED), options.contains(Options::AWARD_SKILLS_PER_LEVEL),
+         newConfig.starting_skill_ids, configString
     );
+}
+
+
+fn encodeConfiguration(config: &Configuration) -> String {
+    let configArray = buildArray(&config);
+    return u32_vec_to_string(configArray);
+}
+
+fn decodeConfiguration(configString: &String) -> Configuration {
+    let configArray = string_to_u32_vec(configString);
+    return buildConfig(configArray.unwrap());
+}
+
+// Uses the same logic as https://github.com/arranf/deck-codes/blob/master/src/lib.rs
+fn u32_vec_to_string(byte_array: Vec<u32>) -> String {
+    let mut fixed_size_integers: Vec<u8> = Vec::new();
+    // This is calculated by taking the largest dbfid and calculating ceil(log(dbfid, 128)) as 128 is the largest value a u8 can store.
+    let mut encoded: [u8; 4] = [0, 0, 0, 0];
+    for i in byte_array {
+        let encoded_bytes = i.encode_var(&mut encoded[..]);
+        for encoded_index in 0..encoded_bytes {
+            fixed_size_integers.push(encoded[encoded_index]);
+        }
+    }
+    return encode(&fixed_size_integers);
+}
+
+// Modified version of the decode from lib.rs
+fn string_to_u32_vec(configString: &str) -> Result<Vec<u32>, String> {
+    let mut decoded = decode(configString).unwrap();
+
+    let mut result: Vec<u32> = vec![];
+    // Read u8 values as u32 varints
+    while !decoded.is_empty() {
+        let (read, size) = u32::decode_var(&decoded).ok_or("This should never happen, as it's coming from us.")?;
+        result.push(read);
+        decoded = decoded[size..].to_vec();
+    }
+    Ok(result)
+}
+
+fn buildConfig(configArray: Vec<u32>) ->  Configuration {
+    return Configuration {
+        spawns: FromPrimitive::from_u32(configArray[3]).unwrap(),
+        curse_spawns: FromPrimitive::from_u32(configArray[4]).unwrap(),
+        options: configArray[2],
+        starting_skill_ids: configArray[7..].to_vec(),
+    };
+}
+
+fn buildArray(config: &Configuration) ->  Vec<u32> {
+    // Generally, the format will read as
+    // 0x0 Version Options Spawn Curse
+    // Followed by the repeating config of
+    // Floor Number StartingSkills / ShopSkills / PickupSkills / FinaleSkills 
+    // Skill reps will have the number of skills followed by the ids
+    let mut array = Vec::new();
+    array.append(&mut vec![
+        0,
+        1,
+        (config.options as u32),
+        (config.spawns as u32),
+        (config.curse_spawns as u32),
+    ]);
+    // This will eventually be replaced by proper looping of all floor configs
+    array.push(0);
+
+    array.push(config.starting_skill_ids.len() as u32);
+    array.extend(&config.starting_skill_ids.clone());
+    return array;
 }
 
 fn main() {
