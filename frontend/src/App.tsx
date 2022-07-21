@@ -1,39 +1,71 @@
-import { useState } from 'react';
-import logo from './logo.svg';
+import { Box, Container, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { ReactNode } from 'react';
 import './App.css';
+import useConfigContext from './context/ConfigContext';
+import AllFloorsConfig from './pages/AllFloorsConfig';
+import FloorConfig from './pages/FloorConfig';
+import GeneralConfig from './pages/GeneralConfig';
+import StartingConfig from './pages/StartingConfig';
+import { Floor } from './types/Configuration';
+import TabData from './types/TabData';
 
 function App() {
-    const [count, setCount] = useState(0);
+    const [config, setConfig] = useConfigContext();
+
+    function getTabs(): TabData[] {
+        const tabs: TabData[] = [
+            {
+                name: 'General Config',
+                page: <GeneralConfig />,
+            },
+            {
+                name: 'StartingConfig',
+                page: <StartingConfig />,
+            },
+        ];
+
+        // TODO: Try cache components
+        if (config.configPerFloor) {
+            tabs.push(
+                { name: 'Floor 1', page: <FloorConfig floor={Floor.FirstFloor} /> },
+                { name: 'Floor 2', page: <FloorConfig floor={Floor.SecondFloor} /> },
+                { name: 'Floor 3', page: <FloorConfig floor={Floor.ThirdFloor} /> },
+                { name: 'Boss Floor', page: <FloorConfig floor={Floor.Boss} /> },
+            );
+        } else {
+            tabs.push({ name: 'Floor Config', page: <AllFloorsConfig /> });
+        }
+
+        return tabs;
+    }
+
+    function renderTabs(): ReactNode {
+        const tabs = getTabs();
+
+        return (
+            <Tabs h="full" display="flex" style={{ flexDirection: 'column' }} overflowY="hidden">
+                <TabList>
+                    {tabs.map((tab) => (
+                        <Tab fontWeight="semibold">{tab.name}</Tab>
+                    ))}
+                </TabList>
+                <TabPanels h="full">
+                    {tabs.map((tab) => (
+                        <TabPanel h="full">{tab.page}</TabPanel>
+                    ))}
+                </TabPanels>
+            </Tabs>
+        );
+    }
 
     return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>Vite + React</p>
-                <p>
-                    <button type="button" onClick={() => setCount((count) => count + 1)}>
-                        count is: {count}
-                    </button>
-                </p>
-                <p>
-                    Edit <code>App.tsx</code> and save to test HMR updates.
-                </p>
-                <p>
-                    <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-                        Learn React
-                    </a>
-                    {' | '}
-                    <a
-                        className="App-link"
-                        href="https://vitejs.dev/guide/features.html"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Vite Docs
-                    </a>
-                </p>
-            </header>
-        </div>
+        <Box className="App" h="full" py={5}>
+            <Container maxW="80%" h="full">
+                <Box borderWidth="1px" py={5} px={10} borderRadius="lg" h="full">
+                    {renderTabs()}
+                </Box>
+            </Container>
+        </Box>
     );
 }
 

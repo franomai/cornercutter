@@ -1,13 +1,21 @@
-import { ChakraProvider } from '@chakra-ui/react'
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App'
-import './index.css'
+import { ChakraProvider } from '@chakra-ui/react';
+import React from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import { ConfigContextProvider } from './context/ConfigContext';
+import './index.css';
+import theme from './utility/Theme';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <ChakraProvider>
-            <App />
+        <ChakraProvider theme={theme}>
+            <DndProvider backend={HTML5Backend}>
+                <ConfigContextProvider>
+                    <App />
+                </ConfigContextProvider>
+            </DndProvider>
         </ChakraProvider>
     </React.StrictMode>,
 );
