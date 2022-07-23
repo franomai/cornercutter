@@ -6,7 +6,17 @@ namespace cornercutter
 {
     abstract class SpawnCollection
     {
-        public abstract void AddSkill(WeightedSkill skill);
+        public List<WeightedSkill> Skills { get; protected set; }
+
+        public SpawnCollection()
+        {
+            Skills = new List<WeightedSkill>();
+        }
+
+        public virtual void AddSkill(WeightedSkill skill)
+        {
+            Skills.Add(skill);
+        }
 
         public void AddSkills(params WeightedSkill[] skills)
         {
@@ -17,7 +27,5 @@ namespace cornercutter
         }
 
         public abstract Entity GetNextSkill();
-
-        public abstract List<WeightedSkill> GetAllSkills();
     }
 }
