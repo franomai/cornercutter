@@ -4,37 +4,9 @@ using System.Text;
 
 namespace cornercutter
 {
-    class SpawnCollection
+    abstract class SpawnCollection
     {
-        public List<WeightedSkill> Skills { get; private set; }
-        // Boolean for whether we should wrap around when pulling this pool or treat it as a bucket to grab from
-        private readonly bool isLooping;
-        // For now, where isLooping is set, currentIndex is used, otherwise currentTotal for weight tracking
-        // Seperated for clarity
-        private int currentIndex;
-        private int currentTotal;
-        private readonly Random rng;
-
-        public SpawnCollection(bool loopSpawns)
-        {
-            Skills = new List<WeightedSkill>();
-            currentIndex = 0;
-            isLooping = loopSpawns;
-            if (isLooping)
-            {
-                // Only instantiate if needed
-                rng = new Random();
-            }
-        }
-
-        public void AddSkill(WeightedSkill skill)
-        {
-            Skills.Add(skill);
-            if (isLooping)
-            {
-                currentTotal += skill.Weight;
-            }
-        }
+        public abstract void AddSkill(WeightedSkill skill);
 
         public void AddSkills(params WeightedSkill[] skills)
         {
@@ -44,33 +16,8 @@ namespace cornercutter
             }
         }
 
-        public Entity GetNextSkill()
-        {
-            if (Skills.Count == 0) return null;
+        public abstract Entity GetNextSkill();
 
-            Entity selectedSkill = null;
-            if (isLooping)
-            {
-                // Take the current index item
-                selectedSkill = Skills[currentIndex].Skill;
-                currentIndex = (currentIndex + 1) % Skills.Count;
-            }
-            else
-            {
-                // Roll the dice for the item - pick a weight, then find the item in the right weight range
-                int selectedWeight = rng.Next(0, currentTotal);
-                int rollingWeight = 0;
-                foreach (WeightedSkill weightedSkill in Skills)
-                {
-                    rollingWeight += weightedSkill.Weight;
-                    if (rollingWeight > selectedWeight)
-                    {
-                        selectedSkill = weightedSkill.Skill;
-                        break;
-                    }
-                }
-            }
-            return selectedSkill;
-        }
+        public abstract List<WeightedSkill> GetAllSkills();
     }
 }

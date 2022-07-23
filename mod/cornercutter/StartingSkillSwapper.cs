@@ -14,7 +14,7 @@ namespace cornercutter
             if (floorConfig.StartingSkills == null) return;
 
             Console.WriteLine("Starting skills found, attaching...");
-            foreach (WeightedSkill skill in floorConfig.StartingSkills.Skills)
+            foreach (WeightedSkill skill in floorConfig.StartingSkills.GetAllSkills())
             {
                 Console.WriteLine("Adding " + skill.Skill.gameObject.name);
                 skill.Skill.GetComponentInChildren<EntityMod>().ApplyFromPrefab(Player.singlePlayer);

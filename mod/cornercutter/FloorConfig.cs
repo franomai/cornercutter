@@ -27,14 +27,13 @@
         {
             Floor = floor;
             ConfigOptions options  = CutterConfig.Instance.Options;
-            bool loopSpawns = options.HasFlag(ConfigOptions.LoopSpawns);
 
             // Config option refers to if starting skills should be given for every floor
             // If the collection shouldn't be needed, null it out to make errors more obvious
             bool awardPerLevel = options.HasFlag(ConfigOptions.AwardPerLevel);
             if (floor == Floor.AllFloors || floor == Floor.FirstFloor || awardPerLevel)
             {
-                StartingSkills = new SpawnCollection(loopSpawns);
+                StartingSkills = CreateSpawnCollection(options);
             }
             else
             {
@@ -42,13 +41,13 @@
             }
 
             // All floors contain a shop
-            ShopSkills = new SpawnCollection(loopSpawns);
+            ShopSkills = CreateSpawnCollection(options);
 
             // Boss rooms don't contain free skill rooms (normal or curse) or finales
             if (floor != Floor.Boss)
             {
-                PickupSkills = new SpawnCollection(loopSpawns);
-                FinaleSkills = new SpawnCollection(loopSpawns);
+                PickupSkills = CreateSpawnCollection(options);
+                FinaleSkills = CreateSpawnCollection(options);
 
             }
             else
@@ -56,6 +55,20 @@
                 PickupSkills = null;
                 FinaleSkills = null;
             }
+        }
+        private SpawnCollection CreateSpawnCollection(ConfigOptions options)
+        {
+            bool loopSpawns = options.HasFlag(ConfigOptions.LoopSpawns);
+            SpawnCollection collection;
+            if (loopSpawns)
+            {
+                collection = new LoopingSpawnCollection();
+            }
+            else
+            {
+                collection = new WeightedSpawnCollection();
+            }
+            return collection;
         }
     }
 }
