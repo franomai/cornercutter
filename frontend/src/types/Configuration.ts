@@ -1,10 +1,18 @@
-export default interface Configuration extends GeneralConfig {}
+export default interface ModConfig {
+    info: ModInfo;
+    general: GeneralConfig;
+}
 
-interface GeneralConfig {
+export interface ModInfo {
+    name: string;
+    description: string;
+}
+
+export interface GeneralConfig {
     spawns: SpawnType;
     curseSpawns: CurseSpawnType;
     options: Options;
-    startingSkillIds: number[];
+    startingSkills: number[];
 }
 
 export enum SpawnType {
@@ -38,9 +46,9 @@ export enum Options {
     AwardSkillsPerLevel = 1 << 6,
 }
 
-export const DEFAULT_CONFIG: Configuration = {
+export const DEFAULT_CONFIG: GeneralConfig = {
     spawns: SpawnType.Looped,
     curseSpawns: CurseSpawnType.Randomly,
     options: Options.RemoveHealingItems | Options.DisablePinned,
-    startingSkillIds: [],
+    startingSkills: [],
 };

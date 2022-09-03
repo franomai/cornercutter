@@ -10,13 +10,13 @@ const StartingConfig: FC = () => {
     const [config, setConfig] = useConfigContext();
 
     function addSkill(skill: Item) {
-        setConfig((config) => ({ ...config, startingSkillIds: [...config.startingSkillIds, skill.id] }));
+        setConfig((config) => ({ ...config, startingSkills: [...config.startingSkills, skill.id] }));
     }
 
     function removeSkill(index: number) {
         // The '1' in splice shows we only want to remove 1 element at the specified index
-        config.startingSkillIds.splice(index, 1);
-        setConfig((config) => ({ ...config, startingSkillIds: [...config.startingSkillIds] }));
+        config.startingSkills.splice(index, 1);
+        setConfig((config) => ({ ...config, startingSkillIds: [...config.startingSkills] }));
     }
 
     return (
@@ -26,7 +26,7 @@ const StartingConfig: FC = () => {
                     Select your starting skills
                 </Heading>
                 <SkillSelector
-                    skillIds={config.startingSkillIds}
+                    skillIds={config.startingSkills}
                     addSkill={addSkill}
                     removeSkill={removeSkill}
                     columns={[1, null, 2, 3, 4, 6]}
