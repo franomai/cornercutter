@@ -6,8 +6,9 @@ import AllFloorsConfig from './pages/AllFloorsConfig';
 import FloorConfig from './pages/FloorConfig';
 import GeneralConfig from './pages/GeneralConfig';
 import StartingConfig from './pages/StartingConfig';
-import { Floor } from './types/Configuration';
+import { Floor, Options } from './types/Configuration';
 import TabData from './types/TabData';
+import { optionsHasFlag } from './utility/ConfigHelpers';
 
 function App() {
     const [config, setConfig] = useConfigContext();
@@ -25,7 +26,7 @@ function App() {
         ];
 
         // TODO: Try cache components
-        if (config.configPerFloor) {
+        if (optionsHasFlag(config, Options.ConfigPerFloor)) {
             tabs.push(
                 { name: 'Floor 1', page: <FloorConfig floor={Floor.FirstFloor} /> },
                 { name: 'Floor 2', page: <FloorConfig floor={Floor.SecondFloor} /> },

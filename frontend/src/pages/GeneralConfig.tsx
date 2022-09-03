@@ -1,42 +1,19 @@
 import { FC, useState } from 'react';
-import { Box, Button, Checkbox, FormLabel, Radio, RadioGroup, Stack } from '@chakra-ui/react';
+import { Button, Checkbox, FormLabel, Radio, RadioGroup, Stack } from '@chakra-ui/react';
 import Configuration, { CurseSpawnType, SpawnType, Options } from '../types/Configuration';
 import { invoke } from '@tauri-apps/api';
 import { convertKeysToSnakeCase } from '../utility/Utils';
 import useConfigContext from '../context/ConfigContext';
+import { optionsHasFlag, setOptionFlag } from '../utility/ConfigHelpers';
 
 const GeneralConfig: FC = () => {
     const [response, setResponse] = useState<string>('');
     const [config, setConfig] = useConfigContext();
 
-    function set<T extends keyof Configuration>(field: T, value: Configuration[T]) {
-        setConfig((config) => {
-            return {
-                ...config,
-                [field]: value,
-            };
-        });
-    }
-
-    function optionsHasValue(flag: Options) {
-        return flag === (config.options & flag);
-    }
-
     function setConfigOption(flag: Options, isSet: boolean) {
-        let newOptions:Options = config.options;
-        if (isSet) {
-            // Append flag
-            newOptions |= flag;
-        } else {
-            // Remove flag
-            newOptions &= ~flag;
-        }
-
         setConfig((config) => {
-            return {
-                ...config,
-                options : newOptions,
-            };
+            setOptionFlag(config, flag, isSet);
+            return { ...config };
         });
     }
 
@@ -75,35 +52,44 @@ const GeneralConfig: FC = () => {
             </div>
             <Stack spacing={1}>
                 <FormLabel>Other options</FormLabel>
-                <Checkbox isChecked={optionsHasValue(Options.ConfigPerFloor)} onChange={(e) => setConfigOption(Options.ConfigPerFloor, e.target.checked)}>
+                <Checkbox
+                    isChecked={optionsHasFlag(config, Options.ConfigPerFloor)}
+                    onChange={(e) => setConfigOption(Options.ConfigPerFloor, e.target.checked)}
+                >
                     Configure spawns per floor
                 </Checkbox>
-                <Checkbox isChecked={optionsHasValue(Options.ConfigPerRoom)} onChange={(e) => setConfigOption(Options.ConfigPerRoom, e.target.checked)}>
+                <Checkbox
+                    isChecked={optionsHasFlag(config, Options.ConfigPerRoom)}
+                    onChange={(e) => setConfigOption(Options.ConfigPerRoom, e.target.checked)}
+                >
                     Configure spawns per room
                 </Checkbox>
                 <Checkbox
-                    isChecked={optionsHasValue(Options.RemoveHealingItems)}
+                    isChecked={optionsHasFlag(config, Options.RemoveHealingItems)}
                     onChange={(e) => setConfigOption(Options.RemoveHealingItems, e.target.checked)}
                 >
                     Remove healing items
                 </Checkbox>
                 <Checkbox
-                    isChecked={optionsHasValue(Options.DisableMentorAbilities)}
+                    isChecked={optionsHasFlag(config, Options.DisableMentorAbilities)}
                     onChange={(e) => setConfigOption(Options.DisableMentorAbilities, e.target.checked)}
                 >
                     Disable mentor abilities
                 </Checkbox>
                 <Checkbox
-                    isChecked={optionsHasValue(Options.DisableGiftOfIntern)}
+                    isChecked={optionsHasFlag(config, Options.DisableGiftOfIntern)}
                     onChange={(e) => setConfigOption(Options.DisableGiftOfIntern, e.target.checked)}
                 >
                     Disable gift of the intern
                 </Checkbox>
-                <Checkbox isChecked={optionsHasValue(Options.DisablePinned)} onChange={(e) => setConfigOption(Options.DisablePinned, e.target.checked)}>
+                <Checkbox
+                    isChecked={optionsHasFlag(config, Options.DisablePinned)}
+                    onChange={(e) => setConfigOption(Options.DisablePinned, e.target.checked)}
+                >
                     Disable pinned skills
                 </Checkbox>
                 <Checkbox
-                    isChecked={optionsHasValue(Options.AwardSkillsPerLevel)}
+                    isChecked={optionsHasFlag(config, Options.AwardSkillsPerLevel)}
                     onChange={(e) => setConfigOption(Options.AwardSkillsPerLevel, e.target.checked)}
                 >
                     Award starting skills per floor
