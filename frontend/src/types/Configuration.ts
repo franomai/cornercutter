@@ -1,4 +1,5 @@
 export default interface ModConfig {
+    id: number;
     info: ModInfo;
     general: GeneralConfig;
 }
