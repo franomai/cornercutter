@@ -1,15 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loadSkills } from '../../../utility/SkillsHelper';
 import { StoreState } from '../../store';
 
 import Skill from '../../../types/Skill';
+import skills from '../../../assets/skills/skills.json';
 
 export interface State {
     skills: Record<number, Skill>;
 }
 
 export const initialState: State = {
-    skills: loadSkills(),
+    skills: Object.fromEntries(skills.map((skill) => [skill.id, skill])),
 };
 
 const skillsSlice = createSlice({

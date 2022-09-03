@@ -1,17 +1,22 @@
 import { Box, Container, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { ReactNode } from 'react';
+import { useSelector } from 'react-redux';
 import './App.css';
 import useConfigContext from './context/ConfigContext';
 import AllFloorsConfig from './pages/AllFloorsConfig';
 import FloorConfig from './pages/FloorConfig';
 import GeneralConfig from './pages/GeneralConfig';
 import StartingConfig from './pages/StartingConfig';
+import { getAllSkills } from './redux/slices/skills';
 import { Floor, Options } from './types/Configuration';
 import TabData from './types/TabData';
 import { optionsHasFlag } from './utility/ConfigHelpers';
 
 function App() {
+    const skills = useSelector(getAllSkills);
     const [config, setConfig] = useConfigContext();
+
+    console.log(skills);
 
     function getTabs(): TabData[] {
         const tabs: TabData[] = [
