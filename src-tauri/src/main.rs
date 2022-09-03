@@ -45,9 +45,9 @@ bitflags! {
 
 #[tauri::command]
 fn accept_config(config: Configuration) -> String {
-    let configString = encodeConfiguration(&config);
-    let newConfig = decodeConfiguration(&configString);
-    let options = Options::from_bits(newConfig.options).unwrap();
+    let config_string = encode_configuration(&config);
+    let new_config = decode_configuration(&config_string);
+    let options = Options::from_bits(new_config.options).unwrap();
     return format!(
         "Spawns: {:?}, \
          Curse spawns: {:?}, \
@@ -60,23 +60,23 @@ fn accept_config(config: Configuration) -> String {
          Award skills per level: {}, \
          starting skill ids: {:?}, \
          config code: {:?}
-        ", newConfig.spawns, newConfig.curse_spawns, options.contains(Options::CONFIG_PER_FLOOR),
+        ", new_config.spawns, new_config.curse_spawns, options.contains(Options::CONFIG_PER_FLOOR),
          options.contains(Options::CONFIG_PER_ROOM), options.contains(Options::REMOVE_HEALING_ITEMS),
          options.contains(Options::DISABLE_MENTOR_ABILITIES), options.contains(Options::DISABLE_GIFT_OF_INTERN),
          options.contains(Options::DISABLE_PINNED), options.contains(Options::AWARD_SKILLS_PER_LEVEL),
-         newConfig.starting_skill_ids, configString
+         new_config.starting_skill_ids, config_string
     );
 }
 
 
-fn encodeConfiguration(config: &Configuration) -> String {
-    let configArray = buildArray(&config);
-    return u32_vec_to_string(configArray);
+fn encode_configuration(config: &Configuration) -> String {
+    let config_array = build_array(&config);
+    return u32_vec_to_string(config_array);
 }
 
-fn decodeConfiguration(configString: &String) -> Configuration {
-    let configArray = string_to_u32_vec(configString);
-    return buildConfig(configArray.unwrap());
+fn decode_configuration(config_string: &String) -> Configuration {
+    let config_array = string_to_u32_vec(config_string);
+    return build_config(config_array.unwrap());
 }
 
 // Uses the same logic as https://github.com/arranf/deck-codes/blob/master/src/lib.rs
@@ -94,8 +94,8 @@ fn u32_vec_to_string(byte_array: Vec<u32>) -> String {
 }
 
 // Modified version of the decode from lib.rs
-fn string_to_u32_vec(configString: &str) -> Result<Vec<u32>, String> {
-    let mut decoded = decode(configString).unwrap();
+fn string_to_u32_vec(config_string: &str) -> Result<Vec<u32>, String> {
+    let mut decoded = decode(config_string).unwrap();
 
     let mut result: Vec<u32> = vec![];
     // Read u8 values as u32 varints
@@ -107,16 +107,16 @@ fn string_to_u32_vec(configString: &str) -> Result<Vec<u32>, String> {
     Ok(result)
 }
 
-fn buildConfig(configArray: Vec<u32>) ->  Configuration {
+fn build_config(config_array: Vec<u32>) ->  Configuration {
     return Configuration {
-        spawns: FromPrimitive::from_u32(configArray[3]).unwrap(),
-        curse_spawns: FromPrimitive::from_u32(configArray[4]).unwrap(),
-        options: configArray[2],
-        starting_skill_ids: configArray[7..].to_vec(),
+        spawns: FromPrimitive::from_u32(config_array[3]).unwrap(),
+        curse_spawns: FromPrimitive::from_u32(config_array[4]).unwrap(),
+        options: config_array[2],
+        starting_skill_ids: config_array[7..].to_vec(),
     };
 }
 
-fn buildArray(config: &Configuration) ->  Vec<u32> {
+fn build_array(config: &Configuration) ->  Vec<u32> {
     // Generally, the format will read as
     // 0x0 Version Options Spawn Curse
     // Followed by the repeating config of
