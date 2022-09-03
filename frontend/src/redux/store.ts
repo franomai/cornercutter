@@ -1,15 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
-import configSlice, { State as ConfigState } from './slices/config';
+import modSlice, { State as ModState } from './slices/mod';
 import skillsSlice, { State as SkillsState } from './slices/skills';
 
 export interface StoreState {
-    config: ConfigState;
+    mod: ModState;
     skills: SkillsState;
 }
 
 const store = configureStore({
     reducer: {
-        config: configSlice,
+        mod: modSlice,
         skills: skillsSlice,
     },
 });

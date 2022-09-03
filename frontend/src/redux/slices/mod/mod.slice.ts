@@ -22,8 +22,8 @@ export const initialState: State = {
     },
 };
 
-const configSlice = createSlice({
-    name: 'config',
+const modSlice = createSlice({
+    name: 'mod',
     initialState,
     reducers: {
         setModInfo(state, action: { payload: ModInfo }) {
@@ -44,18 +44,18 @@ const configSlice = createSlice({
     },
 });
 
-export const { setModInfo, setSpawns, setCurseSpawns, setOptions, setStartingSkills } = configSlice.actions;
+export const { setModInfo, setSpawns, setCurseSpawns, setOptions, setStartingSkills } = modSlice.actions;
 
-export const getMod = (state: StoreState) => state.config.mod;
+export const getMod = (state: StoreState) => state.mod.mod;
 
-export const getModInfo = (state: StoreState) => state.config.mod.info;
+export const getModInfo = (state: StoreState) => state.mod.mod.info;
 
-export const getSpawns = (state: StoreState) => state.config.mod.general.spawns;
+export const getSpawns = (state: StoreState) => state.mod.mod.general.spawns;
 
-export const getCurseSpawns = (state: StoreState) => state.config.mod.general.curseSpawns;
+export const getCurseSpawns = (state: StoreState) => state.mod.mod.general.curseSpawns;
 
-export const getOptions = (state: StoreState) => state.config.mod.general.options;
+export const getOptions = (state: StoreState) => state.mod.mod.general.options;
 
-export const getStartingSkills = (state: StoreState) => state.config.mod.general.startingSkills;
+export const getStartingSkills = (state: StoreState) => state.mod.mod.general.startingSkills;
 
-export default configSlice.reducer;
+export default modSlice.reducer;
