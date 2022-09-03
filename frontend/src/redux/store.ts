@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import configSlice, { State as ConfigState } from './slices/config/config.slice';
+import configSlice, { State as ConfigState } from './slices/config';
 
 export interface StoreState {
     config: ConfigState;
