@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import ModConfig, { CurseSpawnType, ModInfo, Options, SpawnType } from '../../../types/Configuration';
 import { StoreState } from '../../store';
+
+import ModConfig, { CurseSpawnType, ModInfo, Options, SpawnType } from '../../../types/Configuration';
 
 export interface State {
     mod: ModConfig;
@@ -22,7 +23,7 @@ export const initialState: State = {
 };
 
 const configSlice = createSlice({
-    name: `config`,
+    name: 'config',
     initialState,
     reducers: {
         setModInfo(state, action: { payload: ModInfo }) {

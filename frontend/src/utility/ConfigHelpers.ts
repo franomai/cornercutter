@@ -1,4 +1,4 @@
-import Configuration, { GeneralConfig, Options } from '../types/Configuration';
+import { GeneralConfig, Options } from '../types/Configuration';
 
 export function optionsHasFlag(config: GeneralConfig, flag: Options) {
     return flag === (config.options & flag);
