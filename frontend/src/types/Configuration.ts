@@ -1,17 +1,10 @@
-export default interface Configuration extends GeneralConfig {
-    startingSkillIds: number[];
-}
+export default interface Configuration extends GeneralConfig {}
 
 interface GeneralConfig {
     spawns: SpawnType;
     curseSpawns: CurseSpawnType;
-    configPerFloor: boolean;
-    configPerRoom: boolean;
-    removeHealingItems: boolean;
-    disableMentorAbilities: boolean;
-    disableGiftOfIntern: boolean;
-    disablePinned: boolean;
-    awardSkillsPerLevel: boolean;
+    options: Options;
+    startingSkillIds: number[];
 }
 
 export enum SpawnType {
@@ -34,27 +27,20 @@ export enum Floor {
     Boss,
 }
 
-export const DEFAULT_GENERAL_CONFIG: GeneralConfig = {
-    spawns: SpawnType.Looped,
-    curseSpawns: CurseSpawnType.Randomly,
-    configPerFloor: false,
-    configPerRoom: false,
-    removeHealingItems: false,
-    disableMentorAbilities: false,
-    disableGiftOfIntern: false,
-    disablePinned: false,
-    awardSkillsPerLevel: false,
-};
+export enum Options {
+    NoneSelected = 0,
+    ConfigPerFloor = 1 << 0,
+    ConfigPerRoom = 1 << 1,
+    RemoveHealingItems = 1 << 2,
+    DisableMentorAbilities = 1 << 3,
+    DisableGiftOfIntern = 1 << 4,
+    DisablePinned = 1 << 5,
+    AwardSkillsPerLevel = 1 << 6,
+}
 
 export const DEFAULT_CONFIG: Configuration = {
     spawns: SpawnType.Looped,
     curseSpawns: CurseSpawnType.Randomly,
-    configPerFloor: false,
-    configPerRoom: false,
-    removeHealingItems: false,
-    disableMentorAbilities: false,
-    disableGiftOfIntern: false,
-    disablePinned: false,
-    awardSkillsPerLevel: false,
+    options: Options.RemoveHealingItems | Options.DisablePinned,
     startingSkillIds: [],
 };
