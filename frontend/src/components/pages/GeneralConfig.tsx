@@ -1,10 +1,10 @@
 import { FC, useState } from 'react';
 import { Button, Checkbox, FormLabel, Radio, RadioGroup, Stack } from '@chakra-ui/react';
-import Configuration, { CurseSpawnType, SpawnType, Options } from '../types/Configuration';
+import Configuration, { CurseSpawnType, SpawnType, Options } from '../../types/Configuration';
 import { invoke } from '@tauri-apps/api';
-import { convertKeysToSnakeCase } from '../utility/Utils';
-import useConfigContext from '../context/ConfigContext';
-import { optionsHasFlag, setOptionFlag } from '../utility/ConfigHelpers';
+import { convertKeysToSnakeCase } from '../../utility/Utils';
+import useConfigContext from '../../context/ConfigContext';
+import { optionsHasFlag, setOptionFlag } from '../../utility/ConfigHelpers';
 
 const GeneralConfig: FC = () => {
     const [response, setResponse] = useState<string>('');

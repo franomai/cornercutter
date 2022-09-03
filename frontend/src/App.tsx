@@ -1,16 +1,17 @@
-import { Box, Container, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { Box, Container, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { useSelector } from 'react-redux';
 import './App.css';
 import useConfigContext from './context/ConfigContext';
-import AllFloorsConfig from './pages/AllFloorsConfig';
-import FloorConfig from './pages/FloorConfig';
-import GeneralConfig from './pages/GeneralConfig';
-import StartingConfig from './pages/StartingConfig';
+import AllFloorsConfig from './components/pages/AllFloorsConfig';
+import FloorConfig from './components/pages/FloorConfig';
+import GeneralConfig from './components/pages/GeneralConfig';
+import StartingConfig from './components/pages/StartingConfig';
 import { getAllSkills } from './redux/slices/skills';
 import { Floor, Options } from './types/Configuration';
 import TabData from './types/TabData';
 import { optionsHasFlag } from './utility/ConfigHelpers';
+import ModList from './components/mods/ModList';
 
 function App() {
     const skills = useSelector(getAllSkills);
@@ -65,13 +66,12 @@ function App() {
     }
 
     return (
-        <Box className="App" h="full" py={5}>
-            <Container maxW="80%" h="full">
-                <Box borderWidth="1px" py={5} px={10} borderRadius="lg" h="full">
-                    {renderTabs()}
-                </Box>
-            </Container>
-        </Box>
+        <Stack direction="row" h="full" w="full">
+            <ModList />
+            <Box borderWidth="1px" py={5} borderRadius="lg" h="full" w="full">
+                {renderTabs()}
+            </Box>
+        </Stack>
     );
 }
 

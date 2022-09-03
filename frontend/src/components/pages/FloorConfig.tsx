@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Floor } from '../types/Configuration';
+import { Floor } from '../../types/Configuration';
 
 interface Props {
     floor: Floor;

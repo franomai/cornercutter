@@ -1,10 +1,10 @@
 import { Box, Flex, Heading, SimpleGrid } from '@chakra-ui/react';
 import { FC } from 'react';
-import SearchColumn from '../components/SearchColumn';
-import SkillSelector from '../components/skills/SkillSelector';
-import useConfigContext from '../context/ConfigContext';
-import { Skills } from '../data/TestSkills';
-import { Item } from '../types/ItemTypes';
+import SearchColumn from '../SearchColumn';
+import SkillSelector from '../skills/SkillSelector';
+import useConfigContext from '../../context/ConfigContext';
+import { Skills } from '../../data/TestSkills';
+import { Item } from '../../types/ItemTypes';
 
 const StartingConfig: FC = () => {
     const [config, setConfig] = useConfigContext();
