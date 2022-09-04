@@ -12,8 +12,9 @@ const GeneralConfig: FC = () => {
 
     function setConfigOption(flag: Options, isSet: boolean) {
         setConfig((config) => {
-            setOptionFlag(config, flag, isSet);
-            return { ...config };
+            const newConfig = { ...config };
+            setOptionFlag(newConfig, flag, isSet);
+            return newConfig;
         });
     }
 
