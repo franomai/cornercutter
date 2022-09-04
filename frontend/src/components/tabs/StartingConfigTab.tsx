@@ -1,6 +1,6 @@
 import { Box, Flex, Heading, SimpleGrid } from '@chakra-ui/react';
 import { FC } from 'react';
-import SearchColumn from '../SearchColumn';
+import SearchColumn from '../searchbar/SearchColumn';
 import SkillSelector from '../skills/SkillSelector';
 import useConfigContext from '../../context/ConfigContext';
 import { Skills } from '../../data/TestSkills';

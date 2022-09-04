@@ -1,8 +1,8 @@
 import { Box, CloseButton, Input, InputGroup, InputRightElement, Stack, Text } from '@chakra-ui/react';
 import { FC, ReactNode, useEffect, useRef, useState } from 'react';
-import { Item } from '../types/ItemTypes';
-import DraggableSkill from './skills/Skill';
-import Skill from './skills/Skill';
+import { Item } from '../../types/ItemTypes';
+import DraggableSkill from '../skills/Skill';
+import Skill from '../skills/Skill';
 
 interface Props {
     items: Item[];
