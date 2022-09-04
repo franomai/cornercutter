@@ -43,11 +43,24 @@ const Radio: ComponentStyleConfig = {
     },
 };
 
+const Tabs: ComponentStyleConfig = {
+    variants: {
+        line: {
+            tab: {
+                _selected: {
+                    color: 'green.300',
+                },
+            },
+        },
+    },
+};
+
 const theme = extendTheme({
     config,
     components: {
         Checkbox,
         Radio,
+        Tabs,
     },
 });
 
