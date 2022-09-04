@@ -6,7 +6,7 @@ import useConfigContext from '../../context/ConfigContext';
 import { Skills } from '../../data/TestSkills';
 import { Item } from '../../types/ItemTypes';
 
-const StartingConfig: FC = () => {
+const StartingConfigTab: FC = () => {
     const [config, setConfig] = useConfigContext();
 
     function addSkill(skill: Item) {
@@ -37,4 +37,4 @@ const StartingConfig: FC = () => {
     );
 };
 
-export default StartingConfig;
+export default StartingConfigTab;

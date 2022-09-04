@@ -5,8 +5,8 @@ interface Props {
     floor: Floor;
 }
 
-const FloorConfig: FC<Props> = (props) => {
+const FloorConfigTab: FC<Props> = (props) => {
     return <div>{props.floor}</div>;
 };
 
-export default FloorConfig;
+export default FloorConfigTab;

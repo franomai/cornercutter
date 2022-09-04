@@ -6,7 +6,7 @@ import { convertKeysToSnakeCase } from '../../utility/Utils';
 import useConfigContext from '../../context/ConfigContext';
 import { optionsHasFlag, setOptionFlag } from '../../utility/ConfigHelpers';
 
-const GeneralConfig: FC = () => {
+const GeneralConfigTab: FC = () => {
     const [response, setResponse] = useState<string>('');
     const [config, setConfig] = useConfigContext();
 
@@ -102,4 +102,4 @@ const GeneralConfig: FC = () => {
     );
 };
 
-export default GeneralConfig;
+export default GeneralConfigTab;

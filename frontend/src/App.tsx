@@ -3,10 +3,10 @@ import { ReactNode, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './App.css';
 import useConfigContext from './context/ConfigContext';
-import AllFloorsConfig from './components/tabs/AllFloorsConfig';
-import FloorConfig from './components/tabs/FloorConfig';
-import GeneralConfig from './components/tabs/GeneralConfig';
-import StartingConfig from './components/tabs/StartingConfig';
+import AllFloorsConfigTab from './components/tabs/AllFloorsConfigTab';
+import FloorConfigTab from './components/tabs/FloorConfigTab';
+import GeneralConfigTab from './components/tabs/GeneralConfigTab';
+import StartingConfigTab from './components/tabs/StartingConfigTab';
 import { getAllSkills } from './redux/slices/skills';
 import { DEFAULT_CONFIG, Floor, Options } from './types/Configuration';
 import TabData from './types/TabData';
@@ -37,24 +37,24 @@ function App() {
         const tabs: TabData[] = [
             {
                 name: 'General Config',
-                page: <GeneralConfig />,
+                tab: <GeneralConfigTab />,
             },
             {
                 name: 'StartingConfig',
-                page: <StartingConfig />,
+                tab: <StartingConfigTab />,
             },
         ];
 
         // This function will only ever be called if there is a selected mod
         if (optionsHasFlag(selectedMod!.general, Options.ConfigPerFloor)) {
             tabs.push(
-                { name: 'Floor 1', page: <FloorConfig floor={Floor.FirstFloor} /> },
-                { name: 'Floor 2', page: <FloorConfig floor={Floor.SecondFloor} /> },
-                { name: 'Floor 3', page: <FloorConfig floor={Floor.ThirdFloor} /> },
-                { name: 'Boss Floor', page: <FloorConfig floor={Floor.Boss} /> },
+                { name: 'Floor 1', tab: <FloorConfigTab floor={Floor.FirstFloor} /> },
+                { name: 'Floor 2', tab: <FloorConfigTab floor={Floor.SecondFloor} /> },
+                { name: 'Floor 3', tab: <FloorConfigTab floor={Floor.ThirdFloor} /> },
+                { name: 'Boss Floor', tab: <FloorConfigTab floor={Floor.Boss} /> },
             );
         } else {
-            tabs.push({ name: 'Floor Config', page: <AllFloorsConfig /> });
+            tabs.push({ name: 'Floor Config', tab: <AllFloorsConfigTab /> });
         }
 
         return tabs;
@@ -75,7 +75,7 @@ function App() {
                 <TabPanels h="full">
                     {tabs.map((tab) => (
                         <TabPanel key={tab.name} h="full">
-                            {tab.page}
+                            {tab.tab}
                         </TabPanel>
                     ))}
                 </TabPanels>
