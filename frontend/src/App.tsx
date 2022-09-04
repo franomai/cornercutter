@@ -33,7 +33,7 @@ function App() {
             );
             dispatch(setCurrentMod(0));
         }
-    }, [dispatch, currentMod]);
+    }, [dispatch, mods]);
 
     function getTabs(): TabData[] {
         const tabs: TabData[] = [
@@ -67,7 +67,7 @@ function App() {
 
         return (
             <Tabs h="full" display="flex" style={{ flexDirection: 'column' }} overflowY="hidden">
-                <TabList>
+                <TabList background="blackAlpha.200" w="full">
                     {tabs.map((tab) => (
                         <Tab key={tab.name} fontWeight="semibold">
                             {tab.name}
@@ -86,12 +86,12 @@ function App() {
     }
 
     return (
-        <Stack direction="row" h="full" w="full">
+        <Box display="flex" flexDirection="row" h="full" w="full">
             <ModList />
-            <Box borderWidth="1px" py={5} borderRadius="lg" h="full" w="full">
+            <Stack direction="column" h="full" w="full">
                 {renderTabs()}
-            </Box>
-        </Stack>
+            </Stack>
+        </Box>
     );
 }
 
