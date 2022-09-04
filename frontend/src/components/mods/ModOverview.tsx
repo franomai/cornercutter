@@ -1,8 +1,16 @@
 import { Checkbox, Stack, Text } from '@chakra-ui/react';
+import { useDispatch } from 'react-redux';
+import { setCurrentMod } from '../../redux/slices/mod';
 
 import ModConfig from '../../types/Configuration';
 
 const ModOverview = ({ mod, isSelected }: { mod: ModConfig; isSelected: boolean }) => {
+    const dispatch = useDispatch();
+
+    const handleSelect = () => {
+        dispatch(setCurrentMod(isSelected ? -1 : mod.id));
+    };
+
     return (
         <Stack
             direction="row"
@@ -26,7 +34,7 @@ const ModOverview = ({ mod, isSelected }: { mod: ModConfig; isSelected: boolean 
             >
                 {mod.info.name}
             </Text>
-            <Checkbox isChecked={isSelected} size="lg" />
+            <Checkbox isChecked={isSelected} size="lg" onChange={handleSelect} />
         </Stack>
     );
 };

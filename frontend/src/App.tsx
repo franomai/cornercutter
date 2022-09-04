@@ -12,15 +12,16 @@ import { DEFAULT_CONFIG, Floor, Options } from './types/Configuration';
 import TabData from './types/TabData';
 import { optionsHasFlag } from './utility/ConfigHelpers';
 import ModList from './components/mods/ModList';
-import { addMod, getCurrentMod, setCurrentMod } from './redux/slices/mod';
+import { addMod, getAllMods, getCurrentMod, setCurrentMod } from './redux/slices/mod';
 
 function App() {
     const dispatch = useDispatch();
+    const mods = useSelector(getAllMods);
     const currentMod = useSelector(getCurrentMod);
     const [config, setConfig] = useConfigContext();
 
     useEffect(() => {
-        if (currentMod === null) {
+        if (mods.length === 0) {
             dispatch(
                 addMod({
                     info: {
@@ -68,12 +69,16 @@ function App() {
             <Tabs h="full" display="flex" style={{ flexDirection: 'column' }} overflowY="hidden">
                 <TabList>
                     {tabs.map((tab) => (
-                        <Tab fontWeight="semibold">{tab.name}</Tab>
+                        <Tab key={tab.name} fontWeight="semibold">
+                            {tab.name}
+                        </Tab>
                     ))}
                 </TabList>
                 <TabPanels h="full">
                     {tabs.map((tab) => (
-                        <TabPanel h="full">{tab.page}</TabPanel>
+                        <TabPanel key={tab.name} h="full">
+                            {tab.page}
+                        </TabPanel>
                     ))}
                 </TabPanels>
             </Tabs>
