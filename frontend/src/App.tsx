@@ -74,7 +74,7 @@ function App() {
                 </TabList>
                 <TabPanels h="full">
                     {tabs.map((tab) => (
-                        <TabPanel key={tab.name} h="full">
+                        <TabPanel key={tab.name} h="full" p={0}>
                             {tab.tab}
                         </TabPanel>
                     ))}

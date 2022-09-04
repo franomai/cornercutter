@@ -38,9 +38,11 @@ const SearchColumn = () => {
     }
 
     return (
-        <Stack w="280px" h="full" background="blackAlpha.200" py={2} px={4} gap={1}>
+        <Stack w="280px" h="full" background="blackAlpha.200" pt={2} px={4} gap={1} overflow="none" pb={14}>
             <SearchBar handleSearch={filterSkills} />
-            {renderItems()}
+            <Stack gap={1} overflowY="scroll" pr={2}>
+                {renderItems()}
+            </Stack>
         </Stack>
     );
 };

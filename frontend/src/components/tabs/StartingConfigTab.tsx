@@ -1,6 +1,6 @@
-import { Box, Flex, Heading, SimpleGrid } from '@chakra-ui/react';
+import { Box, Flex, Heading } from '@chakra-ui/react';
 import { FC } from 'react';
-import SearchColumn from '../searchbar/SearchColumn';
+import { SkillSearchColumn } from '../searchbar';
 import SkillSelector from '../skills/SkillSelector';
 import useConfigContext from '../../context/ConfigContext';
 import { Item } from '../../types/ItemTypes';
@@ -31,7 +31,7 @@ const StartingConfigTab: FC = () => {
                     columns={[1, null, 2, 3, 4, 6]}
                 />
             </Flex>
-            <SearchColumn />
+            <SkillSearchColumn />
         </Flex>
     );
 };
