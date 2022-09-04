@@ -1,18 +1,17 @@
-import { Box, Container, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
+import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
+import { addMod, getAllMods, getSelectedMod } from './redux/slices/mod';
+import { DEFAULT_CONFIG, Floor, Options } from './types/Configuration';
 import { ReactNode, useCallback, useEffect } from 'react';
+import { optionsHasFlag } from './utility/ConfigHelpers';
 import { useDispatch, useSelector } from 'react-redux';
-import './App.css';
-import useConfigContext from './context/ConfigContext';
+
 import AllFloorsConfigTab from './components/tabs/AllFloorsConfigTab';
 import FloorConfigTab from './components/tabs/FloorConfigTab';
-import GeneralConfigTab from './components/tabs/GeneralConfigTab';
+import GeneralConfigTab from './components/tabs/generalconfig';
 import StartingConfigTab from './components/tabs/StartingConfigTab';
-import { getAllSkills } from './redux/slices/skills';
-import { DEFAULT_CONFIG, Floor, Options } from './types/Configuration';
 import TabData from './types/TabData';
-import { optionsHasFlag } from './utility/ConfigHelpers';
 import ModList from './components/mods/ModList';
-import { addMod, getAllMods, getSelectedMod, setEnabledMod, setSelectedMod } from './redux/slices/mod';
+import './App.css';
 
 function App() {
     const dispatch = useDispatch();
