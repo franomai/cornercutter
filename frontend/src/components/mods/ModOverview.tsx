@@ -6,14 +6,24 @@ const ModOverview = ({ mod, isSelected }: { mod: ModConfig; isSelected: boolean 
     return (
         <Stack
             direction="row"
-            px={5}
-            py={2.5}
+            px={4}
+            py={2}
             background="gray.800"
             borderRadius={6}
             justifyContent="space-between"
             alignItems="center"
+            gap={2}
         >
-            <Text fontSize="md" fontWeight="semibold" color={isSelected ? 'green.300' : 'white'}>
+            <Text
+                sx={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                }}
+                fontSize="md"
+                fontWeight="semibold"
+                color={isSelected ? 'green.300' : 'white'}
+            >
                 {mod.info.name}
             </Text>
             <Checkbox isChecked={isSelected} size="lg" />

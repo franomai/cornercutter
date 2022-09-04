@@ -1,20 +1,17 @@
-import { Stack, Text } from '@chakra-ui/react';
-import { FC } from 'react';
-import { DEFAULT_CONFIG } from '../../types/Configuration';
+import { Stack } from '@chakra-ui/react';
+import { useSelector } from 'react-redux';
+import { getAllMods, getCurrentMod } from '../../redux/slices/mod';
 import ModOverview from './ModOverview';
 
-const ModList: FC = () => {
+const ModList = () => {
+    const mods = useSelector(getAllMods);
+    const currentMod = useSelector(getCurrentMod);
+
     return (
-        <Stack w={60} p={8} gap={2} h="full" background="blackAlpha.300">
-            {Array(10)
-                .fill(0)
-                .map((_, index) => (
-                    <ModOverview
-                        key={index}
-                        mod={{ id: index, info: { name: `Mod ${index}`, description: '' }, general: DEFAULT_CONFIG }}
-                        isSelected={index === 0}
-                    />
-                ))}
+        <Stack maxW="280px" w="280px" p={4} gap={2} h="full" background="blackAlpha.300" overflow="hidden">
+            {mods.map((mod) => (
+                <ModOverview key={mod.id} mod={mod} isSelected={mod.id === currentMod?.id} />
+            ))}
         </Stack>
     );
 };

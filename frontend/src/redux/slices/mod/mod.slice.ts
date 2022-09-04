@@ -51,11 +51,12 @@ const modSlice = createSlice({
     },
 });
 
-export const { setModInfo, setSpawns, setCurseSpawns, setOptions, setStartingSkills } = modSlice.actions;
+export const { setCurrentMod, addMod, setModInfo, setSpawns, setCurseSpawns, setOptions, setStartingSkills } =
+    modSlice.actions;
 
 export const getCurrentMod = (state: StoreState) =>
     state.mod.currentMod === -1 ? null : state.mod.mods[state.mod.currentMod];
 
-export const getMods = (state: StoreState) => state.mod.mods;
+export const getAllMods = (state: StoreState) => state.mod.mods;
 
 export default modSlice.reducer;
