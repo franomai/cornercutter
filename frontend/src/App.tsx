@@ -12,12 +12,12 @@ import { DEFAULT_CONFIG, Floor, Options } from './types/Configuration';
 import TabData from './types/TabData';
 import { optionsHasFlag } from './utility/ConfigHelpers';
 import ModList from './components/mods/ModList';
-import { addMod, getAllMods, getCurrentMod, setCurrentMod } from './redux/slices/mod';
+import { addMod, getAllMods, getSelectedMod, setSelectedMod } from './redux/slices/mod';
 
 function App() {
     const dispatch = useDispatch();
     const mods = useSelector(getAllMods);
-    const currentMod = useSelector(getCurrentMod);
+    const currentMod = useSelector(getSelectedMod);
     const [config, setConfig] = useConfigContext();
 
     useEffect(() => {
@@ -31,7 +31,7 @@ function App() {
                     general: DEFAULT_CONFIG,
                 }),
             );
-            dispatch(setCurrentMod(0));
+            dispatch(setSelectedMod(0));
         }
     }, [dispatch, mods]);
 

@@ -1,14 +1,18 @@
 import { Checkbox, Stack, Text } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
-import { setCurrentMod } from '../../redux/slices/mod';
+import { setEnabledMod, setSelectedMod } from '../../redux/slices/mod';
 
 import ModConfig from '../../types/Configuration';
 
-const ModOverview = ({ mod, isSelected }: { mod: ModConfig; isSelected: boolean }) => {
+const ModOverview = ({ mod, isEnabled }: { mod: ModConfig; isEnabled: boolean }) => {
     const dispatch = useDispatch();
 
+    const handleEnable = () => {
+        dispatch(setEnabledMod(isEnabled ? -1 : mod.id));
+    };
+
     const handleSelect = () => {
-        dispatch(setCurrentMod(isSelected ? -1 : mod.id));
+        dispatch(setSelectedMod(mod.id));
     };
 
     return (
@@ -21,6 +25,7 @@ const ModOverview = ({ mod, isSelected }: { mod: ModConfig; isSelected: boolean 
             justifyContent="space-between"
             alignItems="center"
             gap={2}
+            onClick={handleSelect}
         >
             <Text
                 sx={{
@@ -30,11 +35,11 @@ const ModOverview = ({ mod, isSelected }: { mod: ModConfig; isSelected: boolean 
                 }}
                 fontSize="md"
                 fontWeight="semibold"
-                color={isSelected ? 'green.300' : 'white'}
+                color={isEnabled ? 'green.300' : 'white'}
             >
                 {mod.info.name}
             </Text>
-            <Checkbox isChecked={isSelected} size="lg" onChange={handleSelect} />
+            <Checkbox isChecked={isEnabled} size="lg" onChange={handleEnable} />
         </Stack>
     );
 };

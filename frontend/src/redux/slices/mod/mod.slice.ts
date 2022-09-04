@@ -5,57 +5,82 @@ import ModConfig, { CurseSpawnType, ModInfo, Options, SpawnType } from '../../..
 
 export interface State {
     mods: ModConfig[];
-    currentMod: number;
+    selectedMod: number;
+    enabledMod: number;
 }
 
 export const initialState: State = {
     mods: [],
-    currentMod: -1,
+    selectedMod: -1,
+    enabledMod: -1,
 };
 
 const modSlice = createSlice({
     name: 'mod',
     initialState,
     reducers: {
-        setCurrentMod(state, action: { payload: number }) {
-            state.currentMod = state.mods[action.payload] ? action.payload : -1;
+        setSelectedMod(state, action: { payload: number }) {
+            if (action.payload >= 0 && action.payload < state.mods.length) {
+                state.selectedMod = action.payload;
+            }
+        },
+        setEnabledMod(state, action: { payload: number }) {
+            if (action.payload >= -1 && action.payload < state.mods.length) {
+                state.enabledMod = action.payload;
+            } else {
+                state.enabledMod = -1;
+            }
         },
         addMod(state, action: { payload: Omit<ModConfig, 'id'> }) {
             state.mods.push({ ...action.payload, id: state.mods.length });
+            if (state.selectedMod === -1) {
+                state.selectedMod = 0;
+            }
         },
         setModInfo(state, action: { payload: ModInfo }) {
-            if (state.currentMod !== -1) {
-                state.mods[state.currentMod].info = action.payload;
+            if (state.selectedMod !== -1) {
+                state.mods[state.selectedMod].info = action.payload;
             }
         },
         setSpawns(state, action: { payload: SpawnType }) {
-            if (state.currentMod !== -1) {
-                state.mods[state.currentMod].general.spawns = action.payload;
+            if (state.selectedMod !== -1) {
+                state.mods[state.selectedMod].general.spawns = action.payload;
             }
         },
         setCurseSpawns(state, action: { payload: CurseSpawnType }) {
-            if (state.currentMod !== -1) {
-                state.mods[state.currentMod].general.curseSpawns = action.payload;
+            if (state.selectedMod !== -1) {
+                state.mods[state.selectedMod].general.curseSpawns = action.payload;
             }
         },
         setOptions(state, action: { payload: Options }) {
-            if (state.currentMod !== -1) {
-                state.mods[state.currentMod].general.options = action.payload;
+            if (state.selectedMod !== -1) {
+                state.mods[state.selectedMod].general.options = action.payload;
             }
         },
         setStartingSkills(state, action: { payload: number[] }) {
-            if (state.currentMod !== -1) {
-                state.mods[state.currentMod].general.startingSkills = action.payload;
+            if (state.selectedMod !== -1) {
+                state.mods[state.selectedMod].general.startingSkills = action.payload;
             }
         },
     },
 });
 
-export const { setCurrentMod, addMod, setModInfo, setSpawns, setCurseSpawns, setOptions, setStartingSkills } =
-    modSlice.actions;
+export const {
+    setSelectedMod,
+    setEnabledMod,
+    addMod,
+    setModInfo,
+    setSpawns,
+    setCurseSpawns,
+    setOptions,
+    setStartingSkills,
+} = modSlice.actions;
 
-export const getCurrentMod = (state: StoreState) =>
-    state.mod.currentMod === -1 ? null : state.mod.mods[state.mod.currentMod];
+export const getSelectedMod = (state: StoreState) =>
+    state.mod.selectedMod === -1 ? null : state.mod.mods[state.mod.selectedMod];
+
+export const getEnabledMod = (state: StoreState) =>
+    state.mod.enabledMod === -1 ? null : state.mod.mods[state.mod.enabledMod];
 
 export const getAllMods = (state: StoreState) => state.mod.mods;
 

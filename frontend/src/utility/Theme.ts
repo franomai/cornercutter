@@ -9,7 +9,7 @@ const Checkbox: ComponentStyleConfig = {
     baseStyle: {
         control: {
             _focusVisible: {
-                boxShadow: '0 0 0 3px var(--chakra-colors-green-300)',
+                boxShadow: '0 0 0 3px var(--chakra-colors-green-200)',
             },
             _checked: {
                 bg: 'green.300',
