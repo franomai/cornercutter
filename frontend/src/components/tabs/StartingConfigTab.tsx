@@ -3,7 +3,6 @@ import { FC } from 'react';
 import SearchColumn from '../searchbar/SearchColumn';
 import SkillSelector from '../skills/SkillSelector';
 import useConfigContext from '../../context/ConfigContext';
-import { Skills } from '../../data/TestSkills';
 import { Item } from '../../types/ItemTypes';
 
 const StartingConfigTab: FC = () => {
@@ -32,7 +31,7 @@ const StartingConfigTab: FC = () => {
                     columns={[1, null, 2, 3, 4, 6]}
                 />
             </Flex>
-            <SearchColumn items={Skills} />
+            <SearchColumn />
         </Flex>
     );
 };
