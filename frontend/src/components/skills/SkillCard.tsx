@@ -33,7 +33,7 @@ const SkillCard = ({
                     />
                 )}
                 {infoIcon && (
-                    <Tooltip label={skill.description} hasArrow placement="top">
+                    <Tooltip label={skill.description} hasArrow placement="top" lineHeight={1.3} py={1}>
                         <FontAwesomeIcon size="lg" icon={faCircleQuestion} />
                     </Tooltip>
                 )}
