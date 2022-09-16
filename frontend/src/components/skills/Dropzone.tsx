@@ -2,22 +2,20 @@ import { Box } from '@chakra-ui/react';
 import { FC, ReactNode } from 'react';
 import { useDrop } from 'react-dnd';
 import { Item, ItemType } from '../../types/ItemTypes';
+import Skill from '../../types/Skill';
 
-interface Props {
-    onItemDropped?: (item: Item) => void;
-    children?: ReactNode;
-}
-
-interface DropProps {
-    canDrop: boolean;
-}
-
-const Dropzone: FC<Props> = (props) => {
-    const [{ canDrop }, dropRef] = useDrop<Item, unknown, DropProps>(() => ({
+const Dropzone = ({
+    skills,
+    singleRow,
+    handleSkillDrop,
+}: {
+    skills: Skill[];
+    singleRow?: boolean;
+    handleSkillDrop(skill: Skill): void;
+}) => {
+    const [{ canDrop }, dropRef] = useDrop<Skill, unknown, { canDrop: boolean }>(() => ({
         accept: ItemType.SKILL,
-        drop: (item) => {
-            if (props.onItemDropped) props.onItemDropped(item);
-        },
+        drop: handleSkillDrop,
         collect: (monitor) => ({
             canDrop: monitor.canDrop(),
         }),
@@ -37,7 +35,7 @@ const Dropzone: FC<Props> = (props) => {
             maxH="full"
             overflowY="auto"
         >
-            {props.children}
+            {}
         </Box>
     );
 };

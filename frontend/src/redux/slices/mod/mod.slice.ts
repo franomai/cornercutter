@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { StoreState } from '../../store';
 
-import ModConfig, { CurseSpawnType, ModInfo, Options, SpawnType } from '../../../types/Configuration';
+import ModConfig, { CurseSpawnType, DEFAULT_CONFIG, ModInfo, Options, SpawnType } from '../../../types/Configuration';
 
 export interface State {
     mods: ModConfig[];
@@ -10,7 +10,16 @@ export interface State {
 }
 
 export const initialState: State = {
-    mods: [],
+    mods: [
+        {
+            id: 0,
+            info: {
+                name: 'Placeholder mod',
+                description: 'This is a mod description...',
+            },
+            general: DEFAULT_CONFIG,
+        },
+    ],
     selectedMod: -1,
     enabledMod: -1,
 };

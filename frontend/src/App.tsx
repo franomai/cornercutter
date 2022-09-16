@@ -1,4 +1,4 @@
-import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
+import { Box, Center, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
 import { addMod, getAllMods, getSelectedMod } from './redux/slices/mod';
 import { DEFAULT_CONFIG, Floor, Options } from './types/Configuration';
 import { ReactNode, useCallback, useEffect } from 'react';
@@ -11,25 +11,12 @@ import GeneralConfigTab from './components/tabs/generalconfig';
 import TabData from './types/TabData';
 import ModList from './components/mods/ModList';
 import './App.css';
+import BlankTextLayout from './components/layout/BlankTextLayout';
 
 function App() {
     const dispatch = useDispatch();
     const mods = useSelector(getAllMods);
     const selectedMod = useSelector(getSelectedMod);
-
-    useEffect(() => {
-        if (mods.length === 0) {
-            dispatch(
-                addMod({
-                    info: {
-                        name: 'Placeholder mod',
-                        description: 'This is a mod description...',
-                    },
-                    general: DEFAULT_CONFIG,
-                }),
-            );
-        }
-    }, [dispatch, mods]);
 
     const getTabs = useCallback((): TabData[] => {
         const tabs: TabData[] = [
@@ -84,9 +71,14 @@ function App() {
                 {selectedMod ? (
                     renderTabs()
                 ) : (
-                    <Text fontSize="4xl" color="gray.800">
-                        No Mod Selected :(
-                    </Text>
+                    <BlankTextLayout
+                        title="No Mod Selected"
+                        subtitle={
+                            mods.length === 0
+                                ? 'Create a mod in the left pane to get started'
+                                : 'Select a mod in the left pane to get started'
+                        }
+                    />
                 )}
             </Stack>
         </Box>
