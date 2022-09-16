@@ -57,7 +57,7 @@ const GeneralConfigTab: FC = () => {
 
     function renderActionButtons(): ReactNode {
         return (
-            <Box>
+            <Stack direction="row" spacing={1}>
                 <IconButton
                     variant="ghost"
                     title="Export mod config code"
@@ -70,13 +70,14 @@ const GeneralConfigTab: FC = () => {
                     aria-label="Delete mod"
                     icon={<FontAwesomeIcon icon={faTrash} />}
                 />
-            </Box>
+            </Stack>
         );
     }
 
     function renderOptionCheckbox(flag: Options, label: string): ReactNode {
         return (
             <Checkbox
+                key={flag}
                 isChecked={optionsHasFlag(config, flag)}
                 onChange={(e) => setConfigOption(flag, e.target.checked)}
             >

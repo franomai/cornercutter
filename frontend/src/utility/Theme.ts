@@ -1,4 +1,4 @@
-import { ComponentStyleConfig, extendTheme, ThemeConfig, withDefaultColorScheme } from '@chakra-ui/react';
+import { ComponentStyleConfig, extendTheme, ThemeConfig } from '@chakra-ui/react';
 
 const config: ThemeConfig = {
     initialColorMode: 'dark',
@@ -55,12 +55,25 @@ const Tabs: ComponentStyleConfig = {
     },
 };
 
+const Input: ComponentStyleConfig = {
+    variants: {
+        filled: {
+            field: {
+                _focusVisible: {
+                    borderColor: 'none',
+                },
+            },
+        },
+    },
+};
+
 const theme = extendTheme({
     config,
     components: {
         Checkbox,
         Radio,
         Tabs,
+        Input,
     },
 });
 
