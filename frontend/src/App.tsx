@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import AllFloorsConfigTab from './components/tabs/AllFloorsConfigTab';
 import FloorConfigTab from './components/tabs/FloorConfigTab';
 import GeneralConfigTab from './components/tabs/generalconfig';
-import StartingConfigTab from './components/tabs/StartingConfigTab';
 import TabData from './types/TabData';
 import ModList from './components/mods/ModList';
 import './App.css';
@@ -37,10 +36,6 @@ function App() {
             {
                 name: 'General Config',
                 tab: <GeneralConfigTab />,
-            },
-            {
-                name: 'StartingConfig',
-                tab: <StartingConfigTab />,
             },
         ];
 
