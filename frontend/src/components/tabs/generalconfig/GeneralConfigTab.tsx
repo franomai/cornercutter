@@ -17,15 +17,17 @@ import Configuration, { CurseSpawnType, SpawnType, Options } from '../../../type
 import { invoke } from '@tauri-apps/api';
 import { convertKeysToSnakeCase } from '../../../utility/Utils';
 import useConfigContext from '../../../context/ConfigContext';
-import { optionsHasFlag, setOptionFlag } from '../../../utility/ConfigHelpers';
+import { modHasOption, setModOptionFlag } from '../../../utility/ConfigHelpers';
 import ContentContainer from '../ContentContainer';
-import { useSelector } from 'react-redux';
-import { getSelectedMod } from '../../../redux/slices/mod';
+import { useDispatch, useSelector } from 'react-redux';
+import mod, { addStartingSkill, getSelectedMod, setCurseSpawns, setOption, setSpawns } from '../../../redux/slices/mod';
 import { faArrowUpFromBracket, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LabelledRadioGroup from './LabelledRadioGroup';
 import { SkillSearchColumn } from '../../searchbar';
 import Dropzone from '../../skills/Dropzone';
+import { getAllSkills } from '../../../redux/slices/skills';
+import ModConfig from '../../../types/Configuration';
 
 const optionLabels: Record<Options, string> = {
     [Options.ConfigPerFloor]: 'Configure spawns per floor',
@@ -37,22 +39,13 @@ const optionLabels: Record<Options, string> = {
     [Options.DisablePinned]: 'Disable pinned skills',
 };
 
-const GeneralConfigTab: FC = () => {
-    const [config, setConfig] = useConfigContext();
+const GeneralConfigTab = ({ selectedMod }: { selectedMod: ModConfig }) => {
+    const dispatch = useDispatch();
+    const allSkills = useSelector(getAllSkills);
 
-    const selectedMod = useSelector(getSelectedMod);
-
-    function setConfigOption(flag: Options, isSet: boolean) {
-        setConfig((config) => {
-            const newConfig = { ...config };
-            setOptionFlag(newConfig, flag, isSet);
-            return newConfig;
-        });
-    }
-
-    async function submitConfig() {
-        const res = await invoke<string>('accept_config', { config: convertKeysToSnakeCase(config) });
-    }
+    // async function submitConfig() {
+    //     const res = await invoke<string>('accept_config', { config: convertKeysToSnakeCase(config) });
+    // }
 
     function renderActionButtons(): ReactNode {
         return (
@@ -83,8 +76,8 @@ const GeneralConfigTab: FC = () => {
         return (
             <Checkbox
                 key={flag}
-                isChecked={optionsHasFlag(config, flag)}
-                onChange={(e) => setConfigOption(flag, e.target.checked)}
+                isChecked={modHasOption(selectedMod, flag)}
+                onChange={(e) => dispatch(setOption({ flag, isEnabled: e.target.checked }))}
             >
                 {label}
             </Checkbox>
@@ -102,18 +95,23 @@ const GeneralConfigTab: FC = () => {
                     <Stack spacing={2}>
                         <Flex direction="row" justifyContent="space-between">
                             <Text fontSize="3xl" fontWeight="bold">
-                                {selectedMod?.info.name}
+                                {selectedMod.info.name}
                             </Text>
                             {renderActionButtons()}
                         </Flex>
-                        <Text>{selectedMod?.info.description}</Text>
+                        <Text>{selectedMod.info.description}</Text>
                     </Stack>
                     <Stack spacing={6}>
                         <Text fontSize="2xl" fontWeight="bold">
                             Options
                         </Text>
                         <SimpleGrid columns={{ sm: 1, xl: 2 }} spacingX={2} spacingY={6}>
-                            <LabelledRadioGroup title="Skill Spawns" tooltip="Select how skills should be spawned">
+                            <LabelledRadioGroup
+                                title="Skill Spawns"
+                                tooltip="Select how skills should be spawned"
+                                value={selectedMod.general.spawns}
+                                onChange={(newValue) => dispatch(setSpawns(newValue as SpawnType))}
+                            >
                                 <Radio value="Looped">Looped</Radio>
                                 <Radio value="Weighted">Weighted</Radio>
                                 <Radio value="Consecutive">Consecutive</Radio>
@@ -121,6 +119,8 @@ const GeneralConfigTab: FC = () => {
                             <LabelledRadioGroup
                                 title="Curse Room Spawns"
                                 tooltip="Select when the curse room should spawn"
+                                value={selectedMod.general.curseSpawns}
+                                onChange={(newValue) => dispatch(setCurseSpawns(newValue as CurseSpawnType))}
                             >
                                 <Radio value="Randomly">Randomly</Radio>
                                 <Radio value="Always">Always</Radio>
@@ -143,7 +143,10 @@ const GeneralConfigTab: FC = () => {
                         <Text fontSize="2xl" fontWeight="bold">
                             Starting Skills
                         </Text>
-                        <Dropzone skills={[]} handleSkillDrop={console.log} />
+                        <Dropzone
+                            skills={selectedMod.general.startingSkills}
+                            handleSkillDrop={(skillId) => dispatch(addStartingSkill(skillId))}
+                        />
                     </Stack>
                 </Stack>
             </ContentContainer>

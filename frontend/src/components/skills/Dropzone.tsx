@@ -1,22 +1,25 @@
 import { Box, Stack, Text } from '@chakra-ui/react';
-import { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { useDrop } from 'react-dnd';
-import { Item, ItemType } from '../../types/ItemTypes';
-import Skill from '../../types/Skill';
+import { useSelector } from 'react-redux';
+import { getAllSkills } from '../../redux/slices/skills';
+import { ItemType } from '../../types/ItemTypes';
 import BlankTextLayout from '../layout/BlankTextLayout';
+import SkillCard from './SkillCard';
 
 const Dropzone = ({
     skills,
     singleRow,
     handleSkillDrop,
 }: {
-    skills: Skill[];
+    skills: number[];
     singleRow?: boolean;
-    handleSkillDrop(skill: Skill): void;
+    handleSkillDrop(skillId: number): void;
 }) => {
-    const [{ canDrop }, dropRef] = useDrop<Skill, unknown, { canDrop: boolean }>(() => ({
+    const allSkills = useSelector(getAllSkills);
+    const [{ canDrop }, dropRef] = useDrop<{ id: number }, unknown, { canDrop: boolean }>(() => ({
         accept: ItemType.SKILL,
-        drop: (skill) => handleSkillDrop(skill),
+        drop: ({ id }) => handleSkillDrop(id),
         collect: (monitor) => ({
             canDrop: monitor.canDrop(),
         }),
@@ -52,6 +55,9 @@ const Dropzone = ({
             {!canDrop &&
                 skills.length === 0 &&
                 renderInCenter(<BlankTextLayout title="Add Skills" subtitle="Simply drag and drop" />)}
+            {skills.map((skillId) => (
+                <SkillCard key={skillId} skill={allSkills[skillId]} deleteIcon />
+            ))}
         </Box>
     );
 };

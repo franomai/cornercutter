@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { StoreState } from '../../store';
 
 import ModConfig, { CurseSpawnType, DEFAULT_CONFIG, ModInfo, Options, SpawnType } from '../../../types/Configuration';
+import { setModOptionFlag } from '../../../utility/ConfigHelpers';
 
 export interface State {
     mods: ModConfig[];
@@ -61,14 +62,14 @@ const modSlice = createSlice({
                 state.mods[state.selectedMod].general.curseSpawns = action.payload;
             }
         },
-        setOptions(state, action: { payload: Options }) {
+        setOption(state, action: { payload: { flag: Options; isEnabled: boolean } }) {
             if (state.selectedMod !== -1) {
-                state.mods[state.selectedMod].general.options = action.payload;
+                setModOptionFlag(state.mods[state.selectedMod], action.payload.flag, action.payload.isEnabled);
             }
         },
-        setStartingSkills(state, action: { payload: number[] }) {
+        addStartingSkill(state, action: { payload: number }) {
             if (state.selectedMod !== -1) {
-                state.mods[state.selectedMod].general.startingSkills = action.payload;
+                state.mods[state.selectedMod].general.startingSkills.push(action.payload);
             }
         },
     },
@@ -81,8 +82,8 @@ export const {
     setModInfo,
     setSpawns,
     setCurseSpawns,
-    setOptions,
-    setStartingSkills,
+    setOption,
+    addStartingSkill,
 } = modSlice.actions;
 
 export const getSelectedMod = (state: StoreState) =>

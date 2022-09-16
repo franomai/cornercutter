@@ -2,7 +2,7 @@ import { Box, Center, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text } fro
 import { addMod, getAllMods, getSelectedMod } from './redux/slices/mod';
 import { DEFAULT_CONFIG, Floor, Options } from './types/Configuration';
 import { ReactNode, useCallback, useEffect } from 'react';
-import { optionsHasFlag } from './utility/ConfigHelpers';
+import { modHasOption } from './utility/ConfigHelpers';
 import { useDispatch, useSelector } from 'react-redux';
 
 import AllFloorsConfigTab from './components/tabs/AllFloorsConfigTab';
@@ -19,15 +19,17 @@ function App() {
     const selectedMod = useSelector(getSelectedMod);
 
     const getTabs = useCallback((): TabData[] => {
+        // Sanity check, this should never be true
+        if (!selectedMod) return [];
+
         const tabs: TabData[] = [
             {
                 name: 'General Config',
-                tab: <GeneralConfigTab />,
+                tab: <GeneralConfigTab selectedMod={selectedMod} />,
             },
         ];
 
-        // This function will only ever be called if there is a selected mod
-        if (optionsHasFlag(selectedMod!.general, Options.ConfigPerFloor)) {
+        if (modHasOption(selectedMod, Options.ConfigPerFloor)) {
             tabs.push(
                 { name: 'Floor 1', tab: <FloorConfigTab floor={Floor.FirstFloor} /> },
                 { name: 'Floor 2', tab: <FloorConfigTab floor={Floor.SecondFloor} /> },
