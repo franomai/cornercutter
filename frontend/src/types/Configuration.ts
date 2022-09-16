@@ -44,7 +44,7 @@ export enum Options {
     DisableMentorAbilities = 1 << 3,
     DisableGiftOfIntern = 1 << 4,
     DisablePinned = 1 << 5,
-    AwardSkillsPerLevel = 1 << 6,
+    AwardSkillsPerFloor = 1 << 6,
 }
 
 export const DEFAULT_CONFIG: GeneralConfig = {

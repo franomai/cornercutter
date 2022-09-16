@@ -25,6 +25,16 @@ import { faArrowUpFromBracket, faTrash } from '@fortawesome/free-solid-svg-icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LabelledRadioGroup from './LabelledRadioGroup';
 
+const optionLabels: Record<Options, string> = {
+    [Options.ConfigPerFloor]: 'Configure spawns per floor',
+    [Options.ConfigPerRoom]: 'Configure spawns per room',
+    [Options.AwardSkillsPerFloor]: 'Award starting skills per floor',
+    [Options.RemoveHealingItems]: 'Remove healing items',
+    [Options.DisableMentorAbilities]: 'Disable mentor abilities',
+    [Options.DisableGiftOfIntern]: 'Disable gift of the intern',
+    [Options.DisablePinned]: 'Disable pinned skills',
+};
+
 const GeneralConfigTab: FC = () => {
     const [response, setResponse] = useState<string>('');
     const [config, setConfig] = useConfigContext();
@@ -63,6 +73,21 @@ const GeneralConfigTab: FC = () => {
         );
     }
 
+    function renderOptionCheckbox(flag: Options, label: string): ReactNode {
+        return (
+            <Checkbox
+                isChecked={optionsHasFlag(config, flag)}
+                onChange={(e) => setConfigOption(flag, e.target.checked)}
+            >
+                {label}
+            </Checkbox>
+        );
+    }
+
+    function renderOptionCheckboxes(flags: Options[]): ReactNode {
+        return <Stack spacing={2}>{flags.map((flag) => renderOptionCheckbox(flag, optionLabels[flag]))}</Stack>;
+    }
+
     return (
         <ContentContainer>
             <Stack spacing={7}>
@@ -86,81 +111,29 @@ const GeneralConfigTab: FC = () => {
                                 <Radio value="Weighted">Weighted</Radio>
                                 <Radio value="Consecutive">Consecutive</Radio>
                             </LabelledRadioGroup>
+                            {renderOptionCheckboxes([
+                                Options.ConfigPerFloor,
+                                Options.ConfigPerRoom,
+                                Options.AwardSkillsPerFloor,
+                                Options.RemoveHealingItems,
+                            ])}
                         </Stack>
-                    </SimpleGrid>
-                    <div>
-                        <FormLabel>Weapon spawns</FormLabel>
-                        <RadioGroup
-                            value={config.spawns}
-                            onChange={(type) => setConfig({ ...config, spawns: type as SpawnType })}
-                        >
-                            <Stack direction="row" spacing={4}>
-                                <Radio value="Looped">Looped</Radio>
-                                <Radio value="Weighted">Weighted</Radio>
-                                <Radio value="Consecutive">Consecutive</Radio>
-                            </Stack>
-                        </RadioGroup>
-                    </div>
-                    <div>
-                        <FormLabel>Curse rooms spawn</FormLabel>
-                        <RadioGroup
-                            value={config.curseSpawns}
-                            onChange={(type) => setConfig({ ...config, curseSpawns: type as CurseSpawnType })}
-                        >
-                            <Stack direction="row" spacing={4}>
+                        <Stack spacing={3.5}>
+                            <LabelledRadioGroup
+                                title="Curse Room Spawns"
+                                tooltip="Select when the curse room should spawn"
+                            >
                                 <Radio value="Randomly">Randomly</Radio>
                                 <Radio value="Always">Always</Radio>
                                 <Radio value="Never">Never</Radio>
-                            </Stack>
-                        </RadioGroup>
-                    </div>
-                    <Stack spacing={1}>
-                        <FormLabel>Other options</FormLabel>
-                        <Checkbox
-                            isChecked={optionsHasFlag(config, Options.ConfigPerFloor)}
-                            onChange={(e) => setConfigOption(Options.ConfigPerFloor, e.target.checked)}
-                        >
-                            Configure spawns per floor
-                        </Checkbox>
-                        <Checkbox
-                            isChecked={optionsHasFlag(config, Options.ConfigPerRoom)}
-                            onChange={(e) => setConfigOption(Options.ConfigPerRoom, e.target.checked)}
-                        >
-                            Configure spawns per room
-                        </Checkbox>
-                        <Checkbox
-                            isChecked={optionsHasFlag(config, Options.RemoveHealingItems)}
-                            onChange={(e) => setConfigOption(Options.RemoveHealingItems, e.target.checked)}
-                        >
-                            Remove healing items
-                        </Checkbox>
-                        <Checkbox
-                            isChecked={optionsHasFlag(config, Options.DisableMentorAbilities)}
-                            onChange={(e) => setConfigOption(Options.DisableMentorAbilities, e.target.checked)}
-                        >
-                            Disable mentor abilities
-                        </Checkbox>
-                        <Checkbox
-                            isChecked={optionsHasFlag(config, Options.DisableGiftOfIntern)}
-                            onChange={(e) => setConfigOption(Options.DisableGiftOfIntern, e.target.checked)}
-                        >
-                            Disable gift of the intern
-                        </Checkbox>
-                        <Checkbox
-                            isChecked={optionsHasFlag(config, Options.DisablePinned)}
-                            onChange={(e) => setConfigOption(Options.DisablePinned, e.target.checked)}
-                        >
-                            Disable pinned skills
-                        </Checkbox>
-                        <Checkbox
-                            isChecked={optionsHasFlag(config, Options.AwardSkillsPerLevel)}
-                            onChange={(e) => setConfigOption(Options.AwardSkillsPerLevel, e.target.checked)}
-                        >
-                            Award starting skills per floor
-                        </Checkbox>
-                    </Stack>
-                    <Button onClick={submitConfig}>Test sending to Tauri Core!</Button>
-                    {response.length !== 0 && <div>{response}</div>}
+                            </LabelledRadioGroup>
+                            {renderOptionCheckboxes([
+                                Options.DisableMentorAbilities,
+                                Options.DisableGiftOfIntern,
+                                Options.DisablePinned,
+                            ])}
+                        </Stack>
+                    </SimpleGrid>
                 </Stack>
             </Stack>
         </ContentContainer>

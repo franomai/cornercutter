@@ -29,7 +29,7 @@ const LabelledRadioGroup = ({
                 </Tooltip>
             </Stack>
             <RadioGroup onChange={onChange} value={value}>
-                <Stack direction={direction} spacing={3}>
+                <Stack direction={direction} spacing={5}>
                     {children}
                 </Stack>
             </RadioGroup>
