@@ -33,7 +33,7 @@ const SkillCard = ({ skill, deleteIcon, infoIcon }: { skill: Skill; deleteIcon?:
             onMouseLeave={() => setIsHovering(false)}
         >
             {isHovering && renderIcons()}
-            <Image alt={skill.name} src={`icons/${skill.image}`} />
+            <Image alt={skill.name} src={`icons/${skill.image}`} height="120px" />
             <Text fontSize="sm" fontWeight="semibold">
                 {skill.name}
             </Text>
