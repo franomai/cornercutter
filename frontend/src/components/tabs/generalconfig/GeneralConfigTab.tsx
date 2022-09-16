@@ -24,6 +24,7 @@ import { getSelectedMod } from '../../../redux/slices/mod';
 import { faArrowUpFromBracket, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LabelledRadioGroup from './LabelledRadioGroup';
+import { SkillSearchColumn } from '../../searchbar';
 
 const optionLabels: Record<Options, string> = {
     [Options.ConfigPerFloor]: 'Configure spawns per floor',
@@ -89,36 +90,28 @@ const GeneralConfigTab: FC = () => {
     }
 
     return (
-        <ContentContainer>
-            <Stack spacing={7}>
-                <Stack spacing={1}>
-                    <Flex direction="row" justifyContent="space-between">
-                        <Text fontSize="3xl" fontWeight="bold">
-                            {selectedMod?.info.name}
+        <Stack direction="row">
+            <ContentContainer>
+                <Stack spacing={7}>
+                    <Stack spacing={1}>
+                        <Flex direction="row" justifyContent="space-between">
+                            <Text fontSize="3xl" fontWeight="bold">
+                                {selectedMod?.info.name}
+                            </Text>
+                            {renderActionButtons()}
+                        </Flex>
+                        <Text>{selectedMod?.info.description}</Text>
+                    </Stack>
+                    <Stack spacing={3}>
+                        <Text fontSize="2xl" fontWeight="bold">
+                            Options
                         </Text>
-                        {renderActionButtons()}
-                    </Flex>
-                    <Text>{selectedMod?.info.description}</Text>
-                </Stack>
-                <Stack spacing={3}>
-                    <Text fontSize="2xl" fontWeight="bold">
-                        Options
-                    </Text>
-                    <SimpleGrid columns={2} spacing={2}>
-                        <Stack spacing={3.5}>
+                        <SimpleGrid columns={{ sm: 1, xl: 2 }} spacingX={2} spacingY={6}>
                             <LabelledRadioGroup title="Skill Spawns" tooltip="Select how skills should be spawned">
                                 <Radio value="Looped">Looped</Radio>
                                 <Radio value="Weighted">Weighted</Radio>
                                 <Radio value="Consecutive">Consecutive</Radio>
                             </LabelledRadioGroup>
-                            {renderOptionCheckboxes([
-                                Options.ConfigPerFloor,
-                                Options.ConfigPerRoom,
-                                Options.AwardSkillsPerFloor,
-                                Options.RemoveHealingItems,
-                            ])}
-                        </Stack>
-                        <Stack spacing={3.5}>
                             <LabelledRadioGroup
                                 title="Curse Room Spawns"
                                 tooltip="Select when the curse room should spawn"
@@ -128,15 +121,22 @@ const GeneralConfigTab: FC = () => {
                                 <Radio value="Never">Never</Radio>
                             </LabelledRadioGroup>
                             {renderOptionCheckboxes([
+                                Options.ConfigPerFloor,
+                                Options.ConfigPerRoom,
+                                Options.AwardSkillsPerFloor,
+                                Options.RemoveHealingItems,
+                            ])}
+                            {renderOptionCheckboxes([
                                 Options.DisableMentorAbilities,
                                 Options.DisableGiftOfIntern,
                                 Options.DisablePinned,
                             ])}
-                        </Stack>
-                    </SimpleGrid>
+                        </SimpleGrid>
+                    </Stack>
                 </Stack>
-            </Stack>
-        </ContentContainer>
+            </ContentContainer>
+            <SkillSearchColumn />
+        </Stack>
     );
 };
 
