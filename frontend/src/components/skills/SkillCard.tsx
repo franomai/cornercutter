@@ -1,10 +1,9 @@
-import { Box, Flex, FlexProps, forwardRef, IconButton, Image, Stack, Text, Tooltip } from '@chakra-ui/react';
-import { faCircleQuestion } from '@fortawesome/free-regular-svg-icons';
+import { Flex, FlexProps, forwardRef, IconButton, Image, Stack, Text } from '@chakra-ui/react';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactNode, useState } from 'react';
 import Skill from '../../types/Skill';
-import HelpIcon from '../HelpIcon/HelpIcon';
+import HelpIcon from '../HelpIcon';
 
 export interface SkillCardProps {
     skill: Skill;
