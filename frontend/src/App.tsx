@@ -12,6 +12,7 @@ import StartingConfigTab from './components/tabs/StartingConfigTab';
 import TabData from './types/TabData';
 import ModList from './components/mods/ModList';
 import './App.css';
+import ContentContainer from './components/tabs/ContentContainer';
 
 function App() {
     const dispatch = useDispatch();
