@@ -19,7 +19,7 @@ const LabelledRadioGroup = ({
     children?: ReactNode;
 }) => {
     return (
-        <Stack spacing={1.5}>
+        <Stack spacing={3}>
             <Stack direction="row" spacing={3} alignItems="center">
                 <Text fontSize="xl" fontWeight="semibold">
                     {title}
@@ -29,7 +29,7 @@ const LabelledRadioGroup = ({
                 </Tooltip>
             </Stack>
             <RadioGroup onChange={onChange} value={value}>
-                <Stack direction={direction} spacing={5}>
+                <Stack direction={direction} spacing={6}>
                     {children}
                 </Stack>
             </RadioGroup>

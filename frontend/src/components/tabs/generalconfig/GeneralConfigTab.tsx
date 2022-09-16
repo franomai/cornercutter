@@ -37,7 +37,6 @@ const optionLabels: Record<Options, string> = {
 };
 
 const GeneralConfigTab: FC = () => {
-    const [response, setResponse] = useState<string>('');
     const [config, setConfig] = useConfigContext();
 
     const selectedMod = useSelector(getSelectedMod);
@@ -52,7 +51,6 @@ const GeneralConfigTab: FC = () => {
 
     async function submitConfig() {
         const res = await invoke<string>('accept_config', { config: convertKeysToSnakeCase(config) });
-        setResponse(res);
     }
 
     function renderActionButtons(): ReactNode {
@@ -91,10 +89,10 @@ const GeneralConfigTab: FC = () => {
     }
 
     return (
-        <Stack direction="row">
+        <Stack direction="row" h="full">
             <ContentContainer>
-                <Stack spacing={7}>
-                    <Stack spacing={1}>
+                <Stack spacing={8}>
+                    <Stack spacing={2}>
                         <Flex direction="row" justifyContent="space-between">
                             <Text fontSize="3xl" fontWeight="bold">
                                 {selectedMod?.info.name}
@@ -103,7 +101,7 @@ const GeneralConfigTab: FC = () => {
                         </Flex>
                         <Text>{selectedMod?.info.description}</Text>
                     </Stack>
-                    <Stack spacing={3}>
+                    <Stack spacing={6}>
                         <Text fontSize="2xl" fontWeight="bold">
                             Options
                         </Text>
@@ -133,6 +131,11 @@ const GeneralConfigTab: FC = () => {
                                 Options.DisablePinned,
                             ])}
                         </SimpleGrid>
+                    </Stack>
+                    <Stack spacing={3}>
+                        <Text fontSize="2xl" fontWeight="bold">
+                            Starting Skills
+                        </Text>
                     </Stack>
                 </Stack>
             </ContentContainer>
