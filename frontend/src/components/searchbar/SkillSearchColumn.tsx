@@ -7,17 +7,20 @@ import SearchBar from './SearchBar';
 
 const SearchColumn = () => {
     const skills = useSelector(getAllSkills);
-    const [visibleSkills, setVisibleSkills] = useState(Object.values(skills));
+
+    const allSkills = useCallback(() => {
+        return Object.values(skills).sort((a, b) => a.name.localeCompare(b.name));
+    }, [skills]);
+
+    const [visibleSkills, setVisibleSkills] = useState(allSkills());
 
     const filterSkills = useCallback(
         (search: string) => {
             const loweredSearch = search.toLowerCase();
             if (search === '') {
-                setVisibleSkills(Object.values(skills));
+                setVisibleSkills(allSkills());
             } else {
-                setVisibleSkills(
-                    Object.values(skills).filter((skill) => skill.name.toLowerCase().includes(loweredSearch)),
-                );
+                setVisibleSkills(allSkills().filter((skill) => skill.name.toLowerCase().includes(loweredSearch)));
             }
         },
         [skills],
