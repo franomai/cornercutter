@@ -72,6 +72,11 @@ const modSlice = createSlice({
                 state.mods[state.selectedMod].general.startingSkills.push(action.payload);
             }
         },
+        deleteStartingSkill(state, action: { payload: number }) {
+            if (state.selectedMod !== -1) {
+                state.mods[state.selectedMod].general.startingSkills.splice(action.payload, 1);
+            }
+        },
     },
 });
 
@@ -84,6 +89,7 @@ export const {
     setCurseSpawns,
     setOption,
     addStartingSkill,
+    deleteStartingSkill,
 } = modSlice.actions;
 
 export const getSelectedMod = (state: StoreState) =>

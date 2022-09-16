@@ -20,7 +20,14 @@ import useConfigContext from '../../../context/ConfigContext';
 import { modHasOption, setModOptionFlag } from '../../../utility/ConfigHelpers';
 import ContentContainer from '../ContentContainer';
 import { useDispatch, useSelector } from 'react-redux';
-import mod, { addStartingSkill, getSelectedMod, setCurseSpawns, setOption, setSpawns } from '../../../redux/slices/mod';
+import mod, {
+    addStartingSkill,
+    deleteStartingSkill,
+    getSelectedMod,
+    setCurseSpawns,
+    setOption,
+    setSpawns,
+} from '../../../redux/slices/mod';
 import { faArrowUpFromBracket, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LabelledRadioGroup from './LabelledRadioGroup';
@@ -145,7 +152,8 @@ const GeneralConfigTab = ({ selectedMod }: { selectedMod: ModConfig }) => {
                         </Text>
                         <Dropzone
                             skills={selectedMod.general.startingSkills}
-                            handleSkillDrop={(skillId) => dispatch(addStartingSkill(skillId))}
+                            handleDropSkill={(skillId) => dispatch(addStartingSkill(skillId))}
+                            handleDeleteSkill={(skillIndex) => dispatch(deleteStartingSkill(skillIndex))}
                         />
                     </Stack>
                 </Stack>

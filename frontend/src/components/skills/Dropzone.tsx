@@ -10,16 +10,18 @@ import SkillCard from './SkillCard';
 const Dropzone = ({
     skills,
     singleRow,
-    handleSkillDrop,
+    handleDropSkill,
+    handleDeleteSkill,
 }: {
     skills: number[];
     singleRow?: boolean;
-    handleSkillDrop(skillId: number): void;
+    handleDropSkill(skillId: number): void;
+    handleDeleteSkill(skillIndex: number): void;
 }) => {
     const allSkills = useSelector(getAllSkills);
     const [{ canDrop }, dropRef] = useDrop<{ id: number }, unknown, { canDrop: boolean }>(() => ({
         accept: ItemType.SKILL,
-        drop: ({ id }) => handleSkillDrop(id),
+        drop: ({ id }) => handleDropSkill(id),
         collect: (monitor) => ({
             canDrop: monitor.canDrop(),
         }),
@@ -55,8 +57,13 @@ const Dropzone = ({
             {!canDrop &&
                 skills.length === 0 &&
                 renderInCenter(<BlankTextLayout title="Add Skills" subtitle="Simply drag and drop" />)}
-            {skills.map((skillId) => (
-                <SkillCard key={skillId} skill={allSkills[skillId]} deleteIcon />
+            {skills.map((skillId, skillIndex) => (
+                <SkillCard
+                    key={skillIndex}
+                    skill={allSkills[skillId]}
+                    deleteIcon
+                    handleDelete={() => handleDeleteSkill(skillIndex)}
+                />
             ))}
         </Box>
     );
