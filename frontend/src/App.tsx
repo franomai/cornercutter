@@ -12,7 +12,6 @@ import StartingConfigTab from './components/tabs/StartingConfigTab';
 import TabData from './types/TabData';
 import ModList from './components/mods/ModList';
 import './App.css';
-import ContentContainer from './components/tabs/ContentContainer';
 
 function App() {
     const dispatch = useDispatch();
@@ -84,7 +83,7 @@ function App() {
     }
 
     return (
-        <Box display="flex" flexDirection="row" h="full" w="full">
+        <Box display="flex" flexDirection="row" h="full" maxW="full" w="full" overflowX="hidden">
             <ModList />
             <Stack direction="column" h="full" w="full">
                 {selectedMod ? (

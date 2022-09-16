@@ -28,7 +28,7 @@ const SearchColumn = () => {
             return <Text align="center">No results...</Text>;
         }
 
-        return visibleSkills.map((skill) => <SkillCard skill={skill} />);
+        return visibleSkills.map((skill) => <SkillCard key={skill.id} skill={skill} infoIcon />);
     }
 
     return (

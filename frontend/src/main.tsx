@@ -4,7 +4,6 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Provider } from 'react-redux';
 import { ConfigContextProvider } from './context/ConfigContext';
 
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import store from './redux/store';
