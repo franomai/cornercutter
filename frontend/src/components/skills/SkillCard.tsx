@@ -4,6 +4,7 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactNode, useState } from 'react';
 import Skill from '../../types/Skill';
+import HelpIcon from '../HelpIcon/HelpIcon';
 
 export interface SkillCardProps {
     skill: Skill;
@@ -31,11 +32,7 @@ const SkillCard = forwardRef<SkillCardProps, 'div'>(
                             icon={<FontAwesomeIcon icon={faTrash} />}
                         />
                     )}
-                    {infoIcon && (
-                        <Tooltip label={skill.description} hasArrow placement="top" lineHeight={1.3} py={1}>
-                            <FontAwesomeIcon size="lg" icon={faCircleQuestion} />
-                        </Tooltip>
-                    )}
+                    {infoIcon && <HelpIcon tooltip={skill.description} size="lg" />}
                 </Stack>
             );
         }

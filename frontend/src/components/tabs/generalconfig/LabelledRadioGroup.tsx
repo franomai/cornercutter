@@ -1,7 +1,6 @@
-import { RadioGroup, RadioGroupProps, Stack, StackProps, Text, Tooltip } from '@chakra-ui/react';
-import { faCircleQuestion } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { RadioGroup, RadioGroupProps, Stack, StackProps, Text } from '@chakra-ui/react';
 import { ReactNode } from 'react';
+import HelpIcon from '../../HelpIcon/HelpIcon';
 
 const LabelledRadioGroup = ({
     title,
@@ -24,9 +23,7 @@ const LabelledRadioGroup = ({
                 <Text fontSize="xl" fontWeight="semibold">
                     {title}
                 </Text>
-                <Tooltip hasArrow label={tooltip} aria-label="More info" placement="top">
-                    <FontAwesomeIcon icon={faCircleQuestion} />
-                </Tooltip>
+                <HelpIcon tooltip={tooltip} />
             </Stack>
             <RadioGroup onChange={onChange} value={value}>
                 <Stack direction={direction} spacing={6}>
