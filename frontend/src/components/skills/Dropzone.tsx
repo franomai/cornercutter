@@ -16,7 +16,7 @@ const Dropzone = ({
 }) => {
     const [{ canDrop }, dropRef] = useDrop<Skill, unknown, { canDrop: boolean }>(() => ({
         accept: ItemType.SKILL,
-        drop: handleSkillDrop,
+        drop: (skill) => handleSkillDrop(skill),
         collect: (monitor) => ({
             canDrop: monitor.canDrop(),
         }),

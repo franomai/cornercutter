@@ -2,6 +2,7 @@ import { Box, Stack, Text } from '@chakra-ui/react';
 import { ReactNode, useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getAllSkills } from '../../redux/slices/skills';
+import DraggableSkillCard from '../skills/DraggableSkillCard';
 import SkillCard from '../skills/SkillCard';
 import SearchBar from './SearchBar';
 
@@ -31,7 +32,7 @@ const SearchColumn = () => {
             return <Text align="center">No results...</Text>;
         }
 
-        return visibleSkills.map((skill) => <SkillCard key={skill.id} skill={skill} infoIcon />);
+        return visibleSkills.map((skill) => <DraggableSkillCard key={skill.id} skill={skill} infoIcon />);
     }
 
     return (
