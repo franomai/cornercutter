@@ -21,7 +21,7 @@ import { optionsHasFlag, setOptionFlag } from '../../../utility/ConfigHelpers';
 import ContentContainer from '../ContentContainer';
 import { useSelector } from 'react-redux';
 import { getSelectedMod } from '../../../redux/slices/mod';
-import { faArrowUpFromBracket, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpFromBracket, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LabelledRadioGroup from './LabelledRadioGroup';
 import { SkillSearchColumn } from '../../searchbar';
@@ -55,18 +55,24 @@ const GeneralConfigTab: FC = () => {
 
     function renderActionButtons(): ReactNode {
         return (
-            <Stack direction="row" spacing={1}>
+            <Stack direction="row" spacing={1.5}>
                 <IconButton
                     variant="ghost"
                     title="Export mod config code"
                     aria-label="Export mod config code"
-                    icon={<FontAwesomeIcon icon={faArrowUpFromBracket} />}
+                    icon={<FontAwesomeIcon icon={faArrowUpFromBracket} size="lg" />}
+                />
+                <IconButton
+                    variant="ghost"
+                    title="Edit mod config name and description"
+                    aria-label="Edit mod config name and description"
+                    icon={<FontAwesomeIcon icon={faPenToSquare} size="lg" />}
                 />
                 <IconButton
                     variant="ghost"
                     title="Delete mod"
                     aria-label="Delete mod"
-                    icon={<FontAwesomeIcon icon={faTrash} />}
+                    icon={<FontAwesomeIcon icon={faTrash} size="lg" />}
                 />
             </Stack>
         );
