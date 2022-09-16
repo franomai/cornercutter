@@ -25,6 +25,7 @@ import { faArrowUpFromBracket, faPenToSquare, faTrash } from '@fortawesome/free-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LabelledRadioGroup from './LabelledRadioGroup';
 import { SkillSearchColumn } from '../../searchbar';
+import Dropzone from '../../skills/Dropzone';
 
 const optionLabels: Record<Options, string> = {
     [Options.ConfigPerFloor]: 'Configure spawns per floor',
@@ -97,7 +98,7 @@ const GeneralConfigTab: FC = () => {
     return (
         <Stack direction="row" h="full">
             <ContentContainer>
-                <Stack spacing={8}>
+                <Stack spacing={8} height="full">
                     <Stack spacing={2}>
                         <Flex direction="row" justifyContent="space-between">
                             <Text fontSize="3xl" fontWeight="bold">
@@ -138,10 +139,11 @@ const GeneralConfigTab: FC = () => {
                             ])}
                         </SimpleGrid>
                     </Stack>
-                    <Stack spacing={3}>
+                    <Stack spacing={6} height="full">
                         <Text fontSize="2xl" fontWeight="bold">
                             Starting Skills
                         </Text>
+                        <Dropzone skills={[]} handleSkillDrop={console.log} />
                     </Stack>
                 </Stack>
             </ContentContainer>
