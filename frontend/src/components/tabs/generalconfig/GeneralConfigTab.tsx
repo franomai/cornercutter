@@ -9,6 +9,7 @@ import {
     IconButton,
     Radio,
     RadioGroup,
+    SimpleGrid,
     Stack,
     Text,
 } from '@chakra-ui/react';
@@ -22,6 +23,7 @@ import { useSelector } from 'react-redux';
 import { getSelectedMod } from '../../../redux/slices/mod';
 import { faArrowUpFromBracket, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import LabelledRadioGroup from './LabelledRadioGroup';
 
 const GeneralConfigTab: FC = () => {
     const [response, setResponse] = useState<string>('');
@@ -73,7 +75,19 @@ const GeneralConfigTab: FC = () => {
                     </Flex>
                     <Text>{selectedMod?.info.description}</Text>
                 </Stack>
-                <Stack spacing={4}>
+                <Stack spacing={3}>
+                    <Text fontSize="2xl" fontWeight="bold">
+                        Options
+                    </Text>
+                    <SimpleGrid columns={2} spacing={2}>
+                        <Stack spacing={3.5}>
+                            <LabelledRadioGroup title="Skill Spawns" tooltip="Select how skills should be spawned">
+                                <Radio value="Looped">Looped</Radio>
+                                <Radio value="Weighted">Weighted</Radio>
+                                <Radio value="Consecutive">Consecutive</Radio>
+                            </LabelledRadioGroup>
+                        </Stack>
+                    </SimpleGrid>
                     <div>
                         <FormLabel>Weapon spawns</FormLabel>
                         <RadioGroup
