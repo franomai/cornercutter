@@ -1,15 +1,37 @@
-import { Box, Flex, Image, Stack, Text, Tooltip } from '@chakra-ui/react';
+import { Box, Flex, IconButton, Image, Stack, Text, Tooltip } from '@chakra-ui/react';
 import { faCircleQuestion } from '@fortawesome/free-regular-svg-icons';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactNode, useState } from 'react';
 import Skill from '../../types/Skill';
 
-const SkillCard = ({ skill, deleteIcon, infoIcon }: { skill: Skill; deleteIcon?: boolean; infoIcon?: boolean }) => {
+const SkillCard = ({
+    skill,
+    deleteIcon,
+    infoIcon,
+    handleDelete,
+}: {
+    skill: Skill;
+    deleteIcon?: boolean;
+    infoIcon?: boolean;
+    handleDelete?(): void;
+}) => {
     const [isHovering, setIsHovering] = useState(false);
 
     function renderIcons(): ReactNode {
         return (
-            <Stack position="absolute" right={2} top={2} spacing={2}>
+            <Stack direction="row" position="absolute" right={3} top={3} spacing={1}>
+                {deleteIcon && (
+                    <IconButton
+                        variant="ghost"
+                        mt={-1.5}
+                        size="sm"
+                        onClick={handleDelete}
+                        aria-label="Delete skill"
+                        title="Delete skill"
+                        icon={<FontAwesomeIcon icon={faTrash} />}
+                    />
+                )}
                 {infoIcon && (
                     <Tooltip label={skill.description} hasArrow placement="top">
                         <FontAwesomeIcon size="lg" icon={faCircleQuestion} />
