@@ -47,7 +47,7 @@ function App() {
         const tabs = getTabs();
 
         return (
-            <Tabs h="full" display="flex" style={{ flexDirection: 'column' }} overflowY="hidden">
+            <Tabs h="full" maxW="full" display="flex" style={{ flexDirection: 'column' }} overflow="hidden">
                 <TabList background="blackAlpha.200" w="full">
                     {tabs.map((tab) => (
                         <Tab key={tab.name} fontWeight="semibold">
@@ -69,7 +69,7 @@ function App() {
     return (
         <Box display="flex" flexDirection="row" h="full" maxW="full" w="full" overflowX="hidden">
             <ModList />
-            <Stack direction="column" h="full" w="full">
+            <Stack direction="column" h="full" w="full" maxW="full" overflowX="hidden">
                 {selectedMod ? (
                     renderTabs()
                 ) : (
