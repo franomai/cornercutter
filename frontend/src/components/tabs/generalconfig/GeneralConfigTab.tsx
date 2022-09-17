@@ -150,7 +150,6 @@ const GeneralConfigTab = ({ selectedMod }: { selectedMod: ModConfig }) => {
                         Starting Skills
                     </Text>
                     <Dropzone
-                        singleRow
                         skills={selectedMod.general.startingSkills}
                         handleDropSkill={(skillId) => dispatch(addStartingSkill(skillId))}
                         handleDeleteSkill={(skillIndex) => dispatch(deleteStartingSkill(skillIndex))}
