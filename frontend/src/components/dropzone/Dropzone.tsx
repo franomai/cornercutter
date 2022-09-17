@@ -71,6 +71,8 @@ const Dropzone = ({
             borderColor={canDrop ? 'green.300' : 'gray.600'}
             rounded="lg"
             w="full"
+            maxW="full"
+            overflow="hidden"
         >
             <Flex
                 ref={scrollRef}

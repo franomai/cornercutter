@@ -90,7 +90,7 @@ const SkillCard = forwardRef<SkillCardProps, 'div'>(
                         </NumberInput>
                     ) : (
                         <Text ml="9px" mt="3px" fontSize="xs" fontWeight="semibold">
-                            {weighting ?? 10}
+                            {newWeight}
                         </Text>
                     )}
                 </Box>
