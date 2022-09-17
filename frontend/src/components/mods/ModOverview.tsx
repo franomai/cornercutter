@@ -26,6 +26,7 @@ const ModOverview = ({ mod, isEnabled }: { mod: ModConfig; isEnabled: boolean })
             alignItems="center"
             gap={2}
             onClick={handleSelect}
+            boxShadow={`0 0 0 2px var(--chakra-colors-green-300)`}
         >
             <Text
                 sx={{
