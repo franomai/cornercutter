@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import Skill from '../../types/Skill';
 import HelpIcon from '../helpicon';
 
@@ -33,6 +33,20 @@ export interface SkillCardProps {
 const SkillCard = forwardRef<SkillCardProps, 'div'>(
     ({ skill, isWeighted, weighting, infoIcon, deleteIcon, handleDelete, handleUpdateWeight, ...flexProps }, ref) => {
         const [isHovering, setIsHovering] = useState(false);
+        const [newWeight, setNewWeight] = useState(weighting ?? 10);
+
+        useEffect(() => {
+            if (weighting !== newWeight) {
+                // Don't call the update function until they stop editing it for a while
+                const timeout = setTimeout(() => {
+                    if (handleUpdateWeight) {
+                        handleUpdateWeight(newWeight);
+                    }
+                }, 500);
+
+                return () => clearTimeout(timeout);
+            }
+        }, [weighting, newWeight]);
 
         function renderIcons(): ReactNode {
             return (
@@ -53,21 +67,15 @@ const SkillCard = forwardRef<SkillCardProps, 'div'>(
             );
         }
 
-        function handleChangeWeight(newWeight: number) {
-            if (handleUpdateWeight) {
-                handleUpdateWeight(newWeight);
-            }
-        }
-
         function renderWeighting(): ReactNode {
             return (
                 <Box position="absolute" left={2} top={2.5}>
                     {isHovering ? (
                         <NumberInput
-                            onChange={(_, newWeight) => handleChangeWeight(newWeight)}
+                            onChange={(_, newWeight) => setNewWeight(newWeight)}
                             size="xs"
                             defaultValue={10}
-                            value={weighting}
+                            value={newWeight}
                             min={1}
                             max={999}
                             precision={0}

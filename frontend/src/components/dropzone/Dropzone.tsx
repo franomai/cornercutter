@@ -72,7 +72,16 @@ const Dropzone = ({
             rounded="lg"
             w="full"
         >
-            <Flex ref={scrollRef} minHeight="150px" gap={2} w="full" maxW="full" direction="row" {...getGridProps()}>
+            <Flex
+                ref={scrollRef}
+                minHeight="150px"
+                gap={2}
+                w="full"
+                maxW="full"
+                direction="row"
+                justifyContent="flex-start"
+                {...getGridProps()}
+            >
                 {skills.map((weightedSkill, skillIndex) => (
                     <SkillCard
                         key={skillIndex}
