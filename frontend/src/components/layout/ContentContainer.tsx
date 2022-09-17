@@ -15,6 +15,7 @@ const ContentContainer = ({ children }: { children?: ReactNode }) => {
             mt={8}
             pt={8}
             spacing={8}
+            style={{ scrollbarGutter: 'stable' }}
         >
             {children}
         </Stack>
