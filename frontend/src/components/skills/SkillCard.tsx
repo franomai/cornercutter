@@ -36,7 +36,7 @@ const SkillCard = forwardRef<SkillCardProps, 'div'>(
 
         function renderIcons(): ReactNode {
             return (
-                <Stack direction="row" position="absolute" right={3} top={3} spacing={1}>
+                <Stack direction="row" position="absolute" right={2} top={2.5} spacing={1}>
                     {deleteIcon && (
                         <IconButton
                             variant="ghost"
@@ -61,7 +61,7 @@ const SkillCard = forwardRef<SkillCardProps, 'div'>(
 
         function renderWeighting(): ReactNode {
             return (
-                <Box position="absolute" left={2} top={3}>
+                <Box position="absolute" left={2} top={2.5}>
                     {isHovering ? (
                         <NumberInput
                             onChange={(_, newWeight) => handleChangeWeight(newWeight)}
