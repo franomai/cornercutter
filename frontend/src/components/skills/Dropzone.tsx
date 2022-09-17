@@ -47,6 +47,7 @@ const Dropzone = ({
             border="2px dashed"
             borderColor={canDrop ? 'green.300' : 'gray.600'}
             rounded="lg"
+            gap={2}
             w="full"
             h="full"
             direction="row"
@@ -62,7 +63,15 @@ const Dropzone = ({
             ))}
             {canDrop &&
                 renderInCenter(
-                    <Text fontSize="5xl" fontWeight="bold" color="green.300">
+                    <Text
+                        fontSize="5xl"
+                        fontWeight="bold"
+                        color="green.300"
+                        px={10}
+                        py={3}
+                        bg="blackAlpha.300"
+                        rounded="md"
+                    >
                         Drop Here
                     </Text>,
                 )}

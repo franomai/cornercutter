@@ -43,7 +43,7 @@ const SkillCard = forwardRef<SkillCardProps, 'div'>(
                 direction="column"
                 gap="2px"
                 bg="gray.800"
-                rounded="sm"
+                rounded="md"
                 _hover={{ bg: 'whiteAlpha.100' }}
                 p={2}
                 alignItems="center"
@@ -56,7 +56,7 @@ const SkillCard = forwardRef<SkillCardProps, 'div'>(
                 {...flexProps}
             >
                 {isHovering && renderIcons()}
-                <Image alt={skill.name} src={`icons/${skill.image}`} height="120px" />
+                <Image alt={skill.name} src={`icons/${skill.image}`} height="115px" />
                 <Text fontSize="sm" fontWeight="semibold">
                     {skill.name}
                 </Text>
