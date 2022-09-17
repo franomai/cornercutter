@@ -1,4 +1,18 @@
-import { Flex, FlexProps, forwardRef, IconButton, Image, Stack, Text } from '@chakra-ui/react';
+import {
+    Box,
+    Flex,
+    FlexProps,
+    forwardRef,
+    IconButton,
+    Image,
+    NumberDecrementStepper,
+    NumberIncrementStepper,
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    Stack,
+    Text,
+} from '@chakra-ui/react';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactNode, useState } from 'react';
@@ -7,14 +21,20 @@ import HelpIcon from '../helpicon';
 
 export interface SkillCardProps {
     skill: Skill;
+    isWeighted?: boolean;
+    weighting?: number;
     infoIcon?: boolean;
     deleteIcon?: boolean;
     flexProps?: FlexProps;
     handleDelete?(): void;
+    handleChangeWeighting?(newWeighting: number): void;
 }
 
 const SkillCard = forwardRef<SkillCardProps, 'div'>(
-    ({ skill, infoIcon, deleteIcon, handleDelete, ...flexProps }, ref) => {
+    (
+        { skill, isWeighted, weighting, infoIcon, deleteIcon, handleDelete, handleChangeWeighting, ...flexProps },
+        ref,
+    ) => {
         const [isHovering, setIsHovering] = useState(false);
 
         function renderIcons(): ReactNode {
@@ -33,6 +53,35 @@ const SkillCard = forwardRef<SkillCardProps, 'div'>(
                     )}
                     {infoIcon && <HelpIcon tooltip={skill.description} size="lg" />}
                 </Stack>
+            );
+        }
+
+        function renderWeighting(): ReactNode {
+            return (
+                <Box position="absolute" left={2} top={3}>
+                    {isHovering ? (
+                        <NumberInput
+                            size="xs"
+                            defaultValue={10}
+                            value={weighting}
+                            min={1}
+                            max={999}
+                            precision={0}
+                            allowMouseWheel
+                            w="55px"
+                        >
+                            <NumberInputField pr={2} fontWeight="semibold" />
+                            <NumberInputStepper w="15px">
+                                <NumberIncrementStepper />
+                                <NumberDecrementStepper />
+                            </NumberInputStepper>
+                        </NumberInput>
+                    ) : (
+                        <Text ml="9px" mt="3px" fontSize="xs" fontWeight="semibold">
+                            {weighting ?? 10}
+                        </Text>
+                    )}
+                </Box>
             );
         }
 
@@ -57,11 +106,12 @@ const SkillCard = forwardRef<SkillCardProps, 'div'>(
                 minW="180px"
                 {...flexProps}
             >
-                {isHovering && renderIcons()}
                 <Image alt={skill.name} src={`icons/${skill.image}`} overflow="hidden" />
                 <Text fontSize="sm" fontWeight="semibold">
                     {skill.name}
                 </Text>
+                {isHovering && renderIcons()}
+                {isWeighted && renderWeighting()}
             </Flex>
         );
     },

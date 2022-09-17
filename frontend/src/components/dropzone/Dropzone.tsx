@@ -2,8 +2,11 @@ import { Box, Flex, FlexProps, SimpleGrid, SimpleGridProps, Stack, Text } from '
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useSelector } from 'react-redux';
+import { getSelectedMod } from '../../redux/slices/mod';
 import { getAllSkills } from '../../redux/slices/skills';
+import { SpawnType } from '../../types/Configuration';
 import { ItemType } from '../../types/ItemTypes';
+import { modHasOption } from '../../utility/ConfigHelpers';
 import BlankTextLayout from '../layout/BlankTextLayout';
 import SkillCard from '../skills/SkillCard';
 
@@ -15,6 +18,8 @@ export interface DropzoneProps {
 }
 
 const Dropzone = ({ skills, singleRow, handleDropSkill, handleDeleteSkill }: DropzoneProps) => {
+    const selectedMod = useSelector(getSelectedMod);
+
     const scrollRef = useRef<HTMLDivElement>(null);
     const allSkills = useSelector(getAllSkills);
     const [{ canDrop }, dropRef] = useDrop<{ id: number }, unknown, { canDrop: boolean }>(() => ({
@@ -63,6 +68,7 @@ const Dropzone = ({ skills, singleRow, handleDropSkill, handleDeleteSkill }: Dro
                 {skills.map((skillId, skillIndex) => (
                     <SkillCard
                         key={skillIndex}
+                        isWeighted={selectedMod?.general.spawns === SpawnType.Weighted}
                         skill={allSkills[skillId]}
                         deleteIcon
                         handleDelete={() => handleDeleteSkill(skillIndex)}
