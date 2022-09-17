@@ -1,25 +1,42 @@
 import {
+    Box,
     Editable,
     EditableInput,
     EditablePreview,
     Flex,
     IconButton,
+    Input,
     Stack,
     Text,
+    useEditable,
     useEditableControls,
 } from '@chakra-ui/react';
 import { faArrowUpFromBracket, faCheck, faPenToSquare, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setModInfo } from '../../../redux/slices/mod';
 import ModConfig from '../../../types/Configuration';
 
 const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
+    const dispatch = useDispatch();
+
+    const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState(selectedMod.info.name);
     const [newDescription, setNewDescription] = useState(selectedMod.info.description);
 
-    function EditableControls({ canSave }: { canSave: boolean }) {
-        const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } = useEditableControls();
+    function handleSaveChanges() {
+        setIsEditing(false);
+        dispatch(setModInfo({ name: newName, description: newDescription }));
+    }
 
+    function handleDiscardChanges() {
+        setNewName(selectedMod.info.name);
+        setNewDescription(selectedMod.info.description);
+        setIsEditing(false);
+    }
+
+    function EditableControls({ canSave }: { canSave: boolean }) {
         return (
             <Stack direction="row" spacing={1.5}>
                 {isEditing ? (
@@ -30,7 +47,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
                                 title="Save changes"
                                 aria-label="Save changes"
                                 icon={<FontAwesomeIcon icon={faCheck} size="lg" />}
-                                {...getSubmitButtonProps()}
+                                onClick={handleSaveChanges}
                             />
                         )}
                         <IconButton
@@ -38,7 +55,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
                             title="Discard changes"
                             aria-label="Discard changes"
                             icon={<FontAwesomeIcon icon={faXmark} size="lg" />}
-                            {...getCancelButtonProps()}
+                            onClick={handleDiscardChanges}
                         />
                     </>
                 ) : (
@@ -54,7 +71,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
                             title="Edit mod config name and description"
                             aria-label="Edit mod config name and description"
                             icon={<FontAwesomeIcon icon={faPenToSquare} size="lg" />}
-                            {...getEditButtonProps()}
+                            onClick={() => setIsEditing(true)}
                         />
                         <IconButton
                             variant="ghost"
@@ -69,21 +86,41 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     }
 
     return (
-        <Stack spacing={2}>
-            <Editable defaultValue={newName} onChange={setNewName}>
-                <Flex
-                    direction="row"
-                    justifyContent="space-between"
-                    fontSize="3xl"
-                    fontWeight="bold"
-                    alignItems="center"
-                >
-                    <EditablePreview />
-                    <EditableInput ml={-2} pl={2} mr={4} />
-                    <EditableControls canSave={newName.trim().length !== 0 && newDescription.trim().length !== 0} />
-                </Flex>
-            </Editable>
-            <Text>{selectedMod.info.description}</Text>
+        <Stack spacing={3}>
+            <Flex direction="row" justifyContent="space-between" alignItems="center">
+                {isEditing ? (
+                    <Input
+                        fontSize="3xl"
+                        fontWeight="bold"
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
+                        pl={2}
+                        mr={4}
+                        ml="-9px"
+                        mt="-3px"
+                        height="50px"
+                    />
+                ) : (
+                    <Text fontSize="3xl" fontWeight="bold">
+                        {newName}
+                    </Text>
+                )}
+                <EditableControls canSave={newName.trim().length !== 0 && newDescription.trim().length !== 0} />
+            </Flex>
+            <Box>
+                {isEditing ? (
+                    <Input
+                        ml="-9px"
+                        mt={-2}
+                        value={newDescription}
+                        onChange={(e) => setNewDescription(e.target.value)}
+                        pl={2}
+                        mb={-2}
+                    />
+                ) : (
+                    <Text mt="3px">{newDescription}</Text>
+                )}
+            </Box>
         </Stack>
     );
 };
