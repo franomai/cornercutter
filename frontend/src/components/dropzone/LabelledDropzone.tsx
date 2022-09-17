@@ -1,18 +1,48 @@
-import { Flex, IconButton, Stack, Text } from '@chakra-ui/react';
+import { Box, Flex, IconButton, Stack, Text } from '@chakra-ui/react';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ReactNode, useCallback } from 'react';
+import { render } from 'react-dom';
 import Dropzone, { DropzoneProps } from './Dropzone';
 
 const LabelledDropzone = ({
     label,
     handleClearAllSkills,
+    rotateLabel,
     ...dropzoneProps
 }: {
-    label: string;
+    label: ReactNode;
+    rotateLabel?: boolean;
     handleClearAllSkills(): void;
 } & DropzoneProps) => {
-    return (
-        <Stack spacing={6} height="full">
+    const renderLabel = useCallback(() => {
+        if (rotateLabel)
+            return (
+                <Box position="relative" h="full" maxW="40px" minW="40px">
+                    <Flex
+                        h="full"
+                        w="full"
+                        mt={5}
+                        position="absolute"
+                        direction="row"
+                        gap={2}
+                        alignItems="center"
+                        style={{ transform: 'rotate(-90deg)' }}
+                    >
+                        <Text fontSize="2xl" fontWeight="bold">
+                            {label}
+                        </Text>
+                        <IconButton
+                            variant="ghost"
+                            title="Clear all skills"
+                            aria-label="Clear all skills"
+                            onClick={() => handleClearAllSkills()}
+                            icon={<FontAwesomeIcon icon={faTrash} />}
+                        />
+                    </Flex>
+                </Box>
+            );
+        return (
             <Flex direction="row" gap={2} alignItems="center">
                 <Text fontSize="2xl" fontWeight="bold">
                     {label}
@@ -25,6 +55,12 @@ const LabelledDropzone = ({
                     icon={<FontAwesomeIcon icon={faTrash} />}
                 />
             </Flex>
+        );
+    }, [label, handleClearAllSkills, rotateLabel]);
+
+    return (
+        <Stack spacing={6} height="full" w="full" direction={rotateLabel ? 'row' : 'column'}>
+            {renderLabel()}
             <Dropzone {...dropzoneProps} />
         </Stack>
     );

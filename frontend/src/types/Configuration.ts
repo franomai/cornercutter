@@ -53,6 +53,14 @@ export enum Floor {
     Boss,
 }
 
+export enum Room {
+    All = 'All',
+    Skill = 'Skill',
+    Shop = 'Shop',
+    Curse = 'Curse',
+    Finale = 'Finale',
+}
+
 export enum Options {
     NoneSelected = 0,
     ConfigPerFloor = 1 << 0,
