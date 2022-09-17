@@ -14,7 +14,6 @@ import './App.css';
 import BlankTextLayout from './components/layout/BlankTextLayout';
 
 function App() {
-    const dispatch = useDispatch();
     const mods = useSelector(getAllMods);
     const selectedMod = useSelector(getSelectedMod);
 
