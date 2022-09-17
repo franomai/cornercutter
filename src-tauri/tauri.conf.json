@@ -58,10 +58,10 @@
 				"fileDropEnabled": false,
 				"fullscreen": false,
 				"maximized": true,
-				"height": 600,
 				"resizable": true,
 				"title": "Cornercutter",
-				"width": 800
+				"minWidth": 1200,
+				"minHeight": 600
 			}
 		]
 	}

@@ -63,13 +63,13 @@ const Dropzone = ({
 
     return (
         <Box
+            flexGrow={singleRow ? undefined : 1}
             position="relative"
             p={2}
             ref={dropRef}
             border="2px dashed"
             borderColor={canDrop ? 'green.300' : 'gray.600'}
             rounded="lg"
-            h={singleRow ? undefined : 'full'}
             w="full"
         >
             <Flex ref={scrollRef} minHeight="150px" gap={2} w="full" maxW="full" direction="row" {...getGridProps()}>
