@@ -1,33 +1,36 @@
-import {
-    Box,
-    Editable,
-    EditableInput,
-    EditablePreview,
-    Flex,
-    IconButton,
-    Input,
-    Stack,
-    Text,
-    useEditable,
-    useEditableControls,
-} from '@chakra-ui/react';
+import { Box, Flex, IconButton, Input, Stack, Text, useOutsideClick } from '@chakra-ui/react';
 import { faArrowUpFromBracket, faCheck, faPenToSquare, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setModInfo } from '../../../redux/slices/mod';
 import ModConfig from '../../../types/Configuration';
 
 const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const dispatch = useDispatch();
+    const editableRef = useRef<HTMLDivElement>(null);
 
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState(selectedMod.info.name);
     const [newDescription, setNewDescription] = useState(selectedMod.info.description);
 
+    useOutsideClick({
+        ref: editableRef,
+        enabled: isEditing,
+        handler: handleSaveChanges,
+    });
+
     function handleSaveChanges() {
+        if (newName !== selectedMod.info.name || newDescription !== selectedMod.info.description) {
+            dispatch(setModInfo({ name: newName, description: newDescription }));
+        }
         setIsEditing(false);
-        dispatch(setModInfo({ name: newName, description: newDescription }));
+    }
+
+    function handleKeyPress(e: React.KeyboardEvent) {
+        if (isEditing && e.key === 'Enter') {
+            handleSaveChanges();
+        }
     }
 
     function handleDiscardChanges() {
@@ -86,7 +89,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     }
 
     return (
-        <Stack spacing={3}>
+        <Stack spacing={3} ref={editableRef} onKeyDown={handleKeyPress}>
             <Flex direction="row" justifyContent="space-between" alignItems="center">
                 {isEditing ? (
                     <Input
