@@ -36,7 +36,9 @@ const Dropzone = ({
     }
 
     function getGridProps(): FlexProps {
-        return singleRow ? { overflowY: 'hidden', overflowX: 'auto' } : { maxW: 'full', flexWrap: 'wrap' };
+        return singleRow
+            ? { overflowY: 'hidden', overflowX: 'auto' }
+            : { maxW: 'full', flexWrap: 'wrap', height: 'full' };
     }
 
     return (
@@ -62,23 +64,14 @@ const Dropzone = ({
                     handleDelete={() => handleDeleteSkill(skillIndex)}
                 />
             ))}
-            {canDrop &&
-                renderInCenter(
-                    <Text
-                        fontSize="5xl"
-                        fontWeight="bold"
-                        color="green.300"
-                        px={10}
-                        py={3}
-                        bg="blackAlpha.300"
-                        rounded="md"
-                    >
-                        Drop Here
-                    </Text>,
-                )}
-            {!canDrop &&
-                skills.length === 0 &&
-                renderInCenter(<BlankTextLayout title="Add Skills" subtitle="Simply drag and drop" />)}
+            {skills.length === 0 &&
+                (canDrop
+                    ? renderInCenter(
+                          <Text fontSize="5xl" fontWeight="bold" color="green.300">
+                              Drop Here
+                          </Text>,
+                      )
+                    : renderInCenter(<BlankTextLayout title="Add Skills" subtitle="Simply drag and drop" />))}
         </Flex>
     );
 };
