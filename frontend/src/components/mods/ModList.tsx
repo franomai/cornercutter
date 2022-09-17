@@ -3,6 +3,7 @@ import { invoke } from '@tauri-apps/api/tauri';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { getAllMods, getEnabledMod, getSelectedMod } from '../../redux/slices/mod';
+import { convertKeysToSnakeCase } from '../../utility/Utils';
 import ModOverview from './ModOverview';
 
 const ModList = () => {
@@ -11,7 +12,8 @@ const ModList = () => {
     const selectedMod = useSelector(getSelectedMod);
 
     const handleSave = useCallback(() => {
-        invoke('save_mod', { mod: selectedMod }).catch(console.error);
+        const modConfig = convertKeysToSnakeCase(selectedMod);
+        invoke('save_mod', { modConfig }).catch(console.error);
     }, [selectedMod]);
 
     return (
@@ -34,9 +36,11 @@ const ModList = () => {
                     />
                 ))}
             </Stack>
-            <Button variant="outline" w="full" onClick={handleSave}>
-                Save
-            </Button>
+            {selectedMod && (
+                <Button variant="outline" w="full" onClick={handleSave}>
+                    Save
+                </Button>
+            )}
         </Stack>
     );
 };

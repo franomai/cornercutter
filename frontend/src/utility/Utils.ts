@@ -12,7 +12,7 @@ export function convertKeysToSnakeCase(obj: any): any {
 }
 
 export function isObject(obj: unknown): obj is Record<string, unknown> {
-    return typeof obj === 'object';
+    return typeof obj === 'object' && !Array.isArray(obj);
 }
 
 export function allValues<T extends {}>(anEnum: T): T[keyof T][] {

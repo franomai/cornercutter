@@ -11,6 +11,45 @@ use num_derive::FromPrimitive;
 use num_traits::FromPrimitive;
 
 #[derive(Deserialize)]
+struct ModConfig {
+    info: ModInfo,
+    general: GeneralConfig,
+    floor_skills: FloorSkills
+}
+
+#[derive(Deserialize)]
+struct ModInfo {
+    name: String,
+    description: String,
+}
+
+#[derive(Deserialize)]
+struct GeneralConfig {
+    spawns: SpawnType,
+    curse_spawns: CurseSpawnType,
+    options: u32,
+    starting_skills: Vec<WeightedSkill>,
+}
+
+#[derive(Deserialize)]
+struct FloorSkills {
+    all_floors: RoomSkills,
+    first_floor: RoomSkills,
+    second_floor: RoomSkills,
+    third_floor: RoomSkills,
+    boss: RoomSkills,
+}
+
+#[derive(Deserialize)]
+struct RoomSkills {
+    all: Vec<WeightedSkill>,
+    skill: Vec<WeightedSkill>,
+    shop: Vec<WeightedSkill>,
+    curse: Vec<WeightedSkill>,
+    finale: Vec<WeightedSkill>,
+}
+
+#[derive(Deserialize)]
 struct Configuration  {
     spawns: SpawnType,
     curse_spawns: CurseSpawnType,
@@ -79,6 +118,11 @@ fn accept_config(config: Configuration) -> String {
 fn get_config_code() -> String {
     // Return a dummy string for testing - This is not a valid code though
     return String::from("VGhpcyBpcyBhbiBleGFtcGxlIHNkZiBzZGtqZiBza2RmIA==");
+}
+
+#[tauri::command]
+fn save_mod(mod_config: ModConfig) {
+    println!("Received mod!");
 }
 
 fn encode_configuration(config: &Configuration) -> String {
@@ -156,6 +200,7 @@ fn main() {
         .menu(tauri::Menu::os_default(&context.package_info().name))
         .invoke_handler(tauri::generate_handler![accept_config])
         .invoke_handler(tauri::generate_handler![get_config_code])
+        .invoke_handler(tauri::generate_handler![save_mod])
         .run(context)
         .expect("error while running tauri application");
 }

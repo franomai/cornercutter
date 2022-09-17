@@ -34,11 +34,11 @@ export enum CurseSpawnType {
 }
 
 export enum Floor {
-    AllFloors,
-    FirstFloor,
-    SecondFloor,
-    ThirdFloor,
-    Boss,
+    AllFloors = 'AllFloors',
+    FirstFloor = 'FirstFloor',
+    SecondFloor = 'SecondFloor',
+    ThirdFloor = 'ThirdFloor',
+    Boss = 'Boss',
 }
 
 export enum Room {
