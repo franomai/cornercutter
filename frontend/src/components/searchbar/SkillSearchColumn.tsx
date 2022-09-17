@@ -35,7 +35,7 @@ const SearchColumn = () => {
     }
 
     return (
-        <Stack w="300px" minH="full" background="blackAlpha.200" pt={2} px={4} gap={1} pb={14}>
+        <Stack minW="240px" maxW="240px" minH="full" background="blackAlpha.200" pt={2} px={4} gap={1} pb={2}>
             <SearchBar handleSearch={filterSkills} />
             <Stack gap={1} overflowY="auto" pr={2} h="full">
                 {renderItems()}

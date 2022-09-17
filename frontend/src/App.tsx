@@ -54,7 +54,8 @@ function App() {
                         </Tab>
                     ))}
                 </TabList>
-                <TabPanels h="full">
+                {/* Height subtracted is the height of the TabList */}
+                <TabPanels minH="calc(100% - 58px)" maxH="calc(100% - 58px)">
                     {tabs.map((tab) => (
                         <TabPanel key={tab.name} h="full" p={0}>
                             {tab.tab}

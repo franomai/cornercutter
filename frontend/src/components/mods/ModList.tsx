@@ -9,7 +9,7 @@ const ModList = () => {
     const selectedMod = useSelector(getSelectedMod);
 
     return (
-        <Stack maxW="280px" w="280px" p={4} gap={2} h="full" background="blackAlpha.300" overflow="hidden">
+        <Stack maxW="240px" minW="240px" p={4} gap={2} h="full" background="blackAlpha.300" overflow="hidden">
             {mods.map((mod) => (
                 <ModOverview
                     key={mod.id}
