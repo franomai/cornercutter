@@ -50,7 +50,7 @@ function App() {
             <Tabs h="full" maxW="full" display="flex" style={{ flexDirection: 'column' }} overflow="hidden">
                 <TabList background="blackAlpha.200" w="full">
                     {tabs.map((tab) => (
-                        <Tab key={tab.name} fontWeight="semibold">
+                        <Tab key={tab.name} fontWeight="semibold" pt={5} pb={3}>
                             {tab.name}
                         </Tab>
                     ))}
