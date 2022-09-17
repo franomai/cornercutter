@@ -3,7 +3,7 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactNode, useState } from 'react';
 import Skill from '../../types/Skill';
-import HelpIcon from '../helpIcon';
+import HelpIcon from '../helpicon';
 
 export interface SkillCardProps {
     skill: Skill;

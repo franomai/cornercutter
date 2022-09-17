@@ -77,6 +77,11 @@ const modSlice = createSlice({
                 state.mods[state.selectedMod].general.startingSkills.splice(action.payload, 1);
             }
         },
+        clearStartingSkills(state) {
+            if (state.selectedMod !== -1) {
+                state.mods[state.selectedMod].general.startingSkills = [];
+            }
+        },
     },
 });
 
@@ -90,6 +95,7 @@ export const {
     setOption,
     addStartingSkill,
     deleteStartingSkill,
+    clearStartingSkills,
 } = modSlice.actions;
 
 export const getSelectedMod = (state: StoreState) =>

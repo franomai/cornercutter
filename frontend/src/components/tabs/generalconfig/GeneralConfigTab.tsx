@@ -22,6 +22,7 @@ import ContentContainer from '../ContentContainer';
 import { useDispatch, useSelector } from 'react-redux';
 import mod, {
     addStartingSkill,
+    clearStartingSkills,
     deleteStartingSkill,
     getSelectedMod,
     setCurseSpawns,
@@ -32,9 +33,10 @@ import { faArrowUpFromBracket, faPenToSquare, faTrash } from '@fortawesome/free-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LabelledRadioGroup from './LabelledRadioGroup';
 import { SkillSearchColumn } from '../../searchbar';
-import Dropzone from '../../skills/Dropzone';
+import Dropzone from '../../dropzone/Dropzone';
 import { getAllSkills } from '../../../redux/slices/skills';
 import ModConfig from '../../../types/Configuration';
+import LabelledDropzone from '../../dropzone';
 
 const optionLabels: Record<Options, string> = {
     [Options.ConfigPerFloor]: 'Configure spawns per floor',
@@ -145,16 +147,13 @@ const GeneralConfigTab = ({ selectedMod }: { selectedMod: ModConfig }) => {
                         ])}
                     </SimpleGrid>
                 </Stack>
-                <Stack spacing={6} height="full">
-                    <Text fontSize="2xl" fontWeight="bold">
-                        Starting Skills
-                    </Text>
-                    <Dropzone
-                        skills={selectedMod.general.startingSkills}
-                        handleDropSkill={(skillId) => dispatch(addStartingSkill(skillId))}
-                        handleDeleteSkill={(skillIndex) => dispatch(deleteStartingSkill(skillIndex))}
-                    />
-                </Stack>
+                <LabelledDropzone
+                    label="Starting Skills"
+                    skills={selectedMod.general.startingSkills}
+                    handleDropSkill={(skillId) => dispatch(addStartingSkill(skillId))}
+                    handleDeleteSkill={(skillIndex) => dispatch(deleteStartingSkill(skillIndex))}
+                    handleClearAllSkills={() => dispatch(clearStartingSkills())}
+                />
             </ContentContainer>
             <SkillSearchColumn />
         </Stack>

@@ -5,19 +5,16 @@ import { useSelector } from 'react-redux';
 import { getAllSkills } from '../../redux/slices/skills';
 import { ItemType } from '../../types/ItemTypes';
 import BlankTextLayout from '../layout/BlankTextLayout';
-import SkillCard from './SkillCard';
+import SkillCard from '../skills/SkillCard';
 
-const Dropzone = ({
-    skills,
-    singleRow,
-    handleDropSkill,
-    handleDeleteSkill,
-}: {
+export interface DropzoneProps {
     skills: number[];
     singleRow?: boolean;
     handleDropSkill(skillId: number): void;
     handleDeleteSkill(skillIndex: number): void;
-}) => {
+}
+
+const Dropzone = ({ skills, singleRow, handleDropSkill, handleDeleteSkill }: DropzoneProps) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const allSkills = useSelector(getAllSkills);
     const [{ canDrop }, dropRef] = useDrop<{ id: number }, unknown, { canDrop: boolean }>(() => ({
