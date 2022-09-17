@@ -3,6 +3,7 @@ import { StoreState } from '../../store';
 
 import ModConfig, { CurseSpawnType, DEFAULT_CONFIG, ModInfo, Options, SpawnType } from '../../../types/Configuration';
 import { setModOptionFlag } from '../../../utility/ConfigHelpers';
+import { WeightedSkill } from '../../../types/Skill';
 
 export interface State {
     mods: ModConfig[];
@@ -67,7 +68,7 @@ const modSlice = createSlice({
                 setModOptionFlag(state.mods[state.selectedMod], action.payload.flag, action.payload.isEnabled);
             }
         },
-        addStartingSkill(state, action: { payload: number }) {
+        addStartingSkill(state, action: { payload: WeightedSkill }) {
             if (state.selectedMod !== -1) {
                 state.mods[state.selectedMod].general.startingSkills.push(action.payload);
             }
@@ -80,6 +81,12 @@ const modSlice = createSlice({
         clearStartingSkills(state) {
             if (state.selectedMod !== -1) {
                 state.mods[state.selectedMod].general.startingSkills = [];
+            }
+        },
+        updateStartingSkillWeight(state, action: { payload: { skillIndex: number; newWeight: number } }) {
+            if (state.selectedMod !== -1) {
+                const startingSkills = state.mods[state.selectedMod].general.startingSkills;
+                startingSkills[action.payload.skillIndex].weight = action.payload.newWeight;
             }
         },
     },
@@ -96,6 +103,7 @@ export const {
     addStartingSkill,
     deleteStartingSkill,
     clearStartingSkills,
+    updateStartingSkillWeight,
 } = modSlice.actions;
 
 export const getSelectedMod = (state: StoreState) =>

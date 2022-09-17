@@ -6,25 +6,32 @@ import { getSelectedMod } from '../../redux/slices/mod';
 import { getAllSkills } from '../../redux/slices/skills';
 import { SpawnType } from '../../types/Configuration';
 import { ItemType } from '../../types/ItemTypes';
-import { modHasOption } from '../../utility/ConfigHelpers';
+import { WeightedSkill } from '../../types/Skill';
 import BlankTextLayout from '../layout/BlankTextLayout';
 import SkillCard from '../skills/SkillCard';
 
 export interface DropzoneProps {
-    skills: number[];
+    skills: WeightedSkill[];
     singleRow?: boolean;
-    handleDropSkill(skillId: number): void;
     handleDeleteSkill(skillIndex: number): void;
+    handleDropSkill(weightedSkill: WeightedSkill): void;
+    handleUpdateSkillWeight(skillIndex: number, newWeight: number): void;
 }
 
-const Dropzone = ({ skills, singleRow, handleDropSkill, handleDeleteSkill }: DropzoneProps) => {
+const Dropzone = ({
+    skills,
+    singleRow,
+    handleDropSkill,
+    handleDeleteSkill,
+    handleUpdateSkillWeight,
+}: DropzoneProps) => {
     const selectedMod = useSelector(getSelectedMod);
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const allSkills = useSelector(getAllSkills);
     const [{ canDrop }, dropRef] = useDrop<{ id: number }, unknown, { canDrop: boolean }>(() => ({
         accept: ItemType.SKILL,
-        drop: ({ id }) => handleDropSkill(id),
+        drop: ({ id }) => handleDropSkill({ id, weight: 10 }),
         collect: (monitor) => ({
             canDrop: monitor.canDrop(),
         }),
@@ -65,13 +72,15 @@ const Dropzone = ({ skills, singleRow, handleDropSkill, handleDeleteSkill }: Dro
             h={singleRow ? undefined : 'full'}
         >
             <Flex ref={scrollRef} minHeight="150px" gap={2} w="full" maxW="full" direction="row" {...getGridProps()}>
-                {skills.map((skillId, skillIndex) => (
+                {skills.map((weightedSkill, skillIndex) => (
                     <SkillCard
                         key={skillIndex}
                         isWeighted={selectedMod?.general.spawns === SpawnType.Weighted}
-                        skill={allSkills[skillId]}
+                        skill={allSkills[weightedSkill.id]}
+                        weighting={weightedSkill.weight}
                         deleteIcon
                         handleDelete={() => handleDeleteSkill(skillIndex)}
+                        handleUpdateWeight={(newWeight) => handleUpdateSkillWeight(skillIndex, newWeight)}
                     />
                 ))}
                 {skills.length === 0 &&

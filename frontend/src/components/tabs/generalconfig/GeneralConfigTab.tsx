@@ -1,4 +1,9 @@
-import { addStartingSkill, clearStartingSkills, deleteStartingSkill } from '../../../redux/slices/mod';
+import {
+    addStartingSkill,
+    clearStartingSkills,
+    deleteStartingSkill,
+    updateStartingSkillWeight,
+} from '../../../redux/slices/mod';
 import { Stack } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { SkillSearchColumn } from '../../searchbar';
@@ -24,9 +29,12 @@ const GeneralConfigTab = ({ selectedMod }: { selectedMod: ModConfig }) => {
                 <LabelledDropzone
                     label="Starting Skills"
                     skills={selectedMod.general.startingSkills}
-                    handleDropSkill={(skillId) => dispatch(addStartingSkill(skillId))}
+                    handleDropSkill={(weightedSkill) => dispatch(addStartingSkill(weightedSkill))}
                     handleDeleteSkill={(skillIndex) => dispatch(deleteStartingSkill(skillIndex))}
                     handleClearAllSkills={() => dispatch(clearStartingSkills())}
+                    handleUpdateSkillWeight={(skillIndex, newWeight) =>
+                        dispatch(updateStartingSkillWeight({ skillIndex, newWeight }))
+                    }
                 />
             </ContentContainer>
             <SkillSearchColumn />

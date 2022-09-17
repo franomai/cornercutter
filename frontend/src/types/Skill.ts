@@ -4,3 +4,8 @@ export default interface Skill {
     description: string;
     image: string;
 }
+
+export interface WeightedSkill {
+    id: number;
+    weight: number;
+}

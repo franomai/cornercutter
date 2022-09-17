@@ -27,14 +27,11 @@ export interface SkillCardProps {
     deleteIcon?: boolean;
     flexProps?: FlexProps;
     handleDelete?(): void;
-    handleChangeWeighting?(newWeighting: number): void;
+    handleUpdateWeight?(newWeighting: number): void;
 }
 
 const SkillCard = forwardRef<SkillCardProps, 'div'>(
-    (
-        { skill, isWeighted, weighting, infoIcon, deleteIcon, handleDelete, handleChangeWeighting, ...flexProps },
-        ref,
-    ) => {
+    ({ skill, isWeighted, weighting, infoIcon, deleteIcon, handleDelete, handleUpdateWeight, ...flexProps }, ref) => {
         const [isHovering, setIsHovering] = useState(false);
 
         function renderIcons(): ReactNode {
@@ -56,11 +53,18 @@ const SkillCard = forwardRef<SkillCardProps, 'div'>(
             );
         }
 
+        function handleChangeWeight(newWeight: number) {
+            if (handleUpdateWeight) {
+                handleUpdateWeight(newWeight);
+            }
+        }
+
         function renderWeighting(): ReactNode {
             return (
                 <Box position="absolute" left={2} top={3}>
                     {isHovering ? (
                         <NumberInput
+                            onChange={(_, newWeight) => handleChangeWeight(newWeight)}
                             size="xs"
                             defaultValue={10}
                             value={weighting}

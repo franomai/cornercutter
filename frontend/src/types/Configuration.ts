@@ -1,3 +1,5 @@
+import { WeightedSkill } from './Skill';
+
 export default interface ModConfig {
     id: number;
     info: ModInfo;
@@ -13,7 +15,7 @@ export interface GeneralConfig {
     spawns: SpawnType;
     curseSpawns: CurseSpawnType;
     options: Options;
-    startingSkills: number[];
+    startingSkills: WeightedSkill[];
 }
 
 export enum SpawnType {
