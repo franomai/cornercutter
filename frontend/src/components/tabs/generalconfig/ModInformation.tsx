@@ -1,7 +1,21 @@
-import { Box, Flex, IconButton, Input, Stack, Text, useOutsideClick } from '@chakra-ui/react';
+import {
+    Box,
+    Flex,
+    IconButton,
+    Input,
+    Popover,
+    PopoverArrow,
+    PopoverBody,
+    PopoverContent,
+    PopoverTrigger,
+    Stack,
+    Text,
+    useOutsideClick,
+} from '@chakra-ui/react';
 import { faArrowUpFromBracket, faCheck, faPenToSquare, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { ReactNode, useCallback, useRef, useState } from 'react';
+import { invoke } from '@tauri-apps/api/tauri';
+import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setModInfo } from '../../../redux/slices/mod';
 import ModConfig from '../../../types/Configuration';
@@ -13,6 +27,15 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState(selectedMod.info.name);
     const [newDescription, setNewDescription] = useState(selectedMod.info.description);
+    const [configCode, setConfigCode] = useState<string | null>(null);
+    const [showConfigCodePopup, setShowConfigCodePopup] = useState(false);
+
+    useEffect(() => {
+        if (showConfigCodePopup) {
+            const timeout = setTimeout(() => setShowConfigCodePopup(false), 500);
+            return () => clearTimeout(timeout);
+        }
+    }, [showConfigCodePopup]);
 
     const handleSaveChanges = useCallback(() => {
         if (newName !== selectedMod.info.name || newDescription !== selectedMod.info.description) {
@@ -42,6 +65,16 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
         setIsEditing(false);
     }, [selectedMod.info]);
 
+    const handleExportConfigCode = useCallback(async () => {
+        try {
+            const code = await invoke<string>('get_config_code');
+            setConfigCode(code);
+            navigator.clipboard.writeText(code).then(() => setShowConfigCodePopup(true));
+        } catch (err) {
+            console.error(err);
+        }
+    }, []);
+
     const renderEditableControls = useCallback(
         (canSave: boolean): ReactNode => {
             return (
@@ -67,12 +100,22 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
                         </>
                     ) : (
                         <>
-                            <IconButton
-                                variant="ghost"
-                                title="Export mod config code"
-                                aria-label="Export mod config code"
-                                icon={<FontAwesomeIcon icon={faArrowUpFromBracket} size="lg" />}
-                            />
+                            <Popover isOpen={showConfigCodePopup} placement="top">
+                                <PopoverTrigger>
+                                    <IconButton
+                                        variant="ghost"
+                                        title="Export mod config code"
+                                        aria-label="Export mod config code"
+                                        icon={<FontAwesomeIcon icon={faArrowUpFromBracket} size="lg" />}
+                                        onClick={handleExportConfigCode}
+                                    />
+                                </PopoverTrigger>
+                                <PopoverContent w="min" whiteSpace="nowrap">
+                                    <PopoverArrow />
+                                    <PopoverBody>Shareable code copied to clipboard</PopoverBody>
+                                </PopoverContent>
+                            </Popover>
+
                             <IconButton
                                 variant="ghost"
                                 title="Edit mod config name and description"
@@ -91,7 +134,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
                 </Stack>
             );
         },
-        [isEditing, handleSaveChanges, handleDiscardChanges],
+        [isEditing, showConfigCodePopup, handleSaveChanges, handleDiscardChanges],
     );
 
     const renderName = useCallback((): ReactNode => {

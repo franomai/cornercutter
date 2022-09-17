@@ -18,6 +18,21 @@ export interface GeneralConfig {
     startingSkills: WeightedSkill[];
 }
 
+export type FloorSkills = AllRooms | SpecificRooms;
+
+export interface AllRooms {
+    type: 'all';
+    skills: WeightedSkill[];
+}
+
+export interface SpecificRooms {
+    type: 'rooms';
+    skill: WeightedSkill[];
+    curse: WeightedSkill[];
+    finale: WeightedSkill[];
+    shop: WeightedSkill[];
+}
+
 export enum SpawnType {
     Looped = 'Looped',
     Weighted = 'Weighted',

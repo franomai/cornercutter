@@ -19,6 +19,13 @@ struct Configuration  {
 }
 
 #[derive(Debug)]
+#[derive(Deserialize)]
+struct WeightedSkill {
+    id: u32,
+    weight: u32,
+}
+
+#[derive(Debug)]
 #[derive(Deserialize, Copy, Clone, FromPrimitive)]
 enum SpawnType {
     None = 0, Looped = 1, Weighted = 2, Consecutive = 3
@@ -68,6 +75,11 @@ fn accept_config(config: Configuration) -> String {
     );
 }
 
+#[tauri::command]
+fn get_config_code() -> String {
+    // Return a dummy string for testing - This is not a valid code though
+    return String::from("VGhpcyBpcyBhbiBleGFtcGxlIHNkZiBzZGtqZiBza2RmIA==");
+}
 
 fn encode_configuration(config: &Configuration) -> String {
     let config_array = build_array(&config);
@@ -143,6 +155,7 @@ fn main() {
     tauri::Builder::default()
         .menu(tauri::Menu::os_default(&context.package_info().name))
         .invoke_handler(tauri::generate_handler![accept_config])
+        .invoke_handler(tauri::generate_handler![get_config_code])
         .run(context)
         .expect("error while running tauri application");
 }

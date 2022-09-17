@@ -1,9 +1,16 @@
-export function convertKeysToSnakeCase(obj: Record<string, any>): Record<string, any> {
+export function convertKeysToSnakeCase(obj: any): any {
+    if (!isObject(obj)) return obj;
+
     const result: Record<string, any> = {};
+
     Object.keys(obj).forEach((key) => {
         const snakeCaseKey = key.replace(/([a-z])([A-Z])/g, '$1_$2').toLocaleLowerCase();
-        result[snakeCaseKey] = obj[key];
+        result[snakeCaseKey] = convertKeysToSnakeCase(obj[key]);
     });
 
     return result;
+}
+
+export function isObject(obj: unknown): obj is Record<string, unknown> {
+    return typeof obj === 'object';
 }
