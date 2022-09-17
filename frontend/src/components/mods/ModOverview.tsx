@@ -4,7 +4,7 @@ import { setEnabledMod, setSelectedMod } from '../../redux/slices/mod';
 
 import ModConfig from '../../types/Configuration';
 
-const ModOverview = ({ mod, isEnabled }: { mod: ModConfig; isEnabled: boolean }) => {
+const ModOverview = ({ mod, isEnabled, isSelected }: { mod: ModConfig; isEnabled: boolean; isSelected: boolean }) => {
     const dispatch = useDispatch();
 
     const handleEnable = () => {
@@ -26,7 +26,8 @@ const ModOverview = ({ mod, isEnabled }: { mod: ModConfig; isEnabled: boolean })
             alignItems="center"
             gap={2}
             onClick={handleSelect}
-            boxShadow={`0 0 0 2px var(--chakra-colors-green-300)`}
+            boxShadow={isSelected ? `0 0 0 2px var(--chakra-colors-green-300)` : undefined}
+            _hover={{ boxShadow: isSelected ? undefined : `0 0 0 2px var(--chakra-colors-green-200)` }}
         >
             <Text
                 sx={{
