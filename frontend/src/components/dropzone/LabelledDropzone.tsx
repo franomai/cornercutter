@@ -58,7 +58,7 @@ const LabelledDropzone = ({
     }, [label, handleClearAllSkills, rotateLabel]);
 
     return (
-        <Stack spacing={6} height="full" w="full" direction={rotateLabel ? 'row' : 'column'}>
+        <Stack spacing={6} height="full" w="full" direction={rotateLabel ? 'row' : 'column'} userSelect="none">
             {renderLabel()}
             <Dropzone {...dropzoneProps} />
         </Stack>
