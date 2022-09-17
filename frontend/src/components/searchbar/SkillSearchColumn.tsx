@@ -3,7 +3,6 @@ import { ReactNode, useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getAllSkills } from '../../redux/slices/skills';
 import DraggableSkillCard from '../skills/DraggableSkillCard';
-import SkillCard from '../skills/SkillCard';
 import SearchBar from './SearchBar';
 
 const SearchColumn = () => {
@@ -36,7 +35,7 @@ const SearchColumn = () => {
     }
 
     return (
-        <Stack w="300px" minH="full" background="blackAlpha.200" pt={2} px={4} gap={1} overflow="none" pb={14}>
+        <Stack w="300px" minH="full" background="blackAlpha.200" pt={2} px={4} gap={1} pb={14}>
             <SearchBar handleSearch={filterSkills} />
             <Stack gap={1} overflowY="auto" pr={2} h="full">
                 {renderItems()}

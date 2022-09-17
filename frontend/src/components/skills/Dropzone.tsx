@@ -41,6 +41,7 @@ const Dropzone = ({
 
     return (
         <Flex
+            minHeight="170px"
             position="relative"
             p={2}
             ref={dropRef}

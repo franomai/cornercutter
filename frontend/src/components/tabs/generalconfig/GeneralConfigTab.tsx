@@ -96,66 +96,64 @@ const GeneralConfigTab = ({ selectedMod }: { selectedMod: ModConfig }) => {
     }
 
     return (
-        <Stack direction="row" h="full">
+        <Stack direction="row" maxH="full" h="full" overflow="hidden">
             <ContentContainer>
-                <Stack spacing={8} height="full">
-                    <Stack spacing={2}>
-                        <Flex direction="row" justifyContent="space-between">
-                            <Text fontSize="3xl" fontWeight="bold">
-                                {selectedMod.info.name}
-                            </Text>
-                            {renderActionButtons()}
-                        </Flex>
-                        <Text>{selectedMod.info.description}</Text>
-                    </Stack>
-                    <Stack spacing={6}>
-                        <Text fontSize="2xl" fontWeight="bold">
-                            Options
+                <Stack spacing={2}>
+                    <Flex direction="row" justifyContent="space-between">
+                        <Text fontSize="3xl" fontWeight="bold">
+                            {selectedMod.info.name}
                         </Text>
-                        <SimpleGrid columns={{ sm: 1, xl: 2 }} spacingX={2} spacingY={6}>
-                            <LabelledRadioGroup
-                                title="Skill Spawns"
-                                tooltip="Select how skills should be spawned"
-                                value={selectedMod.general.spawns}
-                                onChange={(newValue) => dispatch(setSpawns(newValue as SpawnType))}
-                            >
-                                <Radio value="Looped">Looped</Radio>
-                                <Radio value="Weighted">Weighted</Radio>
-                                <Radio value="Consecutive">Consecutive</Radio>
-                            </LabelledRadioGroup>
-                            <LabelledRadioGroup
-                                title="Curse Room Spawns"
-                                tooltip="Select when the curse room should spawn"
-                                value={selectedMod.general.curseSpawns}
-                                onChange={(newValue) => dispatch(setCurseSpawns(newValue as CurseSpawnType))}
-                            >
-                                <Radio value="Randomly">Randomly</Radio>
-                                <Radio value="Always">Always</Radio>
-                                <Radio value="Never">Never</Radio>
-                            </LabelledRadioGroup>
-                            {renderOptionCheckboxes([
-                                Options.ConfigPerFloor,
-                                Options.ConfigPerRoom,
-                                Options.AwardSkillsPerFloor,
-                                Options.RemoveHealingItems,
-                            ])}
-                            {renderOptionCheckboxes([
-                                Options.DisableMentorAbilities,
-                                Options.DisableGiftOfIntern,
-                                Options.DisablePinned,
-                            ])}
-                        </SimpleGrid>
-                    </Stack>
-                    <Stack spacing={6} height="full">
-                        <Text fontSize="2xl" fontWeight="bold">
-                            Starting Skills
-                        </Text>
-                        <Dropzone
-                            skills={selectedMod.general.startingSkills}
-                            handleDropSkill={(skillId) => dispatch(addStartingSkill(skillId))}
-                            handleDeleteSkill={(skillIndex) => dispatch(deleteStartingSkill(skillIndex))}
-                        />
-                    </Stack>
+                        {renderActionButtons()}
+                    </Flex>
+                    <Text>{selectedMod.info.description}</Text>
+                </Stack>
+                <Stack spacing={6}>
+                    <Text fontSize="2xl" fontWeight="bold">
+                        Options
+                    </Text>
+                    <SimpleGrid columns={{ sm: 1, xl: 2 }} spacingX={2} spacingY={6}>
+                        <LabelledRadioGroup
+                            title="Skill Spawns"
+                            tooltip="Select how skills should be spawned"
+                            value={selectedMod.general.spawns}
+                            onChange={(newValue) => dispatch(setSpawns(newValue as SpawnType))}
+                        >
+                            <Radio value="Looped">Looped</Radio>
+                            <Radio value="Weighted">Weighted</Radio>
+                            <Radio value="Consecutive">Consecutive</Radio>
+                        </LabelledRadioGroup>
+                        <LabelledRadioGroup
+                            title="Curse Room Spawns"
+                            tooltip="Select when the curse room should spawn"
+                            value={selectedMod.general.curseSpawns}
+                            onChange={(newValue) => dispatch(setCurseSpawns(newValue as CurseSpawnType))}
+                        >
+                            <Radio value="Randomly">Randomly</Radio>
+                            <Radio value="Always">Always</Radio>
+                            <Radio value="Never">Never</Radio>
+                        </LabelledRadioGroup>
+                        {renderOptionCheckboxes([
+                            Options.ConfigPerFloor,
+                            Options.ConfigPerRoom,
+                            Options.AwardSkillsPerFloor,
+                            Options.RemoveHealingItems,
+                        ])}
+                        {renderOptionCheckboxes([
+                            Options.DisableMentorAbilities,
+                            Options.DisableGiftOfIntern,
+                            Options.DisablePinned,
+                        ])}
+                    </SimpleGrid>
+                </Stack>
+                <Stack spacing={6} height="full">
+                    <Text fontSize="2xl" fontWeight="bold">
+                        Starting Skills
+                    </Text>
+                    <Dropzone
+                        skills={selectedMod.general.startingSkills}
+                        handleDropSkill={(skillId) => dispatch(addStartingSkill(skillId))}
+                        handleDeleteSkill={(skillIndex) => dispatch(deleteStartingSkill(skillIndex))}
+                    />
                 </Stack>
             </ContentContainer>
             <SkillSearchColumn />
