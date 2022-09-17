@@ -1,17 +1,16 @@
-import { Box, Center, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
-import { addMod, getAllMods, getSelectedMod } from './redux/slices/mod';
-import { DEFAULT_CONFIG, Floor, Options } from './types/Configuration';
-import { ReactNode, useCallback, useEffect } from 'react';
+import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { getAllMods, getSelectedMod } from './redux/slices/mod';
+import { Floor, Options } from './types/Configuration';
+import { ReactNode, useCallback } from 'react';
 import { modHasOption } from './utility/ConfigHelpers';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import AllFloorsConfigTab from './components/tabs/AllFloorsConfigTab';
+import BlankTextLayout from './components/layout/BlankTextLayout';
 import FloorConfigTab from './components/tabs/FloorConfigTab';
 import GeneralConfigTab from './components/tabs/generalconfig';
 import TabData from './types/TabData';
 import ModList from './components/mods/ModList';
 import './App.css';
-import BlankTextLayout from './components/layout/BlankTextLayout';
 
 function App() {
     const mods = useSelector(getAllMods);
