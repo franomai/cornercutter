@@ -32,23 +32,26 @@ function App() {
             tabs.push(
                 {
                     name: 'Floor 1',
-                    tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.FirstFloor} floorLabel="Floor 1" />,
+                    tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.FirstFloor} />,
                 },
                 {
                     name: 'Floor 2',
-                    tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.SecondFloor} floorLabel="Floor 2" />,
+                    tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.SecondFloor} />,
                 },
                 {
                     name: 'Floor 3',
-                    tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.ThirdFloor} floorLabel="Floor 3" />,
+                    tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.ThirdFloor} />,
                 },
                 {
                     name: 'Boss Floor',
-                    tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.Boss} floorLabel="Boss Floor" />,
+                    tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.Boss} />,
                 },
             );
         } else {
-            tabs.push({ name: 'Floor Config', tab: <AllFloorsConfigTab /> });
+            tabs.push({
+                name: 'All Floors',
+                tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.AllFloors} />,
+            });
         }
 
         return tabs;

@@ -22,7 +22,7 @@ const roomLabels: Record<string, ReactNode> = {
     [Room.All]: 'All Rooms',
 };
 
-const FloorConfigTab = ({ selectedMod, floor }: { selectedMod: ModConfig; floor: Floor; floorLabel: string }) => {
+const FloorConfigTab = ({ selectedMod, floor }: { selectedMod: ModConfig; floor: Floor }) => {
     const dispatch = useDispatch();
 
     const renderDropzone = useCallback(

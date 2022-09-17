@@ -81,7 +81,7 @@ const Dropzone = ({
                 w="full"
                 maxW="full"
                 direction="row"
-                justifyContent="flex-start"
+                alignContent="flex-start"
                 {...getGridProps()}
             >
                 {skills.map((weightedSkill, skillIndex) => (
