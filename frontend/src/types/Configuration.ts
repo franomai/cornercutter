@@ -4,6 +4,7 @@ export default interface ModConfig {
     id: number;
     info: ModInfo;
     general: GeneralConfig;
+    floorSkills: FloorSkills;
 }
 
 export interface ModInfo {
@@ -18,20 +19,7 @@ export interface GeneralConfig {
     startingSkills: WeightedSkill[];
 }
 
-export type FloorSkills = AllRooms | SpecificRooms;
-
-export interface AllRooms {
-    type: 'all';
-    skills: WeightedSkill[];
-}
-
-export interface SpecificRooms {
-    type: 'rooms';
-    skill: WeightedSkill[];
-    curse: WeightedSkill[];
-    finale: WeightedSkill[];
-    shop: WeightedSkill[];
-}
+export type FloorSkills = Record<Floor, Record<Room, WeightedSkill[]>>;
 
 export enum SpawnType {
     Looped = 'Looped',

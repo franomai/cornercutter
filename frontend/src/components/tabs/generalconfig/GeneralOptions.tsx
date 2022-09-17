@@ -43,7 +43,7 @@ const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
             <SimpleGrid columns={{ sm: 1, xl: 2 }} spacingX={2} spacingY={6}>
                 <LabelledRadioGroup
                     title="Skill Spawns"
-                    tooltip="Select how skills should be spawned"
+                    tooltip="Select how skills should be spawned."
                     value={selectedMod.general.spawns}
                     onChange={(newValue) => dispatch(setSpawns(newValue as SpawnType))}
                 >
@@ -53,7 +53,7 @@ const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
                 </LabelledRadioGroup>
                 <LabelledRadioGroup
                     title="Curse Room Spawns"
-                    tooltip="Select when the curse room should spawn"
+                    tooltip="Select when the curse room should spawn."
                     value={selectedMod.general.curseSpawns}
                     onChange={(newValue) => dispatch(setCurseSpawns(newValue as CurseSpawnType))}
                 >

@@ -14,3 +14,7 @@ export function convertKeysToSnakeCase(obj: any): any {
 export function isObject(obj: unknown): obj is Record<string, unknown> {
     return typeof obj === 'object';
 }
+
+export function allValues<T extends {}>(anEnum: T): T[keyof T][] {
+    return Object.values(anEnum) as unknown as T[keyof T][];
+}
