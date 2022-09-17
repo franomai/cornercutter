@@ -1,5 +1,5 @@
 import { Box, Flex, FlexProps, SimpleGrid, SimpleGridProps, Stack, Text } from '@chakra-ui/react';
-import { ReactNode, useEffect, useRef } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useSelector } from 'react-redux';
 import { getAllSkills } from '../../redux/slices/skills';
@@ -28,14 +28,17 @@ const Dropzone = ({
         }),
     }));
 
+    const [prevSkillCount, setPrevSkillCount] = useState(0);
+
     useEffect(() => {
-        if (singleRow) {
+        if (singleRow && skills.length > prevSkillCount) {
             scrollRef.current?.scrollTo({
                 left: scrollRef.current.scrollWidth,
                 behavior: 'smooth',
             });
         }
-    }, [skills, singleRow]);
+        setPrevSkillCount(skills.length);
+    }, [skills.length, singleRow, prevSkillCount]);
 
     function renderInCenter(children: ReactNode): ReactNode {
         return (
@@ -50,17 +53,16 @@ const Dropzone = ({
     }
 
     return (
-        <Box p={2} ref={dropRef} border="2px dashed" borderColor={canDrop ? 'green.300' : 'gray.600'} rounded="lg">
-            <Flex
-                ref={scrollRef}
-                minHeight="150px"
-                position="relative"
-                gap={2}
-                w="full"
-                maxW="full"
-                direction="row"
-                {...getGridProps()}
-            >
+        <Box
+            position="relative"
+            p={2}
+            ref={dropRef}
+            border="2px dashed"
+            borderColor={canDrop ? 'green.300' : 'gray.600'}
+            rounded="lg"
+            h={singleRow ? undefined : 'full'}
+        >
+            <Flex ref={scrollRef} minHeight="150px" gap={2} w="full" maxW="full" direction="row" {...getGridProps()}>
                 {skills.map((skillId, skillIndex) => (
                     <SkillCard
                         key={skillIndex}
