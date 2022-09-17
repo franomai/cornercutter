@@ -1,4 +1,4 @@
-import { Box, Stack, Text } from '@chakra-ui/react';
+import { Box, Flex, FlexProps, SimpleGrid, SimpleGridProps, Stack, Text } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { useDrop } from 'react-dnd';
 import { useSelector } from 'react-redux';
@@ -35,8 +35,12 @@ const Dropzone = ({
         );
     }
 
+    function getGridProps(): FlexProps {
+        return singleRow ? { overflowY: 'hidden', overflowX: 'auto' } : { maxW: 'full', flexWrap: 'wrap' };
+    }
+
     return (
-        <Box
+        <Flex
             position="relative"
             p={2}
             ref={dropRef}
@@ -45,9 +49,17 @@ const Dropzone = ({
             rounded="lg"
             w="full"
             h="full"
-            maxH="full"
-            overflowY="auto"
+            direction="row"
+            {...getGridProps()}
         >
+            {skills.map((skillId, skillIndex) => (
+                <SkillCard
+                    key={skillIndex}
+                    skill={allSkills[skillId]}
+                    deleteIcon
+                    handleDelete={() => handleDeleteSkill(skillIndex)}
+                />
+            ))}
             {canDrop &&
                 renderInCenter(
                     <Text fontSize="5xl" fontWeight="bold" color="green.300">
@@ -57,15 +69,7 @@ const Dropzone = ({
             {!canDrop &&
                 skills.length === 0 &&
                 renderInCenter(<BlankTextLayout title="Add Skills" subtitle="Simply drag and drop" />)}
-            {skills.map((skillId, skillIndex) => (
-                <SkillCard
-                    key={skillIndex}
-                    skill={allSkills[skillId]}
-                    deleteIcon
-                    handleDelete={() => handleDeleteSkill(skillIndex)}
-                />
-            ))}
-        </Box>
+        </Flex>
     );
 };
 

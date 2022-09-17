@@ -49,6 +49,10 @@ const SkillCard = forwardRef<SkillCardProps, 'div'>(
                 alignItems="center"
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
+                maxH="150px"
+                minH="150px"
+                maxW="180px"
+                minW="180px"
                 {...flexProps}
             >
                 {isHovering && renderIcons()}

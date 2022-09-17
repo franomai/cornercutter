@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 
 const ContentContainer = ({ children }: { children?: ReactNode }) => {
     return (
-        <Box w="full" h="full" px="72px" py="64px">
+        <Box maxW="full" w="full" h="full" px="72px" py="64px" overflowX="hidden">
             {children}
         </Box>
     );
