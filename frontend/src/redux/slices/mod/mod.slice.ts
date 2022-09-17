@@ -12,7 +12,6 @@ import ModConfig, {
 } from '../../../types/Configuration';
 import { generateEmptyFloorSkills, setModOptionFlag } from '../../../utility/ConfigHelpers';
 import { WeightedSkill } from '../../../types/Skill';
-import { newArray, newMap } from '../../../utility/Utils';
 
 export interface State {
     mods: ModConfig[];

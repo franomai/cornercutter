@@ -2,7 +2,6 @@ import { Box, Flex, IconButton, Stack, Text } from '@chakra-ui/react';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactNode, useCallback } from 'react';
-import { render } from 'react-dom';
 import Dropzone, { DropzoneProps } from './Dropzone';
 
 const LabelledDropzone = ({
@@ -29,7 +28,7 @@ const LabelledDropzone = ({
                         alignItems="center"
                         style={{ transform: 'rotate(-90deg)' }}
                     >
-                        <Text fontSize="2xl" fontWeight="bold">
+                        <Text as={Box} fontSize="2xl" fontWeight="bold">
                             {label}
                         </Text>
                         <IconButton
