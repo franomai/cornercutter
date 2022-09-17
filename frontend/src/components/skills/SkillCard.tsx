@@ -38,6 +38,7 @@ const SkillCard = forwardRef<SkillCardProps, 'div'>(
 
         return (
             <Flex
+                userSelect="none"
                 ref={ref}
                 position="relative"
                 direction="column"

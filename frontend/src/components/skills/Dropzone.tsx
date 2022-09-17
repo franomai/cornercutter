@@ -67,7 +67,7 @@ const Dropzone = ({
             {skills.length === 0 &&
                 (canDrop
                     ? renderInCenter(
-                          <Text fontSize="5xl" fontWeight="bold" color="green.300">
+                          <Text fontSize="5xl" fontWeight="bold" color="green.300" userSelect="none">
                               Drop Here
                           </Text>,
                       )
