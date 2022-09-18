@@ -3,6 +3,9 @@
   windows_subsystem = "windows"
 )]
 
+mod config_io;
+
+use config_io::{CornerCutterConfig, retrieve_cornercutter_config};
 use serde::{Serialize, Deserialize};
 use bitflags::bitflags;
 use integer_encoding::VarInt;
@@ -43,7 +46,7 @@ struct FloorSkills {
 #[derive(Serialize, Deserialize)]
 struct RoomSkills {
     all: Vec<WeightedSkill>,
-    skill: Vec<WeightedSkill>,
+    free: Vec<WeightedSkill>,
     shop: Vec<WeightedSkill>,
     curse: Vec<WeightedSkill>,
     finale: Vec<WeightedSkill>,
@@ -121,6 +124,14 @@ fn get_config_code() -> String {
 }
 
 #[tauri::command]
+fn get_cornercutter_config() -> CornerCutterConfig {
+    return match retrieve_cornercutter_config() {
+        Err(_why) => CornerCutterConfig { going_under_dir: None },
+        Ok(config) => config,
+    };
+}
+
+#[tauri::command]
 fn save_mod(mod_config: ModConfig) {
     let config_string = encode_mod_config(&mod_config);
     let result_array = string_to_u32_vec(&config_string);
@@ -128,6 +139,9 @@ fn save_mod(mod_config: ModConfig) {
     println!("{}", config_string);
     println!("{:?}", result_array);
     println!("{}", serialized);
+
+    let config = retrieve_cornercutter_config();
+    println!("{:?}", config);
 }
 
 fn encode_configuration(config: &Configuration) -> String {
@@ -244,7 +258,7 @@ fn build_mod_array(config: &ModConfig) ->  Vec<u32> {
 fn build_room_skills_array(floor_id: u32, room_skills: &RoomSkills, per_room: bool, is_weighted: bool) -> Vec<u32> {
     let mut array = Vec::new();
     let total_skills = if per_room {
-        room_skills.skill.len() + room_skills.shop.len() + room_skills.curse.len() + room_skills.finale.len()
+        room_skills.free.len() + room_skills.shop.len() + room_skills.curse.len() + room_skills.finale.len()
     } else {
         room_skills.all.len()
     };
@@ -256,8 +270,8 @@ fn build_room_skills_array(floor_id: u32, room_skills: &RoomSkills, per_room: bo
     }
 
     if per_room {
-        array.push(room_skills.skill.len() as u32);
-        array.extend(build_skill_array(&room_skills.skill, is_weighted).clone());
+        array.push(room_skills.free.len() as u32);
+        array.extend(build_skill_array(&room_skills.free, is_weighted).clone());
         array.push(room_skills.shop.len() as u32);
         array.extend(build_skill_array(&room_skills.shop, is_weighted).clone());
         array.push(room_skills.curse.len() as u32);
