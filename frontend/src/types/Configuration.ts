@@ -43,7 +43,7 @@ export enum Floor {
 
 export enum Room {
     All = 'All',
-    Skill = 'Skill',
+    Free = 'Free',
     Shop = 'Shop',
     Curse = 'Curse',
     Finale = 'Finale',

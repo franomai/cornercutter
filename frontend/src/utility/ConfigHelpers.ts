@@ -28,7 +28,7 @@ export function generateEmptyFloorSkills(): FloorSkills {
 export function generateEmptyRoomSkills(): Record<Room, WeightedSkill[]> {
     return {
         [Room.All]: [],
-        [Room.Skill]: [],
+        [Room.Free]: [],
         [Room.Shop]: [],
         [Room.Curse]: [],
         [Room.Finale]: [],

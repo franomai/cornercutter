@@ -9,14 +9,10 @@ import HelpIcon from '../helpicon';
 import SideSearchColumnLayout from '../layout/SideSearchColumnLayout';
 
 const roomLabels: Record<string, ReactNode> = {
-    [Room.Skill]: (
+    [Room.Free]: (
         <Flex alignItems="center" gap={2} ml={-2}>
-            <HelpIcon
-                tooltip="If a pedastral treasure spawns it will pull from this skill pool too."
-                placement="left"
-                size="sm"
-            />
-            {Room.Skill}
+            <HelpIcon tooltip="This includes the skill room and pedestal treasure." placement="left" size="sm" />
+            {Room.Free}
         </Flex>
     ),
     [Room.All]: 'All Rooms',
@@ -48,7 +44,7 @@ const FloorConfigTab = ({ selectedMod, floor }: { selectedMod: ModConfig; floor:
 
     const renderDropzones = useCallback((): ReactNode => {
         if (modHasOption(selectedMod, Options.ConfigPerRoom)) {
-            return [Room.Skill, Room.Shop, Room.Curse, Room.Finale].map((room) => renderDropzone(room, true));
+            return [Room.Free, Room.Shop, Room.Curse, Room.Finale].map((room) => renderDropzone(room, true));
         }
 
         return renderDropzone(Room.All, false);
