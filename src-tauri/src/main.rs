@@ -132,7 +132,7 @@ fn get_config_code() -> String {
 #[tauri::command]
 fn get_cornercutter_config() -> CornerCutterConfig {
     return match deserialize_cornercutter_config() {
-        Err(_why) => CornerCutterConfig { going_under_dir: None },
+        Err(_why) => CornerCutterConfig::new(),
         Ok(config) => config,
     };
 }

@@ -1,5 +1,5 @@
 use std::fs::{File};
-use std::io;
+use std::io::{self, ErrorKind};
 use std::path::Path;
 use serde::{Serialize, Deserialize};
 
@@ -9,6 +9,16 @@ const CORNER_CUTTER_FILE: &str = "cornercutter.json";
 #[serde(rename_all="camelCase")]
 pub struct CornerCutterConfig {
     pub going_under_dir: Option<String>,
+    pub first_time: bool,
+}
+
+impl CornerCutterConfig {
+    pub fn new() -> Self {
+        CornerCutterConfig {
+            going_under_dir: try_find_going_under_dir(),
+            first_time: true,
+        }
+    }
 }
 
 pub fn deserialize_cornercutter_config() -> Result<CornerCutterConfig, io::Error> {
@@ -16,14 +26,21 @@ pub fn deserialize_cornercutter_config() -> Result<CornerCutterConfig, io::Error
     let file = File::open(&config_file_path);
 
     if file.is_ok() {
-        let config: CornerCutterConfig = serde_json::from_reader(file.unwrap())
-            .expect("Error reading cornercutter config");
+        let deserialized: Result<CornerCutterConfig, serde_json::Error> = serde_json::from_reader(file.unwrap());
+        if deserialized.is_ok() {
+            let mut config = deserialized.unwrap();
+            if config.first_time == true {
+                config.first_time = false;
+                serialize_cornercutter_config(&config)
+            }
 
-        return Ok(config);
+            return Ok(config);
+        }
+        else {
+            return Err(io::Error::new(ErrorKind::Other, deserialized.unwrap_err().to_string()))
+        }
     } else {
-        let config = CornerCutterConfig {
-            going_under_dir: try_find_going_under_dir()
-        };
+        let config = CornerCutterConfig::new();
         serialize_cornercutter_config(&config);
         return Ok(config);
     }
