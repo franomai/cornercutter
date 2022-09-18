@@ -20,6 +20,5 @@ This web application uses Tauri. Follow their instructions [here](https://tauri.
   
 - `npm run tauri build` - Builds an optimised version of the application in `src-tauri/target/release/`.
 
-
-
+## Finding Your Going Under Installation
 

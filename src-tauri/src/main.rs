@@ -142,6 +142,7 @@ fn set_going_under_dir(dir: String) -> bool {
     if is_valid_going_under_dir(dir.as_str()) {
         let mut config = get_cornercutter_config();
         config.going_under_dir = Some(dir);
+        config.set_directory = true;
         serialize_cornercutter_config(&config);
         // TODO: Create folders in going under directory
         return true;

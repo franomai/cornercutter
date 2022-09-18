@@ -9,14 +9,14 @@ const CORNER_CUTTER_FILE: &str = "cornercutter.json";
 #[serde(rename_all="camelCase")]
 pub struct CornerCutterConfig {
     pub going_under_dir: Option<String>,
-    pub first_time: bool,
+    pub set_directory: bool,
 }
 
 impl CornerCutterConfig {
     pub fn new() -> Self {
         CornerCutterConfig {
             going_under_dir: try_find_going_under_dir(),
-            first_time: true,
+            set_directory: false,
         }
     }
 }
@@ -28,12 +28,7 @@ pub fn deserialize_cornercutter_config() -> Result<CornerCutterConfig, io::Error
     if file.is_ok() {
         let deserialized: Result<CornerCutterConfig, serde_json::Error> = serde_json::from_reader(file.unwrap());
         if deserialized.is_ok() {
-            let mut config = deserialized.unwrap();
-            if config.first_time == true {
-                config.first_time = false;
-                serialize_cornercutter_config(&config)
-            }
-
+            let config = deserialized.unwrap();
             return Ok(config);
         }
         else {

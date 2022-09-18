@@ -5,12 +5,14 @@ import {
     FormHelperText,
     FormLabel,
     Input,
+    Link,
     Modal,
     ModalBody,
     ModalContent,
     ModalFooter,
     ModalHeader,
     ModalOverlay,
+    Text,
     useDisclosure,
 } from '@chakra-ui/react';
 import { invoke } from '@tauri-apps/api/tauri';
@@ -24,32 +26,31 @@ const FindGoingUnder = ({ config }: { config: CornerCutterConfig }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [dir, setDir] = useState(config.goingUnderDir ?? '');
     const [isValid, setIsValid] = useState(true);
-    const [foundDir, setFoundDir] = useState(false);
 
     useEffect(() => {
-        if ((config.firstTime || !config.goingUnderDir) && !foundDir) {
+        if (!config.setDirectory) {
             onOpen();
         }
-    }, [config, foundDir]);
+    }, [config.setDirectory]);
 
     const handleSaveGoingUnderDir = useCallback(() => {
-        invoke('set_going_under_dir', { dir }).then((res) => {
+        let strippedDir = dir.replace(/\\Going Under.exe$/, '');
+        invoke('set_going_under_dir', { dir: strippedDir }).then((res) => {
             const isValid = res as boolean;
             setIsValid(isValid);
             if (isValid) {
                 onClose();
-                setFoundDir(true);
-                dispatch(setCornercutterConfig({ ...config, goingUnderDir: dir }));
+                dispatch(setCornercutterConfig({ setDirectory: true, goingUnderDir: dir }));
             }
         });
     }, [dir, onClose, dispatch, config]);
 
     if (!isOpen) return null;
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Locate Going Under for us</ModalHeader>
+                <ModalHeader>Locate Going Under For Us</ModalHeader>
                 <ModalBody>
                     <FormControl isInvalid={!isValid}>
                         {config?.goingUnderDir && <FormHelperText>We think we found it, is it correct?</FormHelperText>}
@@ -57,6 +58,16 @@ const FindGoingUnder = ({ config }: { config: CornerCutterConfig }) => {
                         <Input value={dir} onChange={(e) => setDir(e.target.value)} />
                         {!isValid && <FormErrorMessage>That doesn't seem to be a valid directory</FormErrorMessage>}
                     </FormControl>
+                    <Text mt={2}>
+                        Not sure where Going Under is installed? Check out{' '}
+                        <Link
+                            color="green.300"
+                            href="https://github.com/franomai/cornercutter#finding-your-going-under-installation"
+                        >
+                            this tutorial
+                        </Link>
+                        .
+                    </Text>
                 </ModalBody>
                 <ModalFooter>
                     <Button onClick={() => handleSaveGoingUnderDir()}>Save</Button>
