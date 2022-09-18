@@ -21,9 +21,11 @@ pub fn deserialize_cornercutter_config() -> Result<CornerCutterConfig, io::Error
 
         return Ok(config);
     } else {
-        return Ok(CornerCutterConfig {
-         going_under_dir: try_find_going_under_dir()
-        });
+        let config = CornerCutterConfig {
+            going_under_dir: try_find_going_under_dir()
+        };
+        serialize_cornercutter_config(&config);
+        return Ok(config);
     }
 }
 
