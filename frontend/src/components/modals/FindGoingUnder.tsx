@@ -61,6 +61,7 @@ const FindGoingUnder = ({ config }: { config: CornerCutterConfig }) => {
                     <Text mt={2}>
                         Not sure where Going Under is installed? Check out{' '}
                         <Link
+                            isExternal
                             color="green.300"
                             href="https://github.com/franomai/cornercutter#finding-your-going-under-installation"
                         >
