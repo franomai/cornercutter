@@ -5,7 +5,7 @@
 
 mod config_io;
 
-use config_io::{CornerCutterConfig, deserialize_cornercutter_config};
+use config_io::{CornerCutterConfig, deserialize_cornercutter_config, is_valid_going_under_dir};
 use serde::{Serialize, Deserialize};
 use bitflags::bitflags;
 use integer_encoding::VarInt;
@@ -138,8 +138,15 @@ fn get_cornercutter_config() -> CornerCutterConfig {
 }
 
 #[tauri::command]
-fn save_cornercutter_config(config: CornerCutterConfig) {
-    serialize_cornercutter_config(&config);
+fn set_going_under_dir(dir: String) -> bool {
+    if is_valid_going_under_dir(dir.as_str()) {
+        let mut config = get_cornercutter_config();
+        config.going_under_dir = Some(dir);
+        serialize_cornercutter_config(&config);
+        // TODO: Create folders in going under directory
+        return true;
+    }
+    return false;
 }
 
 #[tauri::command]
@@ -308,7 +315,7 @@ fn main() {
     let context = tauri::generate_context!();
     tauri::Builder::default()
         .menu(tauri::Menu::os_default(&context.package_info().name))
-        .invoke_handler(tauri::generate_handler![accept_config, get_config_code, get_cornercutter_config, save_mod, save_cornercutter_config])
+        .invoke_handler(tauri::generate_handler![accept_config, get_config_code, get_cornercutter_config, save_mod, set_going_under_dir])
         .run(context)
         .expect("error while running tauri application");
 }

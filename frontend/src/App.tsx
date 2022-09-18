@@ -16,7 +16,6 @@ function App() {
                 .then((config) => dispatch(setCornercutterConfig(config as CornerCutterConfig)))
                 .catch(console.error);
         }
-        console.log(cornercutterConfig);
     }, [cornercutterConfig]);
 
     return <ModdingConfig />;

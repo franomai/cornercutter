@@ -1,5 +1,25 @@
-import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
-import { ReactNode, useCallback } from 'react';
+import {
+    Box,
+    Button,
+    FormControl,
+    FormHelperText,
+    FormLabel,
+    Input,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    Stack,
+    Tab,
+    TabList,
+    TabPanel,
+    TabPanels,
+    Tabs,
+    useDisclosure,
+} from '@chakra-ui/react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getCornercutterConfig } from '../../redux/slices/cornercutter';
 import { getAllMods, getSelectedMod } from '../../redux/slices/mod';
@@ -7,6 +27,7 @@ import { Floor, Options } from '../../types/Configuration';
 import TabData from '../../types/TabData';
 import { modHasOption } from '../../utility/ConfigHelpers';
 import BlankTextLayout from '../layout/BlankTextLayout';
+import FindGoingUnder from '../modals/FindGoingUnder';
 import ModList from '../mods/ModList';
 import FloorConfigTab from '../tabs/FloorConfigTab';
 import GeneralConfigTab from '../tabs/generalconfig';
@@ -97,6 +118,7 @@ const ModdingConfig = () => {
                     />
                 )}
             </Stack>
+            {config && <FindGoingUnder config={config} />}
         </Box>
     );
 };
