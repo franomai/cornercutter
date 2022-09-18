@@ -5,13 +5,15 @@
 
 mod config_io;
 
-use config_io::{CornerCutterConfig, retrieve_cornercutter_config};
+use config_io::{CornerCutterConfig, deserialize_cornercutter_config};
 use serde::{Serialize, Deserialize};
 use bitflags::bitflags;
 use integer_encoding::VarInt;
 use base64::{encode, decode};
 use num_derive::FromPrimitive;
 use num_traits::FromPrimitive;
+
+use crate::config_io::serialize_cornercutter_config;
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all="camelCase")]
@@ -129,10 +131,15 @@ fn get_config_code() -> String {
 
 #[tauri::command]
 fn get_cornercutter_config() -> CornerCutterConfig {
-    return match retrieve_cornercutter_config() {
+    return match deserialize_cornercutter_config() {
         Err(_why) => CornerCutterConfig { going_under_dir: None },
         Ok(config) => config,
     };
+}
+
+#[tauri::command]
+fn save_cornercutter_config(config: CornerCutterConfig) {
+    serialize_cornercutter_config(&config);
 }
 
 #[tauri::command]
@@ -301,7 +308,7 @@ fn main() {
     let context = tauri::generate_context!();
     tauri::Builder::default()
         .menu(tauri::Menu::os_default(&context.package_info().name))
-        .invoke_handler(tauri::generate_handler![accept_config, get_config_code, get_cornercutter_config, save_mod])
+        .invoke_handler(tauri::generate_handler![accept_config, get_config_code, get_cornercutter_config, save_mod, save_cornercutter_config])
         .run(context)
         .expect("error while running tauri application");
 }
