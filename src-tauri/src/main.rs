@@ -14,6 +14,7 @@ use num_derive::FromPrimitive;
 use num_traits::FromPrimitive;
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all="camelCase")]
 struct ModConfig {
     info: ModInfo,
     general: GeneralConfig,
@@ -27,6 +28,7 @@ struct ModInfo {
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all="camelCase")]
 struct GeneralConfig {
     spawns: SpawnType,
     curse_spawns: CurseSpawnType,
@@ -35,6 +37,7 @@ struct GeneralConfig {
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all="camelCase")]
 struct FloorSkills {
     all_floors: RoomSkills,
     first_floor: RoomSkills,
@@ -53,6 +56,7 @@ struct RoomSkills {
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all="camelCase")]
 struct Configuration  {
     spawns: SpawnType,
     curse_spawns: CurseSpawnType,
@@ -139,9 +143,6 @@ fn save_mod(mod_config: ModConfig) {
     println!("{}", config_string);
     println!("{:?}", result_array);
     println!("{}", serialized);
-
-    let config = retrieve_cornercutter_config();
-    println!("{:?}", config);
 }
 
 fn encode_configuration(config: &Configuration) -> String {
@@ -300,10 +301,7 @@ fn main() {
     let context = tauri::generate_context!();
     tauri::Builder::default()
         .menu(tauri::Menu::os_default(&context.package_info().name))
-        .invoke_handler(tauri::generate_handler![accept_config])
-        .invoke_handler(tauri::generate_handler![get_config_code])
-        .invoke_handler(tauri::generate_handler![save_mod])
-        .invoke_handler(tauri::generate_handler![get_cornercutter_config])
+        .invoke_handler(tauri::generate_handler![accept_config, get_config_code, get_cornercutter_config, save_mod])
         .run(context)
         .expect("error while running tauri application");
 }

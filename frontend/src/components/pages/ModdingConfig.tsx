@@ -1,6 +1,7 @@
 import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { ReactNode, useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import { getCornercutterConfig } from '../../redux/slices/cornercutter';
 import { getAllMods, getSelectedMod } from '../../redux/slices/mod';
 import { Floor, Options } from '../../types/Configuration';
 import TabData from '../../types/TabData';
@@ -12,6 +13,7 @@ import GeneralConfigTab from '../tabs/generalconfig';
 
 const ModdingConfig = () => {
     const mods = useSelector(getAllMods);
+    const config = useSelector(getCornercutterConfig);
     const selectedMod = useSelector(getSelectedMod);
 
     const getTabs = useCallback((): TabData[] => {

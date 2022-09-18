@@ -34,19 +34,19 @@ export enum CurseSpawnType {
 }
 
 export enum Floor {
-    AllFloors = 'AllFloors',
-    FirstFloor = 'FirstFloor',
-    SecondFloor = 'SecondFloor',
-    ThirdFloor = 'ThirdFloor',
-    Boss = 'Boss',
+    AllFloors = 'allFloors',
+    FirstFloor = 'firstFloor',
+    SecondFloor = 'secondFloor',
+    ThirdFloor = 'thirdFloor',
+    Boss = 'boss',
 }
 
 export enum Room {
-    All = 'All',
-    Free = 'Free',
-    Shop = 'Shop',
-    Curse = 'Curse',
-    Finale = 'Finale',
+    All = 'all',
+    Free = 'free',
+    Shop = 'shop',
+    Curse = 'curse',
+    Finale = 'finale',
 }
 
 export enum Options {
