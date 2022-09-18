@@ -303,6 +303,7 @@ fn main() {
         .invoke_handler(tauri::generate_handler![accept_config])
         .invoke_handler(tauri::generate_handler![get_config_code])
         .invoke_handler(tauri::generate_handler![save_mod])
+        .invoke_handler(tauri::generate_handler![get_cornercutter_config])
         .run(context)
         .expect("error while running tauri application");
 }
