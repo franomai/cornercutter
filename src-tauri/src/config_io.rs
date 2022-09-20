@@ -59,15 +59,18 @@ pub fn is_valid_going_under_dir(dir: &str) -> bool {
     return file_exists(&[dir, "\\Going Under.exe"].join(""));
 }
 
-
 pub fn serialize_cornercutter_config(config: &CornerCutterConfig) {
     let config_file_path = Path::new(CORNER_CUTTER_FILE);
     // Open a file in write-only mode
-    let file = match File::create(&config_file_path) {
-        Err(why) => panic!("couldn't create {}: {}", CORNER_CUTTER_FILE, why),
-        Ok(file) => file,
-    };
+    let file_result = File::create(&config_file_path);
+    if file_result.is_err() {
+        println!("couldn't create {}: {}", CORNER_CUTTER_FILE, file_result.unwrap_err());
+        return;
+    }
 
-    serde_json::to_writer(file, config)
-        .expect("Error writing  cornercutter config");
+    let res = serde_json::to_writer(file_result.unwrap(), config);
+    if res.is_err() {
+        println!("Error writing  cornercutter config: {}", res.unwrap_err());
+    }
 }
+
