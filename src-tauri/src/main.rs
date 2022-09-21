@@ -7,7 +7,7 @@ mod config_io;
 
 use std::sync::Mutex;
 
-use config_io::{CornerCutterConfig, deserialize_cornercutter_config, is_valid_going_under_dir, CornerCutterCache, load_cornercutter_config};
+use config_io::{CornerCutterConfig, is_valid_going_under_dir, CornerCutterCache, load_cornercutter_config};
 use serde::{Serialize, Deserialize};
 use bitflags::bitflags;
 use integer_encoding::VarInt;
