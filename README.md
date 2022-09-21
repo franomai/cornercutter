@@ -23,7 +23,7 @@ If you then click on Manage > Browse local files, this will bring you to the fol
 
 ### Prerequisites 
 
-This web application uses Tauri. Follow their instructions [here](https://tauri.app/v1/guides/getting-started/prerequisites) to make sure you have all the required prerequisites.
+This application is built using Tauri. Follow their instructions [here](https://tauri.app/v1/guides/getting-started/prerequisites) to make sure you have all the required prerequisites.
 
 ### Setup
 
