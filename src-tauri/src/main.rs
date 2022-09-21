@@ -7,7 +7,7 @@ mod config_io;
 
 use std::sync::Mutex;
 
-use config_io::{CornerCutterConfig, is_valid_going_under_dir, CornerCutterCache, load_cornercutter_config};
+use config_io::{CornerCutterConfig, is_valid_going_under_dir, CornerCutterCache, load_cornercutter_config, create_cornercutter_folders};
 use serde::{Serialize, Deserialize};
 use bitflags::bitflags;
 use integer_encoding::VarInt;
@@ -146,7 +146,7 @@ fn set_going_under_dir(cache: State<CornerCutterCache>, dir: String) -> bool {
         config.going_under_dir = Some(dir);
         config.set_directory = true;
         serialize_cornercutter_config(&config);
-        // TODO: Create folders in going under directory
+        create_cornercutter_folders(&config);
         return true;
     }
     return false;

@@ -1,4 +1,4 @@
-use std::fs::{File};
+use std::fs::{File, create_dir_all};
 use std::io::{self, ErrorKind};
 use std::path::Path;
 use std::sync::Mutex;
@@ -31,6 +31,10 @@ pub fn file_exists(dir: &str) -> bool {
     return File::open(path).is_ok();
 }
 
+pub fn get_relative_dir(config: &CornerCutterConfig, dir: &str) -> String {
+    return [config.going_under_dir.as_deref().unwrap(), dir].join("\\");
+}
+
 pub fn try_find_going_under_dir() -> Option<String> {
     for dir in ["C:\\Program Files (x86)\\Steam\\steamapps\\common\\Going Under", "D:\\Steam\\steamapps\\common\\Going Under"] {
         if is_valid_going_under_dir(dir) {
@@ -41,7 +45,7 @@ pub fn try_find_going_under_dir() -> Option<String> {
 }
 
 pub fn is_valid_going_under_dir(dir: &str) -> bool {
-    return file_exists(&[dir, "\\Going Under.exe"].join(""));
+    return file_exists([dir, "\\Going Under.exe"].join("").as_str());
 }
 
 pub fn load_cornercutter_config() -> CornerCutterConfig {
@@ -81,4 +85,18 @@ pub fn deserialize_cornercutter_config() -> Result<CornerCutterConfig, io::Error
         serialize_cornercutter_config(&config);
         return Ok(config);
     }
+}
+
+pub fn create_cornercutter_folders(config: &CornerCutterConfig) {
+    if config.going_under_dir.is_none() {
+        return;
+    }
+    match create_dir_all(get_relative_dir(config, "/cornercutter/mods")) {
+        Err(why) => {
+            println!("Error creating mods directory: {}", why);
+            return;
+        },
+        Ok(_) => {},
+    }
+
 }
