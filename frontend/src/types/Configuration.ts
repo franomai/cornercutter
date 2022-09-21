@@ -1,11 +1,25 @@
-export default interface Configuration extends GeneralConfig {}
+import { WeightedSkill } from './Skill';
 
-interface GeneralConfig {
+export default interface ModConfig {
+    id: number;
+    info: ModInfo;
+    general: GeneralConfig;
+    floorSkills: FloorSkills;
+}
+
+export interface ModInfo {
+    name: string;
+    description: string;
+}
+
+export interface GeneralConfig {
     spawns: SpawnType;
     curseSpawns: CurseSpawnType;
     options: Options;
-    startingSkillIds: number[];
+    startingSkills: WeightedSkill[];
 }
+
+export type FloorSkills = Record<Floor, Record<Room, WeightedSkill[]>>;
 
 export enum SpawnType {
     Looped = 'Looped',
@@ -20,11 +34,19 @@ export enum CurseSpawnType {
 }
 
 export enum Floor {
-    AllFloors,
-    FirstFloor,
-    SecondFloor,
-    ThirdFloor,
-    Boss,
+    AllFloors = 'allFloors',
+    FirstFloor = 'firstFloor',
+    SecondFloor = 'secondFloor',
+    ThirdFloor = 'thirdFloor',
+    Boss = 'boss',
+}
+
+export enum Room {
+    All = 'all',
+    Free = 'free',
+    Shop = 'shop',
+    Curse = 'curse',
+    Finale = 'finale',
 }
 
 export enum Options {
@@ -35,12 +57,12 @@ export enum Options {
     DisableMentorAbilities = 1 << 3,
     DisableGiftOfIntern = 1 << 4,
     DisablePinned = 1 << 5,
-    AwardSkillsPerLevel = 1 << 6,
+    AwardSkillsPerFloor = 1 << 6,
 }
 
-export const DEFAULT_CONFIG: Configuration = {
+export const DEFAULT_CONFIG: GeneralConfig = {
     spawns: SpawnType.Looped,
     curseSpawns: CurseSpawnType.Randomly,
     options: Options.RemoveHealingItems | Options.DisablePinned,
-    startingSkillIds: [],
+    startingSkills: [],
 };

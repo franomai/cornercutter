@@ -57,10 +57,11 @@
 			{
 				"fileDropEnabled": false,
 				"fullscreen": false,
-				"height": 600,
+				"maximized": true,
 				"resizable": true,
 				"title": "Cornercutter",
-				"width": 800
+				"minWidth": 1200,
+				"minHeight": 600
 			}
 		]
 	}

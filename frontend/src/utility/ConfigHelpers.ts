@@ -1,15 +1,36 @@
-import Configuration, { Options } from '../types/Configuration';
+import ModConfig, { Floor, FloorSkills, Options, Room } from '../types/Configuration';
+import { WeightedSkill } from '../types/Skill';
 
-export function optionsHasFlag(config: Configuration, flag: Options) {
-    return flag === (config.options & flag);
+export function modHasOption(mod: ModConfig, flag: Options) {
+    return flag === (mod.general.options & flag);
 }
 
-export function setOptionFlag(config: Configuration, flag: Options, isSet: boolean) {
+export function setModOptionFlag(mod: ModConfig, flag: Options, isSet: boolean) {
     if (isSet) {
         // Append flag
-        config.options |= flag;
+        mod.general.options |= flag;
     } else {
         // Remove flag
-        config.options &= ~flag;
+        mod.general.options &= ~flag;
     }
+}
+
+export function generateEmptyFloorSkills(): FloorSkills {
+    return {
+        [Floor.AllFloors]: generateEmptyRoomSkills(),
+        [Floor.FirstFloor]: generateEmptyRoomSkills(),
+        [Floor.SecondFloor]: generateEmptyRoomSkills(),
+        [Floor.ThirdFloor]: generateEmptyRoomSkills(),
+        [Floor.Boss]: generateEmptyRoomSkills(),
+    };
+}
+
+export function generateEmptyRoomSkills(): Record<Room, WeightedSkill[]> {
+    return {
+        [Room.All]: [],
+        [Room.Free]: [],
+        [Room.Shop]: [],
+        [Room.Curse]: [],
+        [Room.Finale]: [],
+    };
 }

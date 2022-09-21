@@ -16,15 +16,17 @@
 		"@fortawesome/free-regular-svg-icons": "^6.1.1",
 		"@fortawesome/free-solid-svg-icons": "^6.1.1",
 		"@fortawesome/react-fontawesome": "^0.2.0",
-		"@tauri-apps/api": "^1.0.1",
+		"@reduxjs/toolkit": "^1.8.5",
+		"@tauri-apps/api": "^1.1.0",
 		"framer-motion": "^6.3.16",
 		"react": "^18.0.0",
 		"react-dnd": "^16.0.1",
 		"react-dnd-html5-backend": "^16.0.1",
-		"react-dom": "^18.0.0"
+		"react-dom": "^18.0.0",
+		"react-redux": "^8.0.2"
 	},
 	"devDependencies": {
-		"@tauri-apps/cli": "^1.0.0",
+		"@tauri-apps/cli": "^1.1.1",
 		"@types/node": "^18.0.0",
 		"@types/react": "^18.0.0",
 		"@types/react-dom": "^18.0.0",

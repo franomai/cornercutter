@@ -3,14 +3,65 @@
   windows_subsystem = "windows"
 )]
 
-use serde::Deserialize;
+mod config_io;
+
+use std::sync::Mutex;
+
+use config_io::{CornerCutterConfig, is_valid_going_under_dir, CornerCutterCache, load_cornercutter_config};
+use serde::{Serialize, Deserialize};
 use bitflags::bitflags;
 use integer_encoding::VarInt;
 use base64::{encode, decode};
 use num_derive::FromPrimitive;
 use num_traits::FromPrimitive;
+use tauri::State;
 
-#[derive(Deserialize)]
+use crate::config_io::serialize_cornercutter_config;
+
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all="camelCase")]
+struct ModConfig {
+    info: ModInfo,
+    general: GeneralConfig,
+    floor_skills: FloorSkills
+}
+
+#[derive(Serialize, Deserialize)]
+struct ModInfo {
+    name: String,
+    description: String,
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all="camelCase")]
+struct GeneralConfig {
+    spawns: SpawnType,
+    curse_spawns: CurseSpawnType,
+    options: u32,
+    starting_skills: Vec<WeightedSkill>,
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all="camelCase")]
+struct FloorSkills {
+    all_floors: RoomSkills,
+    first_floor: RoomSkills,
+    second_floor: RoomSkills,
+    third_floor: RoomSkills,
+    boss: RoomSkills,
+}
+
+#[derive(Serialize, Deserialize)]
+struct RoomSkills {
+    all: Vec<WeightedSkill>,
+    free: Vec<WeightedSkill>,
+    shop: Vec<WeightedSkill>,
+    curse: Vec<WeightedSkill>,
+    finale: Vec<WeightedSkill>,
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all="camelCase")]
 struct Configuration  {
     spawns: SpawnType,
     curse_spawns: CurseSpawnType,
@@ -19,13 +70,20 @@ struct Configuration  {
 }
 
 #[derive(Debug)]
-#[derive(Deserialize, Copy, Clone, FromPrimitive)]
+#[derive(Serialize, Deserialize, Copy, Clone)]
+struct WeightedSkill {
+    id: u32,
+    weight: u32,
+}
+
+#[derive(Debug)]
+#[derive(Serialize, Deserialize, Copy, Clone, FromPrimitive, PartialEq)]
 enum SpawnType {
     None = 0, Looped = 1, Weighted = 2, Consecutive = 3
 }
 
 #[derive(Debug)]
-#[derive(Deserialize, Copy, Clone, FromPrimitive)]
+#[derive(Serialize, Deserialize, Copy, Clone, FromPrimitive)]
 enum CurseSpawnType {
     None = 0, Randomly = 1, Always = 2, Never = 3
 }
@@ -68,6 +126,41 @@ fn accept_config(config: Configuration) -> String {
     );
 }
 
+#[tauri::command]
+fn get_config_code() -> String {
+    // Return a dummy string for testing - This is not a valid code though
+    return String::from("VGhpcyBpcyBhbiBleGFtcGxlIHNkZiBzZGtqZiBza2RmIA==");
+}
+
+#[tauri::command]
+fn get_cornercutter_config(cache: State<CornerCutterCache>) -> CornerCutterConfig {
+    let config = cache.config.lock().unwrap();
+    return config.clone();
+}
+
+#[tauri::command]
+fn set_going_under_dir(cache: State<CornerCutterCache>, dir: String) -> bool {
+    let mut config = cache.config.lock().unwrap();
+
+    if is_valid_going_under_dir(dir.as_str()) {
+        config.going_under_dir = Some(dir);
+        config.set_directory = true;
+        serialize_cornercutter_config(&config);
+        // TODO: Create folders in going under directory
+        return true;
+    }
+    return false;
+}
+
+#[tauri::command]
+fn save_mod(mod_config: ModConfig) {
+    let config_string = encode_mod_config(&mod_config);
+    let result_array = string_to_u32_vec(&config_string);
+    let serialized = serde_json::to_string(&mod_config).unwrap();
+    println!("{}", config_string);
+    println!("{:?}", result_array);
+    println!("{}", serialized);
+}
 
 fn encode_configuration(config: &Configuration) -> String {
     let config_array = build_array(&config);
@@ -77,6 +170,11 @@ fn encode_configuration(config: &Configuration) -> String {
 fn decode_configuration(config_string: &String) -> Configuration {
     let config_array = string_to_u32_vec(config_string);
     return build_config(config_array.unwrap());
+}
+
+fn encode_mod_config(config: &ModConfig) -> String {
+    let config_array = build_mod_array(&config);
+    return u32_vec_to_string(config_array);
 }
 
 // Uses the same logic as https://github.com/arranf/deck-codes/blob/master/src/lib.rs
@@ -138,11 +236,90 @@ fn build_array(config: &Configuration) ->  Vec<u32> {
     return array;
 }
 
+fn build_mod_array(config: &ModConfig) ->  Vec<u32> {
+    // Generally, the format will read as
+    // 0x0 Version Options Spawn Curse StartingSkills
+    // Followed by the repeating config of
+    // Floor Number PickupSkills / ShopSkills / CurseSkills / FinaleSkills 
+    // Skill reps will have the number of skills followed by the ids
+    let mut array = Vec::new();
+    array.append(&mut vec![
+        0,
+        1,
+        (config.general.options as u32),
+        (config.general.spawns as u32),
+        (config.general.curse_spawns as u32),
+    ]);
+    array.push(config.general.starting_skills.len() as u32);
+    let is_weighted = config.general.spawns == SpawnType::Weighted;
+    for skill in config.general.starting_skills.iter() {
+        array.push(skill.id);
+        if is_weighted {
+            array.push(skill.weight);
+        }
+    }
+    let options = Options::from_bits(config.general.options).unwrap();
+    let per_floor = options.contains(Options::CONFIG_PER_FLOOR);
+    let per_room = options.contains(Options::CONFIG_PER_ROOM);  
+    if per_floor {
+        array.extend(build_room_skills_array(1, &config.floor_skills.first_floor, per_room, is_weighted).clone());
+        array.extend(build_room_skills_array(2, &config.floor_skills.second_floor, per_room, is_weighted).clone());
+        array.extend(build_room_skills_array(3, &config.floor_skills.third_floor,  per_room, is_weighted).clone());
+        array.extend( build_room_skills_array(4, &config.floor_skills.boss, per_room, is_weighted).clone());
+    } else {
+        println!("tru");
+        array.extend(build_room_skills_array(0, &config.floor_skills.all_floors, per_room, is_weighted).clone());
+    }
+    return array;
+}
+
+fn build_room_skills_array(floor_id: u32, room_skills: &RoomSkills, per_room: bool, is_weighted: bool) -> Vec<u32> {
+    let mut array = Vec::new();
+    let total_skills = if per_room {
+        room_skills.free.len() + room_skills.shop.len() + room_skills.curse.len() + room_skills.finale.len()
+    } else {
+        room_skills.all.len()
+    };
+
+    if total_skills == 0 {
+        return array
+    } else {
+        array.push(floor_id);
+    }
+
+    if per_room {
+        array.push(room_skills.free.len() as u32);
+        array.extend(build_skill_array(&room_skills.free, is_weighted).clone());
+        array.push(room_skills.shop.len() as u32);
+        array.extend(build_skill_array(&room_skills.shop, is_weighted).clone());
+        array.push(room_skills.curse.len() as u32);
+        array.extend(build_skill_array(&room_skills.curse, is_weighted).clone());
+        array.push(room_skills.finale.len() as u32);
+        array.extend(build_skill_array(&room_skills.finale, is_weighted).clone());
+    } else {
+        array.push(room_skills.all.len() as u32);
+        array.extend(build_skill_array(&room_skills.all, is_weighted).clone());
+    }
+    return array;
+}
+
+fn build_skill_array(skills_list: &Vec<WeightedSkill>, is_weighted: bool) -> Vec<u32> {
+    let mut array = Vec::new();
+    for skill in skills_list.iter() {
+        array.push(skill.id);
+        if is_weighted {
+            array.push(skill.weight);
+        }
+    }
+    return array;
+}
+
 fn main() {
     let context = tauri::generate_context!();
     tauri::Builder::default()
         .menu(tauri::Menu::os_default(&context.package_info().name))
-        .invoke_handler(tauri::generate_handler![accept_config])
+        .manage(CornerCutterCache { config: Mutex::new(load_cornercutter_config()) })
+        .invoke_handler(tauri::generate_handler![accept_config, get_config_code, get_cornercutter_config, save_mod, set_going_under_dir])
         .run(context)
         .expect("error while running tauri application");
 }

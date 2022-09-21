@@ -1,9 +1,7 @@
-export function convertKeysToSnakeCase(obj: Record<string, any>): Record<string, any> {
-    const result: Record<string, any> = {};
-    Object.keys(obj).forEach((key) => {
-        const snakeCaseKey = key.replace(/([a-z])([A-Z])/g, '$1_$2').toLocaleLowerCase();
-        result[snakeCaseKey] = obj[key];
-    });
+export function allValues<T extends {}>(anEnum: T): T[keyof T][] {
+    return Object.values(anEnum) as unknown as T[keyof T][];
+}
 
-    return result;
+export function capitalise(str: string): string {
+    return str.slice(0, 1).toLocaleUpperCase() + str.slice(1);
 }
