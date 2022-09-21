@@ -1,40 +1,24 @@
-import { useState } from 'react';
-import logo from './logo.svg';
+import ModdingConfig from './components/pages/ModdingConfig';
 import './App.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCornercutterConfig, setCornercutterConfig } from './redux/slices/cornercutter';
+import { useEffect } from 'react';
+import { invoke } from '@tauri-apps/api';
+import { CornerCutterConfig } from './types/CornerCutterConfig';
 
 function App() {
-    const [count, setCount] = useState(0);
+    const dispatch = useDispatch();
+    const cornercutterConfig = useSelector(getCornercutterConfig);
 
-    return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>Vite + React</p>
-                <p>
-                    <button type="button" onClick={() => setCount((count) => count + 1)}>
-                        count is: {count}
-                    </button>
-                </p>
-                <p>
-                    Edit <code>App.tsx</code> and save to test HMR updates.
-                </p>
-                <p>
-                    <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-                        Learn React
-                    </a>
-                    {' | '}
-                    <a
-                        className="App-link"
-                        href="https://vitejs.dev/guide/features.html"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Vite Docs
-                    </a>
-                </p>
-            </header>
-        </div>
-    );
+    useEffect(() => {
+        if (cornercutterConfig === null) {
+            invoke('get_cornercutter_config')
+                .then((config) => dispatch(setCornercutterConfig(config as CornerCutterConfig)))
+                .catch(console.error);
+        }
+    }, [cornercutterConfig]);
+
+    return <ModdingConfig />;
 }
 
 export default App;

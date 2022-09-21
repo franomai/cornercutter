@@ -1,0 +1,566 @@
+[
+    {
+        "id": 1,
+        "name": "Heavy Hitter",
+        "description": "Deal more damage with heavy items.",
+        "image": "Heavy Hitter.png"
+    },
+    {
+        "id": 2,
+        "name": "Conflict Resolver",
+        "description": "A shocking response to taking damage.",
+        "image": "Conflict Resolver.png"
+    },
+    {
+        "id": 3,
+        "name": "Aggressive",
+        "description": "Break hits deal more damage!",
+        "image": "Aggressive.png"
+    },
+    {
+        "id": 4,
+        "name": "Swing for the Fences",
+        "description": "Knock enemies back further, and deal more damage when they bonk into walls.",
+        "image": "Swing for the Fences.png"
+    },
+    {
+        "id": 5,
+        "name": "Large & In Charge",
+        "description": "Go big or go under.",
+        "image": "Large & In Charge.png"
+    },
+    {
+        "id": 6,
+        "name": "Beta Tester",
+        "description": "Using apps creates an electric shock.",
+        "image": "Beta Tester.png"
+    },
+    {
+        "id": 7,
+        "name": "Open Minded",
+        "description": "Higher chance of critting while unfocused.",
+        "image": "Open Minded.png"
+    },
+    {
+        "id": 8,
+        "name": "Eclaire-as-a-Service",
+        "description": "Sniff out important objects in the room!",
+        "image": "Eclaire-as-a-Service.png"
+    },
+    {
+        "id": 9,
+        "name": "Upper Body Strength",
+        "description": "Now I'm a jerk, and everybody loves me!",
+        "image": "Upper Body Strength.png"
+    },
+    {
+        "id": 10,
+        "name": "People Person",
+        "description": "Gain strength when more people are nearby.",
+        "image": "People Person.png"
+    },
+    {
+        "id": 11,
+        "name": "Beggar Queen",
+        "description": "Hit harder, but find less money. +2 damage.",
+        "image": "Beggar Queen.png"
+    },
+    {
+        "id": 12,
+        "name": "Phone Addict",
+        "description": "Apps are more common!",
+        "image": "Phone Addict.png"
+    },
+    {
+        "id": 13,
+        "name": "Self-Starter",
+        "description": "Deal double damage briefly at the start of battle.",
+        "image": "Self-Starter.png"
+    },
+    {
+        "id": 14,
+        "name": "Fiery Glare",
+        "description": "Occasionally ignite enemies you focus on.",
+        "image": "Fiery Glare.png"
+    },
+    {
+        "id": 15,
+        "name": "Move Fast and Break Things",
+        "description": "Move faster the more objects you break.",
+        "image": "Move Fast and Break Things.png"
+    },
+    {
+        "id": 16,
+        "name": "Hard Headed",
+        "description": "Dodge rolls deal damage.",
+        "image": "Hard Headed.png"
+    },
+    {
+        "id": 17,
+        "name": "Yeet!",
+        "description": "That's all she yote.",
+        "image": "Yeet!.png"
+    },
+    {
+        "id": 19,
+        "name": "Free Hand",
+        "description": "Two handed weapons are wielded like one handed weapons.",
+        "image": "Free Hand.png"
+    },
+    {
+        "id": 21,
+        "name": "Spear Header",
+        "description": "Deal bonus damage with the very tip of a spear.",
+        "image": "Spear Header.png"
+    },
+    {
+        "id": 22,
+        "name": "Pickup Artist",
+        "description": "Your critical hits charm enemies.",
+        "image": "Pickup Artist.png"
+    },
+    {
+        "id": 23,
+        "name": "Over-Protective",
+        "description": "Lose a heart container, and gain 4 armor.",
+        "image": "Over-Protective.png"
+    },
+    {
+        "id": 24,
+        "name": "Loaded for Bear",
+        "description": "Guns fire faster and have twice as much ammo.",
+        "image": "Loaded for Bear.png"
+    },
+    {
+        "id": 26,
+        "name": "Disaster-Proof",
+        "description": "You are unaffected by fire, ice, and electricity.",
+        "image": "Disaster-Proof.png"
+    },
+    {
+        "id": 27,
+        "name": "Win Friends & Influence Monsters",
+        "description": "A chance that the last enemy in a combat joins you.",
+        "image": "Win Friends & Influence Monsters.png"
+    },
+    {
+        "id": 28,
+        "name": "Power User",
+        "description": "Use apps an additional time.",
+        "image": "Power User.png"
+    },
+    {
+        "id": 29,
+        "name": "Cold Shoulder",
+        "description": "Taking armor damage freezes all enemies.",
+        "image": "Cold Shoulder.png"
+    },
+    {
+        "id": 30,
+        "name": "Hot Shot",
+        "description": "Thrown items will automatically ignite.",
+        "image": "Hot Shot.png"
+    },
+    {
+        "id": 31,
+        "name": "Team Player",
+        "description": "When you would take damage, your allies will take it instead.",
+        "image": "Team Player.png"
+    },
+    {
+        "id": 32,
+        "name": "Chilling Glare",
+        "description": "Occasionally freeze enemies you focus on.",
+        "image": "Chilling Glare.png"
+    },
+    {
+        "id": 33,
+        "name": "Explosive Temper",
+        "description": "Seriously, I'm at my limit...",
+        "image": "Explosive Temper.png"
+    },
+    {
+        "id": 34,
+        "name": "On The Clock",
+        "description": "Slow down your enemies when you barely dodge their attacks.",
+        "image": "On The Clock.png"
+    },
+    {
+        "id": 35,
+        "name": "Digital Nomad",
+        "description": "Gain a random app every few rooms.",
+        "image": "Digital Nomad.png"
+    },
+    {
+        "id": 36,
+        "name": "Hot-headed",
+        "description": "After killing an enemy with a charged attack, light nearby enemies on fire.",
+        "image": "Hot-headed.png"
+    },
+    {
+        "id": 37,
+        "name": "Crushin' It",
+        "description": "Club weapons crush through armor.",
+        "image": "Crushin' It.png"
+    },
+    {
+        "id": 38,
+        "name": "Downsized",
+        "description": "I'm Baby",
+        "image": "Downsized.png"
+    },
+    {
+        "id": 39,
+        "name": "Emotive",
+        "description": "Supportive reacts only",
+        "image": "Emotive.png"
+    },
+    {
+        "id": 40,
+        "name": "Cold Caller",
+        "description": "Thrown items have a chance to freeze enemies.",
+        "image": "Cold Caller.png"
+    },
+    {
+        "id": 41,
+        "name": "Chumpette",
+        "description": "A girl's best friend!",
+        "image": "Chumpette.png"
+    },
+    {
+        "id": 42,
+        "name": "Thought Leader",
+        "description": "Occasionally charm an enemy you focus on.",
+        "image": "Thought Leader.png"
+    },
+    {
+        "id": 43,
+        "name": "Perfectionist",
+        "description": "Gain bonus damage on each floor until you're hit.",
+        "image": "Perfectionist.png"
+    },
+    {
+        "id": 44,
+        "name": "Lower Body Strength",
+        "description": "Nothing stuns you anymore.",
+        "image": "Lower Body Strength.png"
+    },
+    {
+        "id": 45,
+        "name": "Party Animal",
+        "description": "Gain ping pong balls when you're unarmed.",
+        "image": "Party Animal.png"
+    },
+    {
+        "id": 46,
+        "name": "Fake It Til You Make It",
+        "description": "Start each room disguised.",
+        "image": "Fake It Til You Make It.png"
+    },
+    {
+        "id": 47,
+        "name": "Buzzkill",
+        "description": "A high chance to crit healthy enemies.",
+        "image": "Buzzkill.png"
+    },
+    {
+        "id": 48,
+        "name": "Fragile Ego",
+        "description": "Deal more damage, but items break more easily.",
+        "image": "Fragile Ego.png"
+    },
+    {
+        "id": 49,
+        "name": "Action-Oriented",
+        "description": "If you face away from explosions, they're stronger and don't hurt you.",
+        "image": "Action-Oriented.png"
+    },
+    {
+        "id": 50,
+        "name": "Halt and Catch Fire",
+        "description": "Knocking down enemies ignites them.",
+        "image": "Halt and Catch Fire.png"
+    },
+    {
+        "id": 52,
+        "name": "Blood Money",
+        "description": "Don't have the cash? You can always...",
+        "image": "Blood Money.png"
+    },
+    {
+        "id": 53,
+        "name": "Purchase Protection",
+        "description": "Gain armor whenever you buy something worth $10 or more.",
+        "image": "Purchase Protection.png"
+    },
+    {
+        "id": 54,
+        "name": "Ice Breaker",
+        "description": "Break hits have a chance to freeze enemies.",
+        "image": "Ice Breaker.png"
+    },
+    {
+        "id": 55,
+        "name": "Short Term Invester",
+        "description": "Invest all of your cash and get it back next floor... with interest!",
+        "image": "Short Term Invester.png"
+    },
+    {
+        "id": 56,
+        "name": "Volatile",
+        "description": "Things are about to pop off.",
+        "image": "Volatile.png"
+    },
+    {
+        "id": 57,
+        "name": "Cash Injection",
+        "description": "Picking up money grants you temporary strength.",
+        "image": "Cash Injection.png"
+    },
+    {
+        "id": 58,
+        "name": "Financial Gains",
+        "description": "Your strength is tied to your wallet.",
+        "image": "Financial Gains.png"
+    },
+    {
+        "id": 60,
+        "name": "Aggro Crab's Blessing",
+        "description": "Chance to bless a room upon entry.",
+        "image": "Aggro Crab's Blessing.png"
+    },
+    {
+        "id": 61,
+        "name": "Bridge Burner",
+        "description": "Fire deals double damage. Burn it all down!",
+        "image": "Bridge Burner.png"
+    },
+    {
+        "id": 62,
+        "name": "The Cleaner",
+        "description": "Time to take out the trash.",
+        "image": "The Cleaner.png"
+    },
+    {
+        "id": 63,
+        "name": "Keep it Simple, Stupid",
+        "description": "Do more damage when carrying multiple copies of the same item.",
+        "image": "Keep it Simple Stupid.png"
+    },
+    {
+        "id": 64,
+        "name": "Sweat Equity",
+        "description": "Picking up money causes nearby enemies to slip.",
+        "image": "Sweat Equity.png"
+    },
+    {
+        "id": 65,
+        "name": "Thick Skin",
+        "description": "Projectiles bounce off of you.",
+        "image": "Thick Skin.png"
+    },
+    {
+        "id": 66,
+        "name": "Friends in High Places",
+        "description": "Death from above!",
+        "image": "Friends in High Places.png"
+    },
+    {
+        "id": 67,
+        "name": "Time is Money",
+        "description": "Earn double money, but lose it over time.",
+        "image": "Time is Money.png"
+    },
+    {
+        "id": 68,
+        "name": "Noncommittal",
+        "description": "Avoid damage if you get hit while charging an attack.",
+        "image": "Noncommittal.png"
+    },
+    {
+        "id": 69,
+        "name": "Hot Friends",
+        "description": "Burning enemies will be charmed to your side.",
+        "image": "Hot Friends.png"
+    },
+    {
+        "id": 70,
+        "name": "Deep Pockets",
+        "description": "Carry more stuff. And I mean like, WAY more stuff.",
+        "image": "Deep Pockets.png"
+    },
+    {
+        "id": 71,
+        "name": "Recruiter",
+        "description": "Interact with enemies to purchase their souls.",
+        "image": "Recruiter.png"
+    },
+    {
+        "id": 72,
+        "name": "Wear Many Hats",
+        "description": "The more hats you wear, the stronger you are.",
+        "image": "Wear Many Hats.png"
+    },
+    {
+        "id": 73,
+        "name": "Vertically Integrated",
+        "description": "Going... Over?",
+        "image": "Vertically Integrated.png"
+    },
+    {
+        "id": 74,
+        "name": "Aggro Pal",
+        "description": "This oughta crab their attention!",
+        "image": "Aggro Pal.png"
+    },
+    {
+        "id": 75,
+        "name": "Room for Growth",
+        "description": "Gain an empty heart.",
+        "image": "Room for Growth.png"
+    },
+    {
+        "id": 76,
+        "name": "Cubicle Rewards Member",
+        "description": "Opening crates earns extra cash.",
+        "image": "Cubicle Rewards Member.png"
+    },
+    {
+        "id": 77,
+        "name": "Pugilist",
+        "description": "Punch above your weight!",
+        "image": "Pugilist.png"
+    },
+    {
+        "id": 78,
+        "name": "Disruptive",
+        "description": "Your critical hits electrocute enemies.",
+        "image": "Disruptive.png"
+    },
+    {
+        "id": 79,
+        "name": "Scrappy",
+        "description": "Deal extra damage with junk items.",
+        "image": "Scrappy.png"
+    },
+    {
+        "id": 80,
+        "name": "Clap Back",
+        "description": "After taking damage, knock down nearby enemies.",
+        "image": "Clap Back.png"
+    },
+    {
+        "id": 81,
+        "name": "Retaliatory",
+        "description": "Deal double damage briefly after being hit.",
+        "image": "Retaliatory.png"
+    },
+    {
+        "id": 82,
+        "name": "Composed",
+        "description": "Stay invincible for much longer after being hit.",
+        "image": "Composed.png"
+    },
+    {
+        "id": 83,
+        "name": "Resourceful",
+        "description": "Cubicle boxes contain an extra item.",
+        "image": "Resourceful.png"
+    },
+    {
+        "id": 84,
+        "name": "Go-Getter",
+        "description": "Move and attack faster.",
+        "image": "Go-Getter.png"
+    },
+    {
+        "id": 85,
+        "name": "Penny Puncher",
+        "description": "Your first crit against an enemy will earn you a buck or two. Crit Chance Up 10%",
+        "image": "Penny Puncher.png"
+    },
+    {
+        "id": 86,
+        "name": "Bloodsucker",
+        "description": "Low chance to heal when you defeat an enemy.",
+        "image": "Bloodsucker.png"
+    },
+    {
+        "id": 87,
+        "name": "Bomb Dropper",
+        "description": "Let em' have it!",
+        "image": "Bomb Dropper.png"
+    },
+    {
+        "id": 88,
+        "name": "Intimidating",
+        "description": "Chance to knock down enemies upon entering a room.",
+        "image": "Intimidating.png"
+    },
+    {
+        "id": 89,
+        "name": "She Don't Miss",
+        "description": "All your thrown items are homing.",
+        "image": "She Don't Miss.png"
+    },
+    {
+        "id": 90,
+        "name": "Charismatic",
+        "description": "Gain a small discount at all shops.",
+        "image": "Charismatic.png"
+    },
+    {
+        "id": 91,
+        "name": "Agile",
+        "description": "Faster iteration time AND faster dodge rolls!",
+        "image": "Agile.png"
+    },
+    {
+        "id": 92,
+        "name": "Vindictive",
+        "description": "Regain lost health by quickly defeating the last monster that hurt you.",
+        "image": "Vindictive.png"
+    },
+    {
+        "id": 93,
+        "name": "Scaled Up",
+        "description": "Big business just got bigger. +1 damage.",
+        "image": "Scaled Up.png"
+    },
+    {
+        "id": 94,
+        "name": "Stress Eater",
+        "description": "Eating food increases your strength for a bit.",
+        "image": "Stress Eater.png"
+    },
+    {
+        "id": 95,
+        "name": "Good Under Pressure",
+        "description": "Improved crit chance at low health.",
+        "image": "Good Under Pressure.png"
+    },
+    {
+        "id": 96,
+        "name": "Fail Forward",
+        "description": "Come back from defeat stronger than before!",
+        "image": "Fail Forward.png"
+    },
+    {
+        "id": 97,
+        "name": "Exit Strategist",
+        "description": "Exiting a crawl explodes whatever you were under.",
+        "image": "Exit Strategist.png"
+    },
+    {
+        "id": 98,
+        "name": "Defensive",
+        "description": "Overhealing grants armor!",
+        "image": "Defensive.png"
+    },
+    {
+        "id": 99,
+        "name": "Unapproachable",
+        "description": "The best defense against unwanted conversation.",
+        "image": "Unapproachable.png"
+    }
+]
