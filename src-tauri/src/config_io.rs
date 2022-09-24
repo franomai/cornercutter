@@ -10,6 +10,7 @@ const CC_FILE: &str = "cornercutter.json";
 const CC_MODS_DIR: &str = "cornercutter/mods";
 const CC_CURRENT_MOD_DIR: &str = "cornercutter/current_mod.json";
 
+#[derive(Serialize, Deserialize)]
 pub struct CornercutterCache {
     pub config: Mutex<CornercutterConfig>,
     pub mods: Vec<ModConfig>,
@@ -70,7 +71,7 @@ pub fn is_valid_going_under_dir(dir: &str) -> bool {
 pub fn load_cornercutter_cache() -> CornercutterCache {
     let config = load_cornercutter_config();
     let mods = load_mods(&config);
-    
+
     return CornercutterCache {
         config: Mutex::new(config),
         mods: mods,

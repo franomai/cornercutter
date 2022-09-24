@@ -16,7 +16,7 @@ use tauri::State;
 
 use crate::config_io::serialize_cornercutter_config;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all="camelCase")]
 pub struct ModConfig {
     info: ModInfo,
@@ -24,13 +24,13 @@ pub struct ModConfig {
     floor_skills: FloorSkills
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 struct ModInfo {
     name: String,
     description: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all="camelCase")]
 struct GeneralConfig {
     spawns: SpawnType,
@@ -39,7 +39,7 @@ struct GeneralConfig {
     starting_skills: Vec<WeightedSkill>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all="camelCase")]
 struct FloorSkills {
     all_floors: RoomSkills,
@@ -49,7 +49,7 @@ struct FloorSkills {
     boss: RoomSkills,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 struct RoomSkills {
     all: Vec<WeightedSkill>,
     free: Vec<WeightedSkill>,
@@ -134,6 +134,11 @@ fn get_config_code() -> String {
 fn get_cornercutter_config(cache: State<CornercutterCache>) -> CornercutterConfig {
     let config = cache.config.lock().unwrap();
     return config.clone();
+}
+
+#[tauri::command]
+fn get_mods(cache: State<CornercutterCache>) -> Vec<ModConfig> {
+    return cache.mods.clone();
 }
 
 #[tauri::command]
@@ -317,7 +322,14 @@ fn main() {
     tauri::Builder::default()
         .menu(tauri::Menu::os_default(&context.package_info().name))
         .manage(load_cornercutter_cache())
-        .invoke_handler(tauri::generate_handler![accept_config, get_config_code, get_cornercutter_config, save_mod, set_going_under_dir])
+        .invoke_handler(tauri::generate_handler![
+            accept_config,
+            get_config_code, 
+            get_cornercutter_config, 
+            save_mod, 
+            set_going_under_dir, 
+            get_mods
+        ])
         .run(context)
         .expect("error while running tauri application");
 }
