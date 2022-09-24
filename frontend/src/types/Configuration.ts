@@ -1,7 +1,7 @@
 import { WeightedSkill } from './Skill';
 
 export default interface ModConfig {
-    id: number;
+    id: string;
     info: ModInfo;
     general: GeneralConfig;
     floorSkills: FloorSkills;

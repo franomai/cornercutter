@@ -24,7 +24,7 @@ export type FloorRoom = { floor: Floor; room: Room };
 export const initialState: State = {
     mods: [
         {
-            id: 0,
+            id: '0',
             info: {
                 name: 'Placeholder mod',
                 description: 'This is a mod description...',
@@ -59,8 +59,8 @@ const modSlice = createSlice({
                 state.enabledMod = -1;
             }
         },
-        addMod(state, action: { payload: Omit<ModConfig, 'id'> }) {
-            state.mods.push({ ...action.payload, id: state.mods.length });
+        addMod(state, action: { payload: ModConfig }) {
+            state.mods.push(action.payload);
             if (state.selectedMod === -1) {
                 state.selectedMod = 0;
             }

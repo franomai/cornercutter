@@ -55,6 +55,14 @@ pub fn as_io_error(err: serde_json::Error) -> io::Error {
     return io::Error::new(ErrorKind::Other, err);
 }
 
+pub fn get_mod_filename(mod_config: &ModConfig) -> String {
+    let mut str = mod_config.info.name.replace(" ", "_");
+    str.push('_');
+    str.push_str(mod_config.id.as_str());
+    str.push_str(".json");
+    return str;
+}
+
 pub fn try_find_going_under_dir() -> Option<String> {
     for dir in ["C:\\Program Files (x86)\\Steam\\steamapps\\common\\Going Under", "D:\\Steam\\steamapps\\common\\Going Under"] {
         if is_valid_going_under_dir(dir) {
@@ -106,10 +114,25 @@ pub fn load_mods(config: &CornercutterConfig) -> Vec<ModConfig> {
     return mods;
 }
 
+pub fn serialize_mod(config: &CornercutterConfig, mod_config: &ModConfig) {
+    let filename = get_mod_filename(mod_config);
+    let path = get_relative_dir(config, CC_MODS_DIR).join(filename.as_str());
+    let file_result = File::create(path);
+    if file_result.is_err() {
+        println!("couldn't create {}: {}", filename, file_result.unwrap_err());
+        return;
+    }
+
+    let res = serde_json::to_writer(file_result.unwrap(), mod_config);
+    if res.is_err() {
+        println!("Error writing mod config {}: {}", filename, res.unwrap_err());
+    }
+}
+
 pub fn serialize_cornercutter_config(config: &CornercutterConfig) {
     let config_file_path = Path::new(CC_FILE);
     // Open a file in write-only mode
-    let file_result = File::create(&config_file_path);
+    let file_result = File::create(config_file_path);
     if file_result.is_err() {
         println!("couldn't create {}: {}", CC_FILE, file_result.unwrap_err());
         return;

@@ -5,7 +5,7 @@
 
 mod config_io;
 
-use config_io::{CornercutterConfig, is_valid_going_under_dir, CornercutterCache, create_cornercutter_folders, load_cornercutter_cache};
+use config_io::{CornercutterConfig, is_valid_going_under_dir, CornercutterCache, create_cornercutter_folders, load_cornercutter_cache, serialize_mod};
 use serde::{Serialize, Deserialize};
 use bitflags::bitflags;
 use integer_encoding::VarInt;
@@ -19,6 +19,7 @@ use crate::config_io::serialize_cornercutter_config;
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all="camelCase")]
 pub struct ModConfig {
+    id: String,
     info: ModInfo,
     general: GeneralConfig,
     floor_skills: FloorSkills
@@ -164,13 +165,8 @@ fn set_going_under_dir(cache: State<CornercutterCache>, dir: String) -> bool {
 }
 
 #[tauri::command]
-fn save_mod(mod_config: ModConfig) {
-    let config_string = encode_mod_config(&mod_config);
-    let result_array = string_to_u32_vec(&config_string);
-    let serialized = serde_json::to_string(&mod_config).unwrap();
-    println!("{}", config_string);
-    println!("{:?}", result_array);
-    println!("{}", serialized);
+fn save_mod(cache: State<CornercutterCache>, mod_config: ModConfig) {
+    serialize_mod(&cache.config.lock().unwrap(), &mod_config)
 }
 
 fn encode_configuration(config: &Configuration) -> String {
