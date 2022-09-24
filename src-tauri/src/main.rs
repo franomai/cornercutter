@@ -5,9 +5,7 @@
 
 mod config_io;
 
-use std::sync::Mutex;
-
-use config_io::{CornercutterConfig, is_valid_going_under_dir, CornercutterCache, load_cornercutter_config, create_cornercutter_folders};
+use config_io::{CornercutterConfig, is_valid_going_under_dir, CornercutterCache, create_cornercutter_folders, load_cornercutter_cache};
 use serde::{Serialize, Deserialize};
 use bitflags::bitflags;
 use integer_encoding::VarInt;
@@ -20,7 +18,7 @@ use crate::config_io::serialize_cornercutter_config;
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all="camelCase")]
-struct ModConfig {
+pub struct ModConfig {
     info: ModInfo,
     general: GeneralConfig,
     floor_skills: FloorSkills
@@ -318,7 +316,7 @@ fn main() {
     let context = tauri::generate_context!();
     tauri::Builder::default()
         .menu(tauri::Menu::os_default(&context.package_info().name))
-        .manage(CornercutterCache { config: Mutex::new(load_cornercutter_config()) })
+        .manage(load_cornercutter_cache())
         .invoke_handler(tauri::generate_handler![accept_config, get_config_code, get_cornercutter_config, save_mod, set_going_under_dir])
         .run(context)
         .expect("error while running tauri application");

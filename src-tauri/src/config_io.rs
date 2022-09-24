@@ -1,8 +1,10 @@
-use std::fs::{File, create_dir_all};
+use std::fs::{File, create_dir_all, read_dir};
 use std::io::{self, ErrorKind};
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 use serde::{Serialize, Deserialize};
+
+use crate::{ModConfig};
 
 const CC_FILE: &str = "cornercutter.json";
 const CC_MODS_DIR: &str = "cornercutter/mods";
@@ -10,6 +12,7 @@ const CC_CURRENT_MOD_DIR: &str = "cornercutter/current_mod.json";
 
 pub struct CornercutterCache {
     pub config: Mutex<CornercutterConfig>,
+    pub mods: Vec<ModConfig>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -38,9 +41,17 @@ pub fn file_exists(path: &Path) -> bool {
     return File::open(path).is_ok();
 }
 
+pub fn has_extension(path: &Path, extension: &str) -> bool {
+    return path.extension().map_or(false, |e| e.eq_ignore_ascii_case(extension));
+}
+
 pub fn get_relative_dir(config: &CornercutterConfig, dir: &str) -> PathBuf {
     let path_buf = Path::new(config.going_under_dir.as_ref().unwrap()).join(dir);
     return path_buf;
+}
+
+pub fn as_io_error(err: serde_json::Error) -> io::Error {
+    return io::Error::new(ErrorKind::Other, err);
 }
 
 pub fn try_find_going_under_dir() -> Option<String> {
@@ -56,8 +67,42 @@ pub fn is_valid_going_under_dir(dir: &str) -> bool {
     return file_exists(Path::new(dir).join("Going Under.exe").as_path());
 }
 
+pub fn load_cornercutter_cache() -> CornercutterCache {
+    let config = load_cornercutter_config();
+    let mods = load_mods(&config);
+    
+    return CornercutterCache {
+        config: Mutex::new(config),
+        mods: mods,
+    }
+}
+
 pub fn load_cornercutter_config() -> CornercutterConfig {
     return deserialize_cornercutter_config().unwrap_or_else(|_err| CornercutterConfig::new());
+}
+
+pub fn load_mods(config: &CornercutterConfig) -> Vec<ModConfig> {
+    let mut mods: Vec<ModConfig> = Vec::new();
+    if config.going_under_dir.is_some() {
+        let files = read_dir(get_relative_dir(config, CC_MODS_DIR));
+        if files.is_ok() {
+            for file in files.unwrap() {
+                if file.is_err() {
+                    continue;
+                }
+                let path = file.unwrap().path();
+                if !has_extension(path.as_path(), "json") {
+                    continue;
+                }
+
+                let deserialised: Result<ModConfig, serde_json::Error> = serde_json::from_reader(File::open(path).unwrap());
+                if deserialised.is_ok() {
+                    mods.push(deserialised.unwrap());
+                }
+            }
+        }
+    }
+    return mods;
 }
 
 pub fn serialize_cornercutter_config(config: &CornercutterConfig) {
@@ -86,7 +131,7 @@ pub fn deserialize_cornercutter_config() -> Result<CornercutterConfig, io::Error
             return Ok(config);
         }
         else {
-            return Err(io::Error::new(ErrorKind::Other, deserialized.unwrap_err().to_string()))
+            return Err(as_io_error(deserialized.unwrap_err()))
         }
     } else {
         let config = CornercutterConfig::new();
