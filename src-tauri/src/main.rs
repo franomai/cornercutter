@@ -7,7 +7,7 @@ mod config_io;
 
 use std::sync::Mutex;
 
-use config_io::{CornerCutterConfig, is_valid_going_under_dir, CornerCutterCache, load_cornercutter_config, create_cornercutter_folders};
+use config_io::{CornercutterConfig, is_valid_going_under_dir, CornercutterCache, load_cornercutter_config, create_cornercutter_folders};
 use serde::{Serialize, Deserialize};
 use bitflags::bitflags;
 use integer_encoding::VarInt;
@@ -133,13 +133,13 @@ fn get_config_code() -> String {
 }
 
 #[tauri::command]
-fn get_cornercutter_config(cache: State<CornerCutterCache>) -> CornerCutterConfig {
+fn get_cornercutter_config(cache: State<CornercutterCache>) -> CornercutterConfig {
     let config = cache.config.lock().unwrap();
     return config.clone();
 }
 
 #[tauri::command]
-fn set_going_under_dir(cache: State<CornerCutterCache>, dir: String) -> bool {
+fn set_going_under_dir(cache: State<CornercutterCache>, dir: String) -> bool {
     let mut config = cache.config.lock().unwrap();
 
     if is_valid_going_under_dir(dir.as_str()) {
@@ -318,7 +318,7 @@ fn main() {
     let context = tauri::generate_context!();
     tauri::Builder::default()
         .menu(tauri::Menu::os_default(&context.package_info().name))
-        .manage(CornerCutterCache { config: Mutex::new(load_cornercutter_config()) })
+        .manage(CornercutterCache { config: Mutex::new(load_cornercutter_config()) })
         .invoke_handler(tauri::generate_handler![accept_config, get_config_code, get_cornercutter_config, save_mod, set_going_under_dir])
         .run(context)
         .expect("error while running tauri application");
