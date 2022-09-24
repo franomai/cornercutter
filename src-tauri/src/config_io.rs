@@ -1,6 +1,6 @@
 use std::fs::{File, create_dir_all};
 use std::io::{self, ErrorKind};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 use serde::{Serialize, Deserialize};
 
@@ -26,13 +26,13 @@ impl CornerCutterConfig {
     }
 }
 
-pub fn file_exists(dir: &str) -> bool {
-    let path = Path::new(dir);
+pub fn file_exists(path: &Path) -> bool {
     return File::open(path).is_ok();
 }
 
-pub fn get_relative_dir(config: &CornerCutterConfig, dir: &str) -> String {
-    return [config.going_under_dir.as_deref().unwrap(), dir].join("\\");
+pub fn get_relative_dir(config: &CornerCutterConfig, dir: &str) -> PathBuf {
+    let path_buf = Path::new(config.going_under_dir.as_ref().unwrap()).join(dir);
+    return path_buf;
 }
 
 pub fn try_find_going_under_dir() -> Option<String> {
@@ -45,7 +45,7 @@ pub fn try_find_going_under_dir() -> Option<String> {
 }
 
 pub fn is_valid_going_under_dir(dir: &str) -> bool {
-    return file_exists([dir, "\\Going Under.exe"].join("").as_str());
+    return file_exists(Path::new(dir).join("Going Under.exe").as_path());
 }
 
 pub fn load_cornercutter_config() -> CornerCutterConfig {
