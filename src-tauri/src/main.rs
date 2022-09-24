@@ -5,7 +5,7 @@
 
 mod config_io;
 
-use config_io::{CornercutterConfig, is_valid_going_under_dir, CornercutterCache, create_cornercutter_folders, load_cornercutter_cache, serialize_mod};
+use config_io::{CornercutterConfig, is_valid_going_under_dir, CornercutterCache, create_cornercutter_folders, load_cornercutter_cache, serialize_mod, CornercutterCurrentMod};
 use serde::{Serialize, Deserialize};
 use bitflags::bitflags;
 use integer_encoding::VarInt;
@@ -137,6 +137,11 @@ fn get_config_code(mod_config: ModConfig) -> String {
     config_code.push_str(encode_mod_config(&mod_config).as_str());
 
     return config_code;
+}
+
+#[tauri::command]
+fn get_current_mod(cache: State<CornercutterCache>) -> CornercutterCurrentMod {
+    return cache.current_mod.lock().unwrap().clone();
 }
 
 #[tauri::command]
@@ -330,6 +335,7 @@ fn main() {
             accept_config,
             get_config_code, 
             get_cornercutter_config, 
+            get_current_mod,
             save_mod, 
             set_going_under_dir, 
             get_mods

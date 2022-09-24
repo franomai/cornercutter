@@ -12,6 +12,7 @@ const CC_CURRENT_MOD_DIR: &str = "cornercutter/current_mod.json";
 
 #[derive(Serialize, Deserialize)]
 pub struct CornercutterCache {
+    pub current_mod: Mutex<CornercutterCurrentMod>,
     pub config: Mutex<CornercutterConfig>,
     pub mods: Vec<ModConfig>,
 }
@@ -32,7 +33,7 @@ impl CornercutterConfig {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all="camelCase")]
 pub struct CornercutterCurrentMod {
     pub current_mod: Option<String>
@@ -81,8 +82,9 @@ pub fn load_cornercutter_cache() -> CornercutterCache {
     let mods = load_mods(&config);
 
     return CornercutterCache {
+        current_mod: Mutex::new(CornercutterCurrentMod { current_mod: None }),
         config: Mutex::new(config),
-        mods: mods,
+        mods,
     }
 }
 
