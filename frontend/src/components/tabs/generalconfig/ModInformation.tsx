@@ -152,13 +152,14 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const renderName = useCallback((): ReactNode => {
         return isEditing ? (
             <Input
+                variant="flushed"
+                maxW="500px"
                 fontSize="3xl"
                 fontWeight="bold"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 placeholder="Mod Name..."
                 mr={4}
-                ml="-17px"
                 mt="-3px"
                 height="50px"
             />
@@ -172,12 +173,12 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const renderDescription = useCallback((): ReactNode => {
         return isEditing ? (
             <Input
-                ml="-17px"
-                mt={-2}
+                variant="flushed"
+                mt="-7px"
                 value={newDescription}
                 onChange={(e) => setNewDescription(e.target.value)}
                 placeholder="Enter mod description here..."
-                mb={-2}
+                mb={-3}
             />
         ) : (
             <Text mt="3px">{newDescription}</Text>
