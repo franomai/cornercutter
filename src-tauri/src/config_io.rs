@@ -57,9 +57,7 @@ pub fn as_io_error(err: serde_json::Error) -> io::Error {
 }
 
 pub fn get_mod_filename(mod_config: &ModConfig) -> String {
-    let mut str = mod_config.info.name.replace(" ", "_");
-    str.push('_');
-    str.push_str(mod_config.id.as_str());
+    let mut str = mod_config.id.clone();
     str.push_str(".json");
     return str;
 }

@@ -29,6 +29,7 @@ export const getCornercutterConfig = (state: StoreState) => state.cornercutter.c
 
 export const loadSavedData = createAsyncThunk('cornercutter/loadSavedData', async (_, thunkAPI) => {
     try {
+        console.log('Fetching saved data...');
         const [currentModConfig, cornercutterConfig, mods] = await Promise.all([
             invoke<CurrentModConfig>('get_current_mod'),
             invoke<CornerCutterConfig>('get_cornercutter_config'),
@@ -37,11 +38,7 @@ export const loadSavedData = createAsyncThunk('cornercutter/loadSavedData', asyn
 
         thunkAPI.dispatch(setCornercutterConfig(cornercutterConfig));
         thunkAPI.dispatch(addMods(mods));
-
-        if (currentModConfig.currentMod) {
-            const split = currentModConfig.currentMod.split('_');
-            thunkAPI.dispatch(setEnabledMod(split[split.length - 1]));
-        }
+        thunkAPI.dispatch(setEnabledMod(currentModConfig.currentMod ?? null));
     } catch (err) {
         console.error(err);
     }
