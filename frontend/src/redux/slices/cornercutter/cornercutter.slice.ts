@@ -38,7 +38,7 @@ export const loadSavedData = createAsyncThunk('cornercutter/loadSavedData', asyn
 
         thunkAPI.dispatch(setCornercutterConfig(cornercutterConfig));
         thunkAPI.dispatch(addMods(mods));
-        thunkAPI.dispatch(setEnabledMod(currentModConfig.currentMod ?? null));
+        thunkAPI.dispatch(setEnabledMod(currentModConfig.currentMod?.replace(/.json$/, '') ?? null));
     } catch (err) {
         console.error(err);
     }
