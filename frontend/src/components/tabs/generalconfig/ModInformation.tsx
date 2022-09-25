@@ -27,7 +27,6 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const [isEditing, setIsEditing] = useState(selectedMod.info.name.length === 0);
     const [newName, setNewName] = useState(selectedMod.info.name);
     const [newDescription, setNewDescription] = useState(selectedMod.info.description);
-    const [configCode, setConfigCode] = useState<string | null>(null);
     const [showConfigCodePopup, setShowConfigCodePopup] = useState(false);
 
     useEffect(() => {
@@ -46,7 +45,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
 
     useOutsideClick({
         ref: editableRef,
-        enabled: isEditing,
+        enabled: isEditing && newName.trim().length !== 0,
         handler: handleSaveChanges,
     });
 
@@ -68,7 +67,6 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const handleExportConfigCode = useCallback(async () => {
         try {
             const code = await invoke<string>('get_config_code', { modConfig: selectedMod });
-            setConfigCode(code);
             navigator.clipboard.writeText(code).then(() => setShowConfigCodePopup(true));
         } catch (err) {
             console.error(err);

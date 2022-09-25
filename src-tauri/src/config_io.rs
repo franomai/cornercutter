@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::fs::{File, create_dir_all, read_dir};
+use std::fs::{File, create_dir_all, read_dir, remove_file};
 use std::io::{self, ErrorKind};
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
@@ -130,6 +130,12 @@ pub fn serialize_mod(config: &CornercutterConfig, mod_config: &ModConfig) {
     if res.is_err() {
         println!("Error writing mod config {}: {}", filename, res.unwrap_err());
     }
+}
+
+pub fn delete_mod_file(config: &CornercutterConfig, mod_config: &ModConfig) -> io::Result<()> {
+    let filename = get_mod_filename(mod_config);
+    let path = get_relative_dir(config, CC_MODS_DIR).join(filename.as_str());
+    return remove_file(path);
 }
 
 pub fn serialize_cornercutter_config(config: &CornercutterConfig) {

@@ -7,7 +7,7 @@ mod config_io;
 
 use std::collections::HashMap;
 
-use config_io::{CornercutterConfig, is_valid_going_under_dir, CornercutterCache, create_cornercutter_folders, load_cornercutter_cache, serialize_mod, CornercutterCurrentMod, get_mod_filename, serialize_current_mod_config};
+use config_io::{CornercutterConfig, is_valid_going_under_dir, CornercutterCache, create_cornercutter_folders, load_cornercutter_cache, serialize_mod, CornercutterCurrentMod, get_mod_filename, serialize_current_mod_config, delete_mod_file};
 use serde::{Serialize, Deserialize};
 use bitflags::bitflags;
 use integer_encoding::VarInt;
@@ -141,6 +141,15 @@ fn set_going_under_dir(cache: State<CornercutterCache>, dir: String) -> bool {
         return true;
     }
     return false;
+}
+
+#[tauri::command]
+fn delete_mod(cache: State<CornercutterCache>, mod_id: String) {
+    let mut mods = cache.mods.lock().unwrap();
+    if mods.contains_key(&mod_id) {
+        let mod_config = mods.remove(&mod_id).unwrap();
+        delete_mod_file(&cache.config.lock().unwrap(), &mod_config);
+    }
 }
 
 #[tauri::command]
