@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { StoreState } from '../../store';
 
 import ModConfig, {
@@ -12,6 +12,7 @@ import ModConfig, {
 } from '../../../types/Configuration';
 import { generateEmptyFloorSkills, setModOptionFlag } from '../../../utility/ConfigHelpers';
 import { WeightedSkill } from '../../../types/Skill';
+import { invoke } from '@tauri-apps/api';
 
 export interface State {
     mods: Record<string, ModConfig>;
@@ -164,5 +165,9 @@ export const getEnabledMod = (state: StoreState) =>
     state.mod.enabledMod ? state.mod.mods[state.mod.enabledMod] : null;
 
 export const getAllMods = (state: StoreState) => state.mod.mods;
+
+export const updateEnabledMod = createAsyncThunk('mod/updateEnabledMod', async (modId: string | null, thunkAPI) => {
+    await invoke('set_enabled_mod', { enabledMod: modId }).then(() => thunkAPI.dispatch(setEnabledMod(modId)));
+});
 
 export default modSlice.reducer;

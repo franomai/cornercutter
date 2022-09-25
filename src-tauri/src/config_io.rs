@@ -56,8 +56,8 @@ pub fn as_io_error(err: serde_json::Error) -> io::Error {
     return io::Error::new(ErrorKind::Other, err);
 }
 
-pub fn get_mod_filename(mod_config: &ModConfig) -> String {
-    let mut str = mod_config.id.clone();
+pub fn get_mod_filename(id: String) -> String {
+    let mut str = id.clone();
     str.push_str(".json");
     return str;
 }
@@ -116,7 +116,7 @@ pub fn load_mods(config: &CornercutterConfig) -> HashMap<String, ModConfig> {
 }
 
 pub fn serialize_mod(config: &CornercutterConfig, mod_config: &ModConfig) {
-    let filename = get_mod_filename(mod_config);
+    let filename = get_mod_filename(mod_config.id.clone());
     let path = get_relative_dir(config, CC_MODS_DIR).join(filename.as_str());
     let file_result = File::create(path);
     if file_result.is_err() {
@@ -131,7 +131,7 @@ pub fn serialize_mod(config: &CornercutterConfig, mod_config: &ModConfig) {
 }
 
 pub fn delete_mod_file(config: &CornercutterConfig, mod_config: &ModConfig) -> io::Result<()> {
-    let filename = get_mod_filename(mod_config);
+    let filename = get_mod_filename(mod_config.id.clone());
     let path = get_relative_dir(config, CC_MODS_DIR).join(filename.as_str());
     return remove_file(path);
 }
