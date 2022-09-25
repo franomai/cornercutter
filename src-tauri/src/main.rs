@@ -13,6 +13,7 @@ use base64::{encode, decode};
 use num_derive::FromPrimitive;
 use num_traits::FromPrimitive;
 use tauri::State;
+use uuid::Uuid;
 
 use crate::config_io::serialize_cornercutter_config;
 
@@ -59,15 +60,6 @@ struct RoomSkills {
     finale: Vec<WeightedSkill>,
 }
 
-#[derive(Serialize, Deserialize)]
-#[serde(rename_all="camelCase")]
-struct Configuration  {
-    spawns: SpawnType,
-    curse_spawns: CurseSpawnType,
-    options: u32,
-    starting_skill_ids: Vec<u32>,
-}
-
 #[derive(Debug)]
 #[derive(Serialize, Deserialize, Copy, Clone)]
 struct WeightedSkill {
@@ -98,31 +90,6 @@ bitflags! {
         const DISABLE_PINNED = 1 << 5;
         const AWARD_SKILLS_PER_LEVEL = 1 << 6;
     }
-}
-
-#[tauri::command]
-fn accept_config(config: Configuration) -> String {
-    let config_string = encode_configuration(&config);
-    let new_config = decode_configuration(&config_string);
-    let options = Options::from_bits(new_config.options).unwrap();
-    return format!(
-        "Spawns: {:?}, \
-         Curse spawns: {:?}, \
-         Config per floor: {}, \
-         Config per room: {}, \
-         Remove healing items: {}, \
-         Disable mentor abilties: {}, \
-         Disable gift of the intern: {}, \
-         Disabled pinned: {}, \
-         Award skills per level: {}, \
-         starting skill ids: {:?}, \
-         config code: {:?}
-        ", new_config.spawns, new_config.curse_spawns, options.contains(Options::CONFIG_PER_FLOOR),
-         options.contains(Options::CONFIG_PER_ROOM), options.contains(Options::REMOVE_HEALING_ITEMS),
-         options.contains(Options::DISABLE_MENTOR_ABILITIES), options.contains(Options::DISABLE_GIFT_OF_INTERN),
-         options.contains(Options::DISABLE_PINNED), options.contains(Options::AWARD_SKILLS_PER_LEVEL),
-         new_config.starting_skill_ids, config_string
-    );
 }
 
 #[tauri::command]
@@ -174,12 +141,51 @@ fn save_mod(cache: State<CornercutterCache>, mod_config: ModConfig) {
     serialize_mod(&cache.config.lock().unwrap(), &mod_config)
 }
 
-fn encode_configuration(config: &Configuration) -> String {
-    let config_array = build_array(&config);
+#[tauri::command]
+fn import_mod(cache: State<CornercutterCache>, encoded_config: String) -> Option<ModConfig> {
+    let id = Uuid::new_v4().to_string();
+    let parts = encoded_config.lines().collect::<Vec<_>>();
+    if parts.len() < 2 || parts.len() > 3 {
+        return None;
+    }
+
+    let mod_info = if parts.len() == 2 {
+        ModInfo { name: String::from(*parts.get(0).unwrap()), description: String::from("") }
+    } else {
+        ModInfo { name: String::from(*parts.get(0).unwrap()), description: String::from(*parts.get(1).unwrap()) }
+    };
+    
+    // TODO: Extract from encoded_config
+    return Some(ModConfig {
+        id,
+        info: mod_info,
+        general: GeneralConfig { spawns: SpawnType::Looped, curse_spawns: CurseSpawnType::Randomly, options: 0, starting_skills: Vec::new() },
+        floor_skills: FloorSkills {
+            all_floors: generate_room_skills(),
+            first_floor: generate_room_skills(),
+            second_floor: generate_room_skills(),
+            third_floor: generate_room_skills(),
+            boss: generate_room_skills(),
+        }
+    });
+}
+
+fn generate_room_skills() -> RoomSkills{
+    return RoomSkills {
+        all: Vec::new(),
+        free: Vec::new(),
+        shop: Vec::new(),
+        curse: Vec::new(),
+        finale: Vec::new(),
+    }
+}
+
+fn encode_configuration(config: &ModConfig) -> String {
+    let config_array = build_mod_array(&config);
     return u32_vec_to_string(config_array);
 }
 
-fn decode_configuration(config_string: &String) -> Configuration {
+fn decode_configuration(config_string: &String) -> ModConfig {
     let config_array = string_to_u32_vec(config_string);
     return build_config(config_array.unwrap());
 }
@@ -217,36 +223,36 @@ fn string_to_u32_vec(config_string: &str) -> Result<Vec<u32>, String> {
     Ok(result)
 }
 
-fn build_config(config_array: Vec<u32>) ->  Configuration {
-    return Configuration {
-        spawns: FromPrimitive::from_u32(config_array[3]).unwrap(),
-        curse_spawns: FromPrimitive::from_u32(config_array[4]).unwrap(),
-        options: config_array[2],
-        starting_skill_ids: config_array[7..].to_vec(),
-    };
-}
+// fn build_mod_config(config_array: Vec<u32>) ->  Configuration {
+//     return Configuration {
+//         spawns: FromPrimitive::from_u32(config_array[3]).unwrap(),
+//         curse_spawns: FromPrimitive::from_u32(config_array[4]).unwrap(),
+//         options: config_array[2],
+//         starting_skill_ids: config_array[7..].to_vec(),
+//     };
+// }
 
-fn build_array(config: &Configuration) ->  Vec<u32> {
-    // Generally, the format will read as
-    // 0x0 Version Options Spawn Curse
-    // Followed by the repeating config of
-    // Floor Number StartingSkills / ShopSkills / PickupSkills / FinaleSkills 
-    // Skill reps will have the number of skills followed by the ids
-    let mut array = Vec::new();
-    array.append(&mut vec![
-        0,
-        1,
-        (config.options as u32),
-        (config.spawns as u32),
-        (config.curse_spawns as u32),
-    ]);
-    // This will eventually be replaced by proper looping of all floor configs
-    array.push(0);
+// fn build_array(config: &Configuration) ->  Vec<u32> {
+//     // Generally, the format will read as
+//     // 0x0 Version Options Spawn Curse
+//     // Followed by the repeating config of
+//     // Floor Number StartingSkills / ShopSkills / PickupSkills / FinaleSkills 
+//     // Skill reps will have the number of skills followed by the ids
+//     let mut array = Vec::new();
+//     array.append(&mut vec![
+//         0,
+//         1,
+//         (config.options as u32),
+//         (config.spawns as u32),
+//         (config.curse_spawns as u32),
+//     ]);
+//     // This will eventually be replaced by proper looping of all floor configs
+//     array.push(0);
 
-    array.push(config.starting_skill_ids.len() as u32);
-    array.extend(&config.starting_skill_ids.clone());
-    return array;
-}
+//     array.push(config.starting_skill_ids.len() as u32);
+//     array.extend(&config.starting_skill_ids.clone());
+//     return array;
+// }
 
 fn build_mod_array(config: &ModConfig) ->  Vec<u32> {
     // Generally, the format will read as
