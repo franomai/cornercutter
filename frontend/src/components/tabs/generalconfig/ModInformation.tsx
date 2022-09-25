@@ -24,7 +24,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const dispatch = useDispatch();
     const editableRef = useRef<HTMLDivElement>(null);
 
-    const [isEditing, setIsEditing] = useState(false);
+    const [isEditing, setIsEditing] = useState(selectedMod.info.name.length === 0);
     const [newName, setNewName] = useState(selectedMod.info.name);
     const [newDescription, setNewDescription] = useState(selectedMod.info.description);
     const [configCode, setConfigCode] = useState<string | null>(null);
@@ -144,6 +144,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
                 fontWeight="bold"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
+                placeholder="Mod Name..."
                 mr={4}
                 ml="-17px"
                 mt="-3px"
@@ -163,6 +164,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
                 mt={-2}
                 value={newDescription}
                 onChange={(e) => setNewDescription(e.target.value)}
+                placeholder="Enter mod description here..."
                 mb={-2}
             />
         ) : (

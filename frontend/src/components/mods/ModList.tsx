@@ -1,17 +1,21 @@
 import { Button, Stack } from '@chakra-ui/react';
 import { invoke } from '@tauri-apps/api/tauri';
 import { useCallback } from 'react';
-import { useSelector } from 'react-redux';
-import { getAllMods, getEnabledMod, getSelectedMod } from '../../redux/slices/mod';
+import { useDispatch, useSelector } from 'react-redux';
+import { addMod, getAllMods, getEnabledMod, getSelectedMod } from '../../redux/slices/mod';
+import { generateEmptyMod } from '../../utility/ConfigHelpers';
 import ModOverview from './ModOverview';
 
 const ModList = () => {
+    const dispatch = useDispatch();
     const mods = useSelector(getAllMods);
     const enabledMod = useSelector(getEnabledMod);
     const selectedMod = useSelector(getSelectedMod);
 
-    const handleSave = useCallback(() => {
-        invoke('save_mod', { modConfig: selectedMod }).catch(console.error);
+    const handleNewMod = useCallback(() => {
+        invoke('get_new_mod_id')
+            .then((id) => dispatch(addMod(generateEmptyMod(id as string))))
+            .catch(console.error);
     }, [selectedMod]);
 
     return (
@@ -34,11 +38,9 @@ const ModList = () => {
                     />
                 ))}
             </Stack>
-            {selectedMod && (
-                <Button variant="outline" w="full" onClick={handleSave}>
-                    Save
-                </Button>
-            )}
+            <Button variant="outline" w="full" onClick={handleNewMod}>
+                New Mod
+            </Button>
         </Stack>
     );
 };

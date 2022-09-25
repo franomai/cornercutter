@@ -1,4 +1,4 @@
-import ModConfig, { Floor, FloorSkills, Options, Room } from '../types/Configuration';
+import ModConfig, { DEFAULT_CONFIG, Floor, FloorSkills, Options, Room } from '../types/Configuration';
 import { WeightedSkill } from '../types/Skill';
 
 export function modHasOption(mod: ModConfig, flag: Options) {
@@ -13,6 +13,15 @@ export function setModOptionFlag(mod: ModConfig, flag: Options, isSet: boolean) 
         // Remove flag
         mod.general.options &= ~flag;
     }
+}
+
+export function generateEmptyMod(id: string): ModConfig {
+    return {
+        id,
+        info: { name: '', description: '' },
+        general: DEFAULT_CONFIG,
+        floorSkills: generateEmptyFloorSkills(),
+    };
 }
 
 export function generateEmptyFloorSkills(): FloorSkills {
