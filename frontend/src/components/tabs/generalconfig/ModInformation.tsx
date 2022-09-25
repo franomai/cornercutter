@@ -17,8 +17,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { invoke } from '@tauri-apps/api/tauri';
 import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setModInfo } from '../../../redux/slices/mod';
+import { deleteMod, setModInfo } from '../../../redux/slices/mod';
 import ModConfig from '../../../types/Configuration';
+import { saveMod } from '../../../utility/ConfigHelpers';
 
 const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const dispatch = useDispatch();
@@ -39,6 +40,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const handleSaveChanges = useCallback(() => {
         if (newName !== selectedMod.info.name || newDescription !== selectedMod.info.description) {
             dispatch(setModInfo({ name: newName, description: newDescription }));
+            saveMod({ ...selectedMod, info: { name: newName, description: newDescription } });
         }
         setIsEditing(false);
     }, [dispatch, newName, newDescription, selectedMod.info]);
@@ -71,7 +73,13 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
         } catch (err) {
             console.error(err);
         }
-    }, []);
+    }, [selectedMod]);
+
+    const handleDeleteMod = useCallback(() => {
+        invoke('delete_mod', { modId: selectedMod.id })
+            .then(() => dispatch(deleteMod(selectedMod.id)))
+            .catch(console.error);
+    }, [selectedMod.id]);
 
     const renderEditableControls = useCallback(
         (canSave: boolean): ReactNode => {
@@ -126,6 +134,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
                                 title="Delete mod"
                                 aria-label="Delete mod"
                                 icon={<FontAwesomeIcon icon={faTrash} size="lg" />}
+                                onClick={handleDeleteMod}
                             />
                         </>
                     )}
@@ -174,7 +183,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
         <Stack spacing={3} ref={editableRef} onKeyDown={handleKeyPress}>
             <Flex direction="row" justifyContent="space-between" alignItems="center">
                 {renderName()}
-                {renderEditableControls(newName.trim().length !== 0 && newDescription.trim().length !== 0)}
+                {renderEditableControls(newName.trim().length !== 0)}
             </Flex>
             <Box>{renderDescription()}</Box>
         </Stack>

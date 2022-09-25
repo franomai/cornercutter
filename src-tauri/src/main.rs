@@ -154,7 +154,8 @@ fn delete_mod(cache: State<CornercutterCache>, mod_id: String) {
 
 #[tauri::command]
 fn save_mod(cache: State<CornercutterCache>, mod_config: ModConfig) {
-    serialize_mod(&cache.config.lock().unwrap(), &mod_config)
+    serialize_mod(&cache.config.lock().unwrap(), &mod_config);
+    cache.mods.lock().unwrap().insert(mod_config.id.clone(), mod_config);
 }
 
 #[tauri::command]
@@ -381,6 +382,7 @@ fn main() {
             get_config_code, 
             get_cornercutter_config, 
             get_current_mod,
+            delete_mod,
             save_mod, 
             set_going_under_dir, 
             get_mods,
