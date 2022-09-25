@@ -19,13 +19,14 @@ import {
     Tabs,
     useDisclosure,
 } from '@chakra-ui/react';
+import { invoke } from '@tauri-apps/api/tauri';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getCornercutterConfig } from '../../redux/slices/cornercutter';
-import { getAllMods, getSelectedMod } from '../../redux/slices/mod';
+import { addMod, getAllMods, getSelectedMod, setSelectedMod } from '../../redux/slices/mod';
 import ModConfig, { Floor, Options } from '../../types/Configuration';
 import TabData from '../../types/TabData';
-import { modHasOption } from '../../utility/ConfigHelpers';
+import { generateEmptyMod, modHasOption } from '../../utility/ConfigHelpers';
 import BlankTextLayout from '../layout/BlankTextLayout';
 import FindGoingUnder from '../modals/FindGoingUnder';
 import ModList from '../mods/ModList';
@@ -33,9 +34,18 @@ import FloorConfigTab from '../tabs/FloorConfigTab';
 import GeneralConfigTab from '../tabs/generalconfig';
 
 const ModdingConfig = () => {
+    const dispatch = useDispatch();
     const mods = useSelector(getAllMods);
     const config = useSelector(getCornercutterConfig);
     const selectedMod = useSelector(getSelectedMod);
+
+    const [newModId, setNewModId] = useState<string | null>(null);
+
+    const handleNewMod = useCallback(() => {
+        invoke<string>('get_new_mod_id')
+            .then((id) => setNewModId(id))
+            .catch(console.error);
+    }, [selectedMod]);
 
     const getTabs = useCallback(
         (selectedMod: ModConfig): TabData[] => {
@@ -116,7 +126,11 @@ const ModdingConfig = () => {
 
     return (
         <Box display="flex" flexDirection="row" h="full" maxW="full" w="full" overflowX="hidden">
-            <ModList />
+            <ModList>
+                <Button variant="outline" w="full" onClick={handleNewMod}>
+                    New Mod
+                </Button>
+            </ModList>
             <Stack direction="column" h="full" w="full" maxW="full" overflowX="hidden">
                 {renderLayout()}
             </Stack>
