@@ -5,6 +5,8 @@
 
 mod config_io;
 
+use std::collections::HashMap;
+
 use config_io::{CornercutterConfig, is_valid_going_under_dir, CornercutterCache, create_cornercutter_folders, load_cornercutter_cache, serialize_mod, CornercutterCurrentMod};
 use serde::{Serialize, Deserialize};
 use bitflags::bitflags;
@@ -150,7 +152,7 @@ fn save_mod(cache: State<CornercutterCache>, mod_config: ModConfig) {
 fn import_mod(cache: State<CornercutterCache>, encoded_config: String) -> Option<ModConfig> {
     let config = cache.config.lock().unwrap();
 
-    let id = Uuid::new_v4().to_string();
+    let id = get_new_id(&cache.mods.lock().unwrap());
     let parts = encoded_config.lines().collect::<Vec<_>>();
     if parts.len() < 2 || parts.len() > 3 {
         return None;
@@ -182,26 +184,8 @@ fn import_mod(cache: State<CornercutterCache>, encoded_config: String) -> Option
 }
 
 #[tauri::command]
-fn create_mod(cache: State<CornercutterCache>) -> ModConfig {
-    let config = cache.config.lock().unwrap();
-
-    let id = Uuid::new_v4().to_string();
-    let mod_config = ModConfig { 
-        id: id.clone(),
-        info: ModInfo { name: String::from(""), description: String::from("") }, 
-        general: GeneralConfig { spawns: SpawnType::Looped, curse_spawns: CurseSpawnType::Randomly, options: 0, starting_skills: Vec::new() }, 
-        floor_skills: FloorSkills {
-            all_floors: generate_room_skills(),
-            first_floor: generate_room_skills(),
-            second_floor: generate_room_skills(),
-            third_floor: generate_room_skills(),
-            boss: generate_room_skills(),
-        }
-    };
-
-    serialize_mod(&config, &mod_config);
-    cache.mods.lock().unwrap().insert(id, mod_config.clone());
-    return mod_config;
+fn get_new_mod_id(cache: State<CornercutterCache>) -> String {
+    return get_new_id(&cache.mods.lock().unwrap());
 }
 
 fn generate_room_skills() -> RoomSkills{
@@ -212,6 +196,16 @@ fn generate_room_skills() -> RoomSkills{
         curse: Vec::new(),
         finale: Vec::new(),
     }
+}
+
+fn get_new_id(map: &HashMap<String, ModConfig>) -> String {
+    let mut uuid = Uuid::new_v4().to_string();
+
+    while map.contains_key(&uuid) {
+        uuid = Uuid::new_v4().to_string();
+    }
+
+    return uuid;
 }
 
 // fn decode_configuration(config_string: &String) -> ModConfig {
