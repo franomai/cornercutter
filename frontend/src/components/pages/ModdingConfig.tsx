@@ -83,7 +83,7 @@ const ModdingConfig = () => {
                 <BlankTextLayout
                     title="No Mod Selected"
                     subtitle={
-                        mods.length === 0
+                        Object.keys(mods).length === 0
                             ? 'Create a mod in the left pane to get started'
                             : 'Select a mod in the left pane to get started'
                     }
