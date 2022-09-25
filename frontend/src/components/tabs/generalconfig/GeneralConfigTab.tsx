@@ -18,10 +18,6 @@ import SideSearchColumnLayout from '../../layout/SideSearchColumnLayout';
 const GeneralConfigTab = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const dispatch = useDispatch();
 
-    // async function submitConfig() {
-    //     const res = await invoke<string>('accept_config', { config: convertKeysToSnakeCase(config) });
-    // }
-
     return (
         <SideSearchColumnLayout>
             <ModInformation selectedMod={selectedMod} />

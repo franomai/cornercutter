@@ -32,6 +32,7 @@ import FindGoingUnder from '../modals/FindGoingUnder';
 import ModList from '../mods/ModList';
 import FloorConfigTab from '../tabs/FloorConfigTab';
 import GeneralConfigTab from '../tabs/generalconfig';
+import NewMod from '../mods/NewMod';
 
 const ModdingConfig = () => {
     const dispatch = useDispatch();
@@ -88,6 +89,20 @@ const ModdingConfig = () => {
     );
 
     const renderLayout = useCallback((): ReactNode => {
+        if (newModId) {
+            return (
+                <NewMod
+                    id={newModId}
+                    handleCreate={(mod) => {
+                        setNewModId(null);
+                        dispatch(addMod(mod));
+                        dispatch(setSelectedMod(newModId));
+                    }}
+                    handleDiscard={() => setNewModId(null)}
+                />
+            );
+        }
+
         if (!selectedMod) {
             return (
                 <BlankTextLayout
@@ -122,7 +137,7 @@ const ModdingConfig = () => {
                 </TabPanels>
             </Tabs>
         );
-    }, [selectedMod, mods]);
+    }, [selectedMod, mods, newModId, getTabs, dispatch]);
 
     return (
         <Box display="flex" flexDirection="row" h="full" maxW="full" w="full" overflowX="hidden">
