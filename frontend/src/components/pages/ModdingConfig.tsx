@@ -48,45 +48,42 @@ const ModdingConfig = () => {
             .catch(console.error);
     }, [selectedMod]);
 
-    const getTabs = useCallback(
-        (selectedMod: ModConfig): TabData[] => {
-            const tabs: TabData[] = [
+    const getTabs = useCallback((selectedMod: ModConfig): TabData[] => {
+        const tabs: TabData[] = [
+            {
+                name: 'General Config',
+                tab: <GeneralConfigTab selectedMod={selectedMod} />,
+            },
+        ];
+
+        if (modHasOption(selectedMod, Options.ConfigPerFloor)) {
+            tabs.push(
                 {
-                    name: 'General Config',
-                    tab: <GeneralConfigTab selectedMod={selectedMod} />,
+                    name: 'Floor 1',
+                    tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.FirstFloor} />,
                 },
-            ];
+                {
+                    name: 'Floor 2',
+                    tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.SecondFloor} />,
+                },
+                {
+                    name: 'Floor 3',
+                    tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.ThirdFloor} />,
+                },
+                {
+                    name: 'Boss Floor',
+                    tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.Boss} />,
+                },
+            );
+        } else {
+            tabs.push({
+                name: 'All Floors',
+                tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.AllFloors} />,
+            });
+        }
 
-            if (modHasOption(selectedMod, Options.ConfigPerFloor)) {
-                tabs.push(
-                    {
-                        name: 'Floor 1',
-                        tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.FirstFloor} />,
-                    },
-                    {
-                        name: 'Floor 2',
-                        tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.SecondFloor} />,
-                    },
-                    {
-                        name: 'Floor 3',
-                        tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.ThirdFloor} />,
-                    },
-                    {
-                        name: 'Boss Floor',
-                        tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.Boss} />,
-                    },
-                );
-            } else {
-                tabs.push({
-                    name: 'All Floors',
-                    tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.AllFloors} />,
-                });
-            }
-
-            return tabs;
-        },
-        [selectedMod],
-    );
+        return tabs;
+    }, []);
 
     const renderLayout = useCallback((): ReactNode => {
         if (newModId) {

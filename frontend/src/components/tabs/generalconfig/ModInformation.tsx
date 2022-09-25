@@ -25,7 +25,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const dispatch = useDispatch();
     const editableRef = useRef<HTMLDivElement>(null);
 
-    const [isEditing, setIsEditing] = useState(selectedMod.info.name.length === 0);
+    const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState(selectedMod.info.name);
     const [newDescription, setNewDescription] = useState(selectedMod.info.description);
     const [showConfigCodePopup, setShowConfigCodePopup] = useState(false);
@@ -36,6 +36,11 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
             return () => clearTimeout(timeout);
         }
     }, [showConfigCodePopup]);
+
+    useEffect(() => {
+        setNewName(selectedMod.info.name);
+        setNewDescription(selectedMod.info.description);
+    }, [selectedMod]);
 
     const handleSaveChanges = useCallback(() => {
         if (newName !== selectedMod.info.name || newDescription !== selectedMod.info.description) {
