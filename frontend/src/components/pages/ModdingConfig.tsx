@@ -26,13 +26,13 @@ import { getCornercutterConfig } from '../../redux/slices/cornercutter';
 import { addMod, getAllMods, getSelectedMod, setSelectedMod } from '../../redux/slices/mod';
 import ModConfig, { Floor, Options } from '../../types/Configuration';
 import TabData from '../../types/TabData';
-import { generateEmptyMod, modHasOption } from '../../utility/ConfigHelpers';
+import { modHasOption } from '../../utility/ConfigHelpers';
 import BlankTextLayout from '../layout/BlankTextLayout';
 import FindGoingUnder from '../modals/FindGoingUnder';
 import ModList from '../mods/ModList';
 import FloorConfigTab from '../tabs/FloorConfigTab';
 import GeneralConfigTab from '../tabs/generalconfig';
-import NewMod from '../mods/NewMod';
+import NewMod from '../modals/NewMod';
 
 const ModdingConfig = () => {
     const dispatch = useDispatch();
@@ -86,20 +86,6 @@ const ModdingConfig = () => {
     }, []);
 
     const renderLayout = useCallback((): ReactNode => {
-        if (newModId) {
-            return (
-                <NewMod
-                    id={newModId}
-                    handleCreate={(mod) => {
-                        setNewModId(null);
-                        dispatch(addMod(mod));
-                        dispatch(setSelectedMod(newModId));
-                    }}
-                    handleDiscard={() => setNewModId(null)}
-                />
-            );
-        }
-
         if (!selectedMod) {
             return (
                 <BlankTextLayout
@@ -134,7 +120,7 @@ const ModdingConfig = () => {
                 </TabPanels>
             </Tabs>
         );
-    }, [selectedMod, mods, newModId, getTabs, dispatch]);
+    }, [selectedMod, mods, getTabs]);
 
     return (
         <Box display="flex" flexDirection="row" h="full" maxW="full" w="full" overflowX="hidden">
@@ -147,6 +133,17 @@ const ModdingConfig = () => {
                 {renderLayout()}
             </Stack>
             {config && <FindGoingUnder config={config} />}
+            {newModId && (
+                <NewMod
+                    id={newModId}
+                    handleCreate={(mod) => {
+                        setNewModId(null);
+                        dispatch(addMod(mod));
+                        dispatch(setSelectedMod(newModId));
+                    }}
+                    handleDiscard={() => setNewModId(null)}
+                />
+            )}
         </Box>
     );
 };
