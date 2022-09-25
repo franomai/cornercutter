@@ -7,7 +7,7 @@ mod config_io;
 
 use std::collections::HashMap;
 
-use config_io::{CornercutterConfig, is_valid_going_under_dir, CornercutterCache, create_cornercutter_folders, load_cornercutter_cache, serialize_mod, CornercutterCurrentMod};
+use config_io::{CornercutterConfig, is_valid_going_under_dir, CornercutterCache, create_cornercutter_folders, load_cornercutter_cache, serialize_mod, CornercutterCurrentMod, get_mod_filename, serialize_current_mod_config};
 use serde::{Serialize, Deserialize};
 use bitflags::bitflags;
 use integer_encoding::VarInt;
@@ -186,6 +186,14 @@ fn import_mod(cache: State<CornercutterCache>, encoded_config: String) -> Option
 #[tauri::command]
 fn get_new_mod_id(cache: State<CornercutterCache>) -> String {
     return get_new_id(&cache.mods.lock().unwrap());
+}
+
+#[tauri::command]
+fn set_enabled_mod(cache: State<CornercutterCache>, enabled_mod: ModConfig) {
+    let config = cache.config.lock().unwrap();
+
+    cache.current_mod.lock().unwrap().current_mod = Some(get_mod_filename(&enabled_mod));
+    serialize_current_mod_config(&config, &cache.current_mod.lock().unwrap())
 }
 
 fn generate_room_skills() -> RoomSkills{
@@ -368,6 +376,8 @@ fn main() {
             set_going_under_dir, 
             get_mods,
             import_mod,
+            get_new_mod_id,
+            set_enabled_mod
         ])
         .run(context)
         .expect("error while running tauri application");
