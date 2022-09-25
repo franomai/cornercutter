@@ -50,7 +50,6 @@ const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
                     <Radio value="Looped">Looped</Radio>
                     <Radio value="Weighted">Weighted</Radio>
                     <Radio value="Consecutive">Consecutive</Radio>
-                    <Radio value="AlwaysIfAble">Always if able</Radio>
                 </LabelledRadioGroup>
                 <LabelledRadioGroup
                     title="Curse Room Spawns"
@@ -61,6 +60,7 @@ const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
                     <Radio value="Randomly">Randomly</Radio>
                     <Radio value="Always">Always</Radio>
                     <Radio value="Never">Never</Radio>
+                    <Radio value="AlwaysIfAble">Always if able</Radio>
                 </LabelledRadioGroup>
                 {renderOptionCheckboxes([Options.ConfigPerFloor, Options.ConfigPerRoom, Options.AwardSkillsPerFloor])}
                 {renderOptionCheckboxes([
