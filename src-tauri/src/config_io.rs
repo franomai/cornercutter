@@ -109,7 +109,7 @@ pub fn load_mods(config: &CornercutterConfig) -> HashMap<String, ModConfig> {
                 let deserialised: Result<ModConfig, serde_json::Error> = serde_json::from_reader(File::open(path).unwrap());
                 if deserialised.is_ok() {
                     let mod_config = deserialised.unwrap();
-                    mods.insert(mod_config.id, mod_config);
+                    mods.insert(mod_config.id.clone(), mod_config);
                 }
             }
         }
