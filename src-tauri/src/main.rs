@@ -119,7 +119,7 @@ fn get_cornercutter_config(cache: State<CornercutterCache>) -> CornercutterConfi
 
 #[tauri::command]
 fn get_mods(cache: State<CornercutterCache>) -> Vec<ModConfig> {
-    return cache.mods.clone();
+    return cache.mods.lock().unwrap().clone();
 }
 
 #[tauri::command]
@@ -143,6 +143,8 @@ fn save_mod(cache: State<CornercutterCache>, mod_config: ModConfig) {
 
 #[tauri::command]
 fn import_mod(cache: State<CornercutterCache>, encoded_config: String) -> Option<ModConfig> {
+    let config = cache.config.lock().unwrap();
+
     let id = Uuid::new_v4().to_string();
     let parts = encoded_config.lines().collect::<Vec<_>>();
     if parts.len() < 2 || parts.len() > 3 {
@@ -156,7 +158,7 @@ fn import_mod(cache: State<CornercutterCache>, encoded_config: String) -> Option
     };
     
     // TODO: Extract from encoded_config
-    return Some(ModConfig {
+    let mod_config = ModConfig {
         id,
         info: mod_info,
         general: GeneralConfig { spawns: SpawnType::Looped, curse_spawns: CurseSpawnType::Randomly, options: 0, starting_skills: Vec::new() },
@@ -167,7 +169,15 @@ fn import_mod(cache: State<CornercutterCache>, encoded_config: String) -> Option
             third_floor: generate_room_skills(),
             boss: generate_room_skills(),
         }
-    });
+    };
+
+    serialize_mod(&config, &mod_config);
+    cache.mods.lock().unwrap().push(mod_config.clone());
+    return Some(mod_config);
+}
+
+fn create_mod() {
+
 }
 
 fn generate_room_skills() -> RoomSkills{
@@ -180,15 +190,10 @@ fn generate_room_skills() -> RoomSkills{
     }
 }
 
-fn encode_configuration(config: &ModConfig) -> String {
-    let config_array = build_mod_array(&config);
-    return u32_vec_to_string(config_array);
-}
-
-fn decode_configuration(config_string: &String) -> ModConfig {
-    let config_array = string_to_u32_vec(config_string);
-    return build_config(config_array.unwrap());
-}
+// fn decode_configuration(config_string: &String) -> ModConfig {
+//     let config_array = string_to_u32_vec(config_string);
+//     return build_config(config_array.unwrap());
+// }
 
 fn encode_mod_config(config: &ModConfig) -> String {
     let config_array = build_mod_array(&config);
@@ -338,13 +343,13 @@ fn main() {
         .menu(tauri::Menu::os_default(&context.package_info().name))
         .manage(load_cornercutter_cache())
         .invoke_handler(tauri::generate_handler![
-            accept_config,
             get_config_code, 
             get_cornercutter_config, 
             get_current_mod,
             save_mod, 
             set_going_under_dir, 
-            get_mods
+            get_mods,
+            import_mod,
         ])
         .run(context)
         .expect("error while running tauri application");
