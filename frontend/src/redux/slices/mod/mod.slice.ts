@@ -51,6 +51,14 @@ const modSlice = createSlice({
                 state.selectedMod = action.payload.id;
             }
         },
+        addMods(state, action: { payload: ModConfig[] }) {
+            if (state.selectedMod === null && action.payload.length !== 0) {
+                state.selectedMod = action.payload[0].id;
+            }
+            for (const mod of action.payload) {
+                state.mods[mod.id] = mod;
+            }
+        },
         deleteMod(state, action: { payload: string }) {
             delete state.mods[action.payload];
             if (state.selectedMod === action.payload) {
@@ -133,6 +141,7 @@ export const {
     setSelectedMod,
     setEnabledMod,
     addMod,
+    addMods,
     deleteMod,
     setModInfo,
     setSpawns,
