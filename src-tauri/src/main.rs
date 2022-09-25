@@ -189,10 +189,10 @@ fn get_new_mod_id(cache: State<CornercutterCache>) -> String {
 }
 
 #[tauri::command]
-fn set_enabled_mod(cache: State<CornercutterCache>, enabled_mod: ModConfig) {
+fn set_enabled_mod(cache: State<CornercutterCache>, enabled_mod: Option<ModConfig>) {
     let config = cache.config.lock().unwrap();
 
-    cache.current_mod.lock().unwrap().current_mod = Some(get_mod_filename(&enabled_mod));
+    cache.current_mod.lock().unwrap().current_mod = enabled_mod.map(|mod_config| get_mod_filename(&mod_config));
     serialize_current_mod_config(&config, &cache.current_mod.lock().unwrap())
 }
 
