@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fs::{File, create_dir_all, read_dir};
 use std::io::{self, ErrorKind};
 use std::path::{Path, PathBuf};
@@ -10,11 +11,10 @@ const CC_FILE: &str = "cornercutter.json";
 const CC_MODS_DIR: &str = "cornercutter/mods";
 const CC_CURRENT_MOD_DIR: &str = "cornercutter/current_mod.json";
 
-#[derive(Serialize, Deserialize)]
 pub struct CornercutterCache {
     pub current_mod: Mutex<CornercutterCurrentMod>,
     pub config: Mutex<CornercutterConfig>,
-    pub mods: Mutex<Vec<ModConfig>>,
+    pub mods: Mutex<HashMap<String, ModConfig>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -92,8 +92,8 @@ pub fn load_cornercutter_config() -> CornercutterConfig {
     return deserialize_cornercutter_config().unwrap_or_else(|_err| CornercutterConfig::new());
 }
 
-pub fn load_mods(config: &CornercutterConfig) -> Vec<ModConfig> {
-    let mut mods: Vec<ModConfig> = Vec::new();
+pub fn load_mods(config: &CornercutterConfig) -> HashMap<String, ModConfig> {
+    let mut mods: HashMap<String, ModConfig> = HashMap::new();
     if config.going_under_dir.is_some() {
         let files = read_dir(get_relative_dir(config, CC_MODS_DIR));
         if files.is_ok() {
@@ -108,7 +108,8 @@ pub fn load_mods(config: &CornercutterConfig) -> Vec<ModConfig> {
 
                 let deserialised: Result<ModConfig, serde_json::Error> = serde_json::from_reader(File::open(path).unwrap());
                 if deserialised.is_ok() {
-                    mods.push(deserialised.unwrap());
+                    let mod_config = deserialised.unwrap();
+                    mods.insert(mod_config.id, mod_config);
                 }
             }
         }

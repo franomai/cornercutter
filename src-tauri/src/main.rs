@@ -119,7 +119,12 @@ fn get_cornercutter_config(cache: State<CornercutterCache>) -> CornercutterConfi
 
 #[tauri::command]
 fn get_mods(cache: State<CornercutterCache>) -> Vec<ModConfig> {
-    return cache.mods.lock().unwrap().clone();
+    let mods = cache.mods.lock()
+        .unwrap()
+        .values()
+        .map(|mod_config| mod_config.clone())
+        .collect();
+    return mods;
 }
 
 #[tauri::command]
@@ -159,7 +164,7 @@ fn import_mod(cache: State<CornercutterCache>, encoded_config: String) -> Option
     
     // TODO: Extract from encoded_config
     let mod_config = ModConfig {
-        id,
+        id: id.clone(),
         info: mod_info,
         general: GeneralConfig { spawns: SpawnType::Looped, curse_spawns: CurseSpawnType::Randomly, options: 0, starting_skills: Vec::new() },
         floor_skills: FloorSkills {
@@ -172,12 +177,31 @@ fn import_mod(cache: State<CornercutterCache>, encoded_config: String) -> Option
     };
 
     serialize_mod(&config, &mod_config);
-    cache.mods.lock().unwrap().push(mod_config.clone());
+    cache.mods.lock().unwrap().insert(id, mod_config.clone());
     return Some(mod_config);
 }
 
-fn create_mod() {
+#[tauri::command]
+fn create_mod(cache: State<CornercutterCache>) -> ModConfig {
+    let config = cache.config.lock().unwrap();
 
+    let id = Uuid::new_v4().to_string();
+    let mod_config = ModConfig { 
+        id: id.clone(),
+        info: ModInfo { name: String::from(""), description: String::from("") }, 
+        general: GeneralConfig { spawns: SpawnType::Looped, curse_spawns: CurseSpawnType::Randomly, options: 0, starting_skills: Vec::new() }, 
+        floor_skills: FloorSkills {
+            all_floors: generate_room_skills(),
+            first_floor: generate_room_skills(),
+            second_floor: generate_room_skills(),
+            third_floor: generate_room_skills(),
+            boss: generate_room_skills(),
+        }
+    };
+
+    serialize_mod(&config, &mod_config);
+    cache.mods.lock().unwrap().insert(id, mod_config.clone());
+    return mod_config;
 }
 
 fn generate_room_skills() -> RoomSkills{
