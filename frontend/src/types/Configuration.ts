@@ -31,6 +31,7 @@ export enum CurseSpawnType {
     Randomly = 'Randomly',
     Always = 'Always',
     Never = 'Never',
+    AlwaysIfAble = 'AlwaysIfAble',
 }
 
 export enum Floor {

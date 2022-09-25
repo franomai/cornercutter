@@ -78,7 +78,7 @@ enum SpawnType {
 #[derive(Debug)]
 #[derive(Serialize, Deserialize, Copy, Clone, FromPrimitive)]
 enum CurseSpawnType {
-    None = 0, Randomly = 1, Always = 2, Never = 3
+    None = 0, Randomly = 1, Always = 2, Never = 3, AlwaysIfAble = 4,
 }
 
 bitflags! {
