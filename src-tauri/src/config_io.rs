@@ -82,7 +82,7 @@ pub fn load_cornercutter_cache() -> CornercutterCache {
 
     return CornercutterCache {
         config: Mutex::new(config),
-        mods: mods,
+        mods,
     }
 }
 

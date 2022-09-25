@@ -25,7 +25,7 @@ const ModList = () => {
             justifyContent="space-between"
         >
             <Stack gap={2} h="full">
-                {mods.map((mod) => (
+                {Object.values(mods).map((mod) => (
                     <ModOverview
                         key={mod.id}
                         mod={mod}

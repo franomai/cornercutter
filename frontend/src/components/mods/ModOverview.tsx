@@ -8,7 +8,7 @@ const ModOverview = ({ mod, isEnabled, isSelected }: { mod: ModConfig; isEnabled
     const dispatch = useDispatch();
 
     const handleEnable = () => {
-        dispatch(setEnabledMod(isEnabled ? -1 : mod.id));
+        dispatch(setEnabledMod(isEnabled ? null : mod.id));
     };
 
     const handleSelect = () => {
