@@ -41,12 +41,17 @@ const ModdingConfig = () => {
     const selectedMod = useSelector(getSelectedMod);
 
     const [newModId, setNewModId] = useState<string | null>(null);
+    const [importMod, setImportMod] = useState(false);
 
     const handleNewMod = useCallback(() => {
         invoke<string>('get_new_mod_id')
             .then((id) => setNewModId(id))
             .catch(console.error);
-    }, [selectedMod]);
+    }, [setNewModId]);
+
+    const handleImportMod = useCallback(() => {
+        setImportMod(true);
+    }, [setImportMod]);
 
     const getTabs = useCallback((selectedMod: ModConfig): TabData[] => {
         const tabs: TabData[] = [
@@ -127,6 +132,9 @@ const ModdingConfig = () => {
             <ModList>
                 <Button variant="outline" w="full" onClick={handleNewMod}>
                     New Mod
+                </Button>
+                <Button variant="outline" w="full" onClick={handleImportMod}>
+                    Import Mod
                 </Button>
             </ModList>
             <Stack direction="column" h="full" w="full" maxW="full" overflowX="hidden">

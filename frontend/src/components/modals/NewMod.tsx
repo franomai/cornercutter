@@ -1,7 +1,5 @@
 import {
     Button,
-    Center,
-    Flex,
     FormControl,
     FormLabel,
     Input,
@@ -18,7 +16,6 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import ModConfig, { DEFAULT_CONFIG } from '../../types/Configuration';
 import { generateEmptyFloorSkills } from '../../utility/ConfigHelpers';
-import ContentContainer from '../layout/ContentContainer';
 
 const NewMod = ({
     id,
