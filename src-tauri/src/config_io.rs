@@ -227,5 +227,5 @@ pub fn create_cornercutter_folders(config: &CornercutterConfig) {
         current_mod: None,
         global_options: 0
     };
-    serialize_current_mod_config(config, &current_mod)
+    serialize_current_mod_config(config, &current_mod);
 }

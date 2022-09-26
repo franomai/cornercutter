@@ -478,7 +478,6 @@ fn build_skill(source: &mut VecDeque<u32>, num_skills: u32, is_weighted: bool) -
 fn main() {
     let context = tauri::generate_context!();
     tauri::Builder::default()
-        .menu(tauri::Menu::os_default(&context.package_info().name))
         .manage(load_cornercutter_cache())
         .invoke_handler(tauri::generate_handler![
             get_config_code, 
