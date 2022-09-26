@@ -1,15 +1,16 @@
 use std::collections::HashMap;
-use std::fs::{File, create_dir_all, read_dir, remove_file};
+use std::fs::{File, create_dir_all, read_dir, remove_file, copy};
 use std::io::{self, ErrorKind};
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
+use std::env::current_dir;
 use serde::{Serialize, Deserialize};
 
 use crate::{ModConfig};
 
 const CC_FILE: &str = "cornercutter.json";
 const CC_MODS_DIR: &str = "cornercutter/mods";
-const CC_CURRENT_MOD_DIR: &str = "cornercutter/current_mod.json";
+const CC_CURRENT_MOD_DIR: &str = "cornercutter/settings.json";
 
 pub struct CornercutterCache {
     pub current_mod: Mutex<CornercutterCurrentMod>,
@@ -184,7 +185,22 @@ pub fn serialize_current_mod_config(config: &CornercutterConfig, current_mod: &C
     if res.is_err() {
         println!("Error writing current mod config: {}", res.unwrap_err());
     }
-} 
+}
+
+// https://stackoverflow.com/a/65192210, no out of the box solution
+pub fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<()> {
+    create_dir_all(&dst)?;
+    for entry in read_dir(src)? {
+        let entry = entry?;
+        let ty = entry.file_type()?;
+        if ty.is_dir() {
+            copy_dir_all(entry.path(), dst.as_ref().join(entry.file_name()))?;
+        } else {
+            copy(entry.path(), dst.as_ref().join(entry.file_name()))?;
+        }
+    }
+    Ok(())
+}
 
 pub fn create_cornercutter_folders(config: &CornercutterConfig) {
     if config.going_under_dir.is_none() {
@@ -197,6 +213,13 @@ pub fn create_cornercutter_folders(config: &CornercutterConfig) {
             return;
         },
         Ok(_) => {},
+    }
+
+    let mod_dir = current_dir().unwrap().join("built-mod");
+    println!("Installing mod from {}", mod_dir.display());
+    let res = copy_dir_all(mod_dir, Path::new(config.going_under_dir.as_ref().unwrap()));
+    if res.is_err() {
+        println!("Error installing mod: {}", res.unwrap_err());
     }
 
     let current_mod = CornercutterCurrentMod {
