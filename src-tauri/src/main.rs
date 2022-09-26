@@ -376,7 +376,6 @@ fn build_skill_array(skills_list: &Vec<WeightedSkill>, is_weighted: bool) -> Vec
 fn main() {
     let context = tauri::generate_context!();
     tauri::Builder::default()
-        .menu(tauri::Menu::os_default(&context.package_info().name))
         .manage(load_cornercutter_cache())
         .invoke_handler(tauri::generate_handler![
             get_config_code, 
