@@ -6,6 +6,7 @@
 mod config_io;
 
 use std::collections::HashMap;
+use std::collections::VecDeque;
 
 use config_io::{CornercutterConfig, is_valid_going_under_dir, CornercutterCache, create_cornercutter_folders, load_cornercutter_cache, serialize_mod, CornercutterCurrentMod, get_mod_filename, serialize_current_mod_config, delete_mod_file};
 use serde::{Serialize, Deserialize};
@@ -15,6 +16,7 @@ use base64::{encode, decode};
 use num_derive::FromPrimitive;
 use num_traits::FromPrimitive;
 use tauri::State;
+use tauri::generate_context;
 use uuid::Uuid;
 
 use crate::config_io::serialize_cornercutter_config;
@@ -104,6 +106,9 @@ fn get_config_code(mod_config: ModConfig) -> String {
     config_code.push_str(mod_config.info.description.as_str());
     config_code.push('\n');
     config_code.push_str(encode_mod_config(&mod_config).as_str());
+
+    println!("{}", encode_mod_config(&mod_config).as_str());
+    println!("{}", encode_mod_config(&decode_configuration(&encode_mod_config(&mod_config)).unwrap()).as_str());
 
     return config_code;
 }
@@ -226,10 +231,43 @@ fn get_new_id(map: &HashMap<String, ModConfig>) -> String {
     return uuid;
 }
 
-// fn decode_configuration(config_string: &String) -> ModConfig {
-//     let config_array = string_to_u32_vec(config_string);
-//     return build_config(config_array.unwrap());
-// }
+fn decode_configuration(config_string: &String) -> Result<ModConfig, String> {
+    let mut split = config_string.lines().collect::<Vec<&str>>();
+    let mut name = String::from("");
+    let mut description= String::from("");
+    let mut config_string = String::from("");
+
+    if split.len() == 1 {
+        name = String::from("Imported mod");
+        config_string = split[0].trim().to_string();
+    } else if split.len() == 2 {
+        name = get_commented_string(split[0])?;
+        config_string = split[1].trim().to_string();
+    } else if split.len() == 3 {
+        name = get_commented_string(split[0])?;
+        description = get_commented_string(split[1])?;
+        config_string = split[2].trim().to_string();
+    } else {
+        // Too many lines, error out
+        return Err("Too many lines in config string".to_string())
+    }
+
+    let info = ModInfo{name: name.to_string(), description: description.to_string()};
+    let mut config_array = string_to_u32_vec(&config_string)?;
+    let mod_config = match build_mod_config(&info, &mut config_array) {
+        Ok(mod_config) => mod_config,
+        Err(e) => return Err(e),
+    };
+    Ok(mod_config)
+}
+
+fn get_commented_string(original_string: &str) -> Result<String, String> {
+    if !original_string.starts_with("#") {
+        return Err("Not a valid comment string".to_string())
+    }
+    let result = original_string[1..original_string.len()].trim().to_string();
+    Ok(result)
+}
 
 fn encode_mod_config(config: &ModConfig) -> String {
     let config_array = build_mod_array(&config);
@@ -251,49 +289,99 @@ fn u32_vec_to_string(byte_array: Vec<u32>) -> String {
 }
 
 // Modified version of the decode from lib.rs
-fn string_to_u32_vec(config_string: &str) -> Result<Vec<u32>, String> {
+fn string_to_u32_vec(config_string: &str) -> Result<VecDeque<u32>, String> {
     let mut decoded = decode(config_string).unwrap();
 
-    let mut result: Vec<u32> = vec![];
+    let mut result: VecDeque<u32> = VecDeque::new();
     // Read u8 values as u32 varints
     while !decoded.is_empty() {
-        let (read, size) = u32::decode_var(&decoded).ok_or("This should never happen, as it's coming from us.")?;
-        result.push(read);
+        let (read, size) = u32::decode_var(&decoded).ok_or("Invalid varint encountered")?;
+        result.push_back(read);
         decoded = decoded[size..].to_vec();
     }
     Ok(result)
 }
 
-// fn build_mod_config(config_array: Vec<u32>) ->  Configuration {
-//     return Configuration {
-//         spawns: FromPrimitive::from_u32(config_array[3]).unwrap(),
-//         curse_spawns: FromPrimitive::from_u32(config_array[4]).unwrap(),
-//         options: config_array[2],
-//         starting_skill_ids: config_array[7..].to_vec(),
-//     };
-// }
+fn build_mod_config(mod_info: &ModInfo,  config_array_original: &VecDeque<u32>) -> Result<ModConfig, String> {
+    let mut config_array = config_array_original.clone();
+    config_array.pop_front();
+    let major = config_array.pop_front().unwrap();
+    let minor = config_array.pop_front().unwrap();
+    let patch = config_array.pop_front().unwrap();
+    let options = config_array.pop_front().unwrap();
+    let spawns = FromPrimitive::from_u32(config_array.pop_front().unwrap()).unwrap();
+    let curse_spawns = FromPrimitive::from_u32(config_array.pop_front().unwrap()).unwrap();
+    let mut num_skills = config_array.pop_front().unwrap();
+    let is_weighted = spawns == SpawnType::Weighted;
+    let starting_skills = build_skill(&mut config_array, num_skills, is_weighted);
 
-// fn build_array(config: &Configuration) ->  Vec<u32> {
-//     // Generally, the format will read as
-//     // 0x0 Version Options Spawn Curse
-//     // Followed by the repeating config of
-//     // Floor Number StartingSkills / ShopSkills / PickupSkills / FinaleSkills 
-//     // Skill reps will have the number of skills followed by the ids
-//     let mut array = Vec::new();
-//     array.append(&mut vec![
-//         0,
-//         1,
-//         (config.options as u32),
-//         (config.spawns as u32),
-//         (config.curse_spawns as u32),
-//     ]);
-//     // This will eventually be replaced by proper looping of all floor configs
-//     array.push(0);
+    let option_flags = Options::from_bits(options).unwrap();
+    let per_room = option_flags.contains(Options::CONFIG_PER_ROOM);
 
-//     array.push(config.starting_skill_ids.len() as u32);
-//     array.extend(&config.starting_skill_ids.clone());
-//     return array;
-// }
+    let mut floors: Vec<RoomSkills> = vec![generate_room_skills(); 5];
+
+    while config_array.len() != 0 {
+        let floor = config_array.pop_front().unwrap();
+        let mut all: Vec<WeightedSkill>  = Vec::new();
+        let mut free: Vec<WeightedSkill> = Vec::new();
+        let mut shop: Vec<WeightedSkill> = Vec::new();
+        let mut curse: Vec<WeightedSkill> = Vec::new();
+        let mut finale: Vec<WeightedSkill> = Vec::new();
+        let mut room_skills: Vec<WeightedSkill>;
+
+        if per_room {
+            num_skills = config_array.pop_front().unwrap();
+            room_skills = build_skill(&mut config_array, num_skills, is_weighted);
+            free.append(&mut room_skills);
+
+            num_skills = config_array.pop_front().unwrap();
+            room_skills = build_skill(&mut config_array, num_skills, is_weighted);
+            shop.append(&mut room_skills);
+
+            num_skills = config_array.pop_front().unwrap();
+            room_skills = build_skill(&mut config_array, num_skills, is_weighted);
+            curse.append(&mut room_skills);
+
+            num_skills = config_array.pop_front().unwrap();
+            room_skills = build_skill(&mut config_array, num_skills, is_weighted);
+            finale.append(&mut room_skills);
+        } else {
+            num_skills = config_array.pop_front().unwrap();
+            room_skills = build_skill(&mut config_array, num_skills, is_weighted);
+            all.append(&mut room_skills);
+        }
+
+        let room_skills = RoomSkills{
+            all, free, shop, curse, finale
+        };
+
+        floors[floor as usize] = room_skills;
+    }
+
+    let floor_skills = FloorSkills {
+        all_floors: floors[0].clone(),
+        first_floor: floors[1].clone(),
+        second_floor: floors[2].clone(),
+        third_floor: floors[3].clone(),
+        boss: floors[4].clone(),
+    };
+
+    let general_config = GeneralConfig {
+        spawns,
+        curse_spawns,
+        options,
+        starting_skills: starting_skills.to_vec()
+    };
+
+    let mod_config = ModConfig {
+        id: "Imported mod".to_string(),
+        info: mod_info.clone(),
+        general: general_config,
+        floor_skills
+    };
+
+    Ok(mod_config)
+}
 
 fn build_mod_array(config: &ModConfig) ->  Vec<u32> {
     // Generally, the format will read as
@@ -304,7 +392,7 @@ fn build_mod_array(config: &ModConfig) ->  Vec<u32> {
     let mut array = Vec::new();
     array.append(&mut vec![
         0,
-        1,
+        1, 0, 0,
         (config.general.options as u32),
         (config.general.spawns as u32),
         (config.general.curse_spawns as u32),
@@ -326,7 +414,6 @@ fn build_mod_array(config: &ModConfig) ->  Vec<u32> {
         array.extend(build_room_skills_array(3, &config.floor_skills.third_floor,  per_room, is_weighted).clone());
         array.extend( build_room_skills_array(4, &config.floor_skills.boss, per_room, is_weighted).clone());
     } else {
-        println!("tru");
         array.extend(build_room_skills_array(0, &config.floor_skills.all_floors, per_room, is_weighted).clone());
     }
     return array;
@@ -371,6 +458,21 @@ fn build_skill_array(skills_list: &Vec<WeightedSkill>, is_weighted: bool) -> Vec
         }
     }
     return array;
+}
+
+fn build_skill(source: &mut VecDeque<u32>, num_skills: u32, is_weighted: bool) -> Vec<WeightedSkill> {
+    let mut skills: Vec<WeightedSkill> = Vec::new();
+    for x in 0..num_skills {
+        let id = source.pop_front().unwrap();
+        let weight;
+        if is_weighted {
+            weight = source.pop_front().unwrap();
+        } else {
+            weight = 10;
+        }
+        skills.push(WeightedSkill{id, weight});
+    }
+    return skills;
 }
 
 fn main() {
