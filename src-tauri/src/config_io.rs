@@ -37,7 +37,8 @@ impl CornercutterConfig {
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all="camelCase")]
 pub struct CornercutterCurrentMod {
-    pub current_mod: Option<String>
+    pub current_mod: Option<String>,
+    pub global_options: u32
 }
 
 pub fn file_exists(path: &Path) -> bool {
@@ -81,7 +82,7 @@ pub fn load_cornercutter_cache() -> CornercutterCache {
     let mods = load_mods(&config);
 
     return CornercutterCache {
-        current_mod: Mutex::new(CornercutterCurrentMod { current_mod: None }),
+        current_mod: Mutex::new(CornercutterCurrentMod { current_mod: None, global_options: 0 }),
         config: Mutex::new(config),
         mods: Mutex::new(mods),
     }
@@ -224,6 +225,7 @@ pub fn create_cornercutter_folders(config: &CornercutterConfig) {
 
     let current_mod = CornercutterCurrentMod {
         current_mod: None,
+        global_options: 0
     };
     serialize_current_mod_config(config, &current_mod)
 }
