@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace cornercutter
+namespace cornercutter.ModFeature.SpawnOverride
 {
     [HarmonyPatch(typeof(FinalRoomBattlePickup), nameof(FinalRoomBattlePickup.OnGrabbed))]
     class FinaleSwapper
