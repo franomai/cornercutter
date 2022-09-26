@@ -8,13 +8,11 @@ namespace cornercutter.DTO
     {
         [JsonProperty("spawns")]
         public SpawnCollectionType SpawnCollectionType { get; set; }
-        [JsonProperty("curse_spawns")]
+        [JsonProperty("curseSpawns")]
         public CurseSpawnType CurseSpawnType { get; set; }
-        [JsonProperty("global_options")]
-        public GlobalOptions GlobalOptions { get; set; }
         [JsonProperty("options")]
         public ConfigOptions ConfigOptions { get; set; }
-        [JsonProperty("starting_skills")]
+        [JsonProperty("startingSkills")]
         public List<WeightedSkillDTO> StartingSkills { get; set; }
     }
 }

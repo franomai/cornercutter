@@ -8,7 +8,7 @@ namespace cornercutter.DTO
         public ModInfoDTO ModInfo { get; set; }
         [JsonProperty("general")]
         public GeneralConfigDTO GeneralConfig { get; set; }
-        [JsonProperty("floor_skills")]
+        [JsonProperty("floorSkills")]
         public FloorSkillsDTO FloorSkills { get; set; }
     }
 }

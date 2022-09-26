@@ -7,6 +7,7 @@ namespace cornercutter.ModFeature.GlobalSetting
     [HarmonyPatch(typeof(SaveData), nameof(SaveData.ConfirmRun))]
     class BestRunBlocker
     {
+        // Note that this time will only show up in game if you have no other runs for that dungeon
         private const float ONE_DAY_IN_SECONDS = 60 * 60 * 24;
 
         static void Postfix(ref SaveData __instance, ref RunData runData)

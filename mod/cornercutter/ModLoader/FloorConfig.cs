@@ -33,6 +33,7 @@ namespace cornercutter.ModLoader
             CurseSkills = CreateSpawnCollection(collectionType);
             FinaleSkills = CreateSpawnCollection(collectionType);
         }
+
         private SpawnCollection CreateSpawnCollection(SpawnCollectionType collectionType)
         {
             SpawnCollection collection;

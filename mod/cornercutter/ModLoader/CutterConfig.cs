@@ -1,4 +1,5 @@
-﻿using cornercutter.DTO;
+﻿using BepInEx.Logging;
+using cornercutter.DTO;
 using cornercutter.Enum;
 using cornercutter.ModFeature.SpawnOverride.CollectionTypes;
 using System;
@@ -13,28 +14,58 @@ namespace cornercutter.ModLoader
     class CutterConfig
     {
         public static CutterConfig Instance { get; } = new CutterConfig();
-        public SpawnCollectionType SpawnCollectionType { get; private set; } = SpawnCollectionType.None;
-        public CurseSpawnType CurseSpawnType { get; private set; } = CurseSpawnType.None;
-        public GlobalOptions GlobalOptions { get; private set; } = GlobalOptions.DisableCornercutter;
-        public ConfigOptions ConfigOptions { get; private set; } = ConfigOptions.NoneSelected;
-        public WeightedSkill[] StartingSkills { get; private set; } = new WeightedSkill[] { };
-        private Dictionary<Floor, FloorConfig> floorConfigs = new Dictionary<Floor, FloorConfig>();
+
+        private string ModFileLocation;
+        public GlobalOptions GlobalOptions { get; private set; }
+
+        public SpawnCollectionType SpawnCollectionType { get; private set; }
+        public CurseSpawnType CurseSpawnType { get; private set; }
+        
+        public ConfigOptions ConfigOptions { get; private set; }
+        public WeightedSkill[] StartingSkills { get; private set; }
+        private Dictionary<Floor, FloorConfig> floorConfigs;
+
+        private ManualLogSource Logger = null;
         private ModReader Reader = new ModReader();
 
         private CutterConfig()
         {
         }
 
+        public void Setup(ManualLogSource logger)
+        {
+            Logger = logger;
+            ClearConfig();
+            LoadGlobalSettings();
+        }
+
+        public void LogInfo(object data) { if (Logger == null) return; Logger.LogInfo(data); }
+        public void LogError(object data) { if (Logger == null) return; Logger.LogError(data); }
+        public void LogDebug(object data)
+        {
+            if (Logger == null) return;
+            if (!GlobalOptions.HasFlag(GlobalOptions.EnableExtraLogging)) return;
+            Logger.LogDebug(data);
+        }
+
+        public void LoadGlobalSettings()
+        {
+            string modInstallLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string cornercutterFolder = Path.Combine(modInstallLocation, @"..\..\cornercutter");
+            string settingsLocation = Path.GetFullPath(Path.Combine(cornercutterFolder, "settings.json"));
+            GlobalInfoDTO settings = Reader.ReadGlobalInfo(settingsLocation);
+            GlobalOptions = settings.GlobalOptions;
+            ModFileLocation = Path.GetFullPath(Path.Combine(cornercutterFolder, @"mods\" + settings.CurrentModFilename));
+        }
+
         public void LoadCurrentConfig()
         {
             ClearConfig();
+            LoadGlobalSettings();
 
-            string modInstallLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string currentModLocation = Path.GetFullPath(Path.Combine(modInstallLocation, @"..\..\cornercutter\current_mod.json"));
-            ModConfigDTO config = Reader.ReadMod(currentModLocation);
+            ModConfigDTO config = Reader.ReadMod(ModFileLocation);
             SpawnCollectionType = config.GeneralConfig.SpawnCollectionType;
             CurseSpawnType = config.GeneralConfig.CurseSpawnType;
-            GlobalOptions = config.GeneralConfig.GlobalOptions;
             ConfigOptions = config.GeneralConfig.ConfigOptions;
             StartingSkills = FetchSkills(config.GeneralConfig.StartingSkills);
 
@@ -88,12 +119,21 @@ namespace cornercutter.ModLoader
 
         public void ClearConfig()
         {
-            SpawnCollectionType = SpawnCollectionType.None;
-            CurseSpawnType = CurseSpawnType.None;
-            GlobalOptions = GlobalOptions.DisableCornercutter;
-            ConfigOptions = ConfigOptions.NoneSelected;
+            ModFileLocation = null;
+            GlobalOptions = GlobalOptions.NoneSelected;
 
+            SpawnCollectionType = SpawnCollectionType.NoneSelected;
+            CurseSpawnType = CurseSpawnType.NoneSelected;
+            ConfigOptions = ConfigOptions.NoneSelected;
+            StartingSkills = new WeightedSkill[] {};
             floorConfigs = new Dictionary<Floor, FloorConfig>();
+        }
+
+        // Utility method to eject out if we can't load the current config
+        public void ShutdownCornercutter()
+        {
+            ClearConfig();
+            GlobalOptions = GlobalOptions.DisableCornercutter;
         }
 
         // Adding as a utility method here, given it is called in most features

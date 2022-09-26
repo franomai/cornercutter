@@ -43,7 +43,6 @@ namespace cornercutter.ModFeature.ModSetting
                 ShopEntity[] entities = (from e in DungeonManager.currentRoom.GetComponentsInChildren<ShopEntity>()
                                          where !(e is StyxToCashKiosk) && !(e is RayRerollShopKiosk) && !(e is TappiSubscriptionKiosk)
                                          select e).ToArray<ShopEntity>();
-                Console.WriteLine(entities.Length);
                 if (entities.Length == 0)
                 {
                     AudioManager.PlayOneShot("App_CantUse");

@@ -11,8 +11,21 @@ namespace cornercutter.ModLoader
     {
         private void Awake()
         {
+            try
+            {
+                CutterConfig.Instance.Setup(Logger);
+                Logger.LogInfo("Cornercutter is loaded!");
+            }
+            catch (Exception e)
+            {
+                Logger.LogError("Couldn't load base cornercutter info:");
+                Logger.LogError(e);
+
+                Logger.LogError("Putting cornercutter to sleep ...");
+                CutterConfig.Instance.ShutdownCornercutter();
+            }
+
             // Loads all patches for cornercutter on startup
-            Logger.LogInfo("Cornercutter is loaded!");
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
             Logger.LogInfo("Patches are alive, ready to rock ...");
         }
@@ -23,30 +36,29 @@ namespace cornercutter.ModLoader
     {
         static void Postfix()
         {
+            CutterConfig cornercutter = CutterConfig.Instance;
             // This method fires when a new dungeon is started - meaning new mods won't be hotloaded,
             // but instead will be picked up on the next run.
-            Console.WriteLine("Loading current cornercutter config ...");
+            cornercutter.LogInfo("Loading current cornercutter config ...");
             try
             {
-                CutterConfig.Instance.LoadCurrentConfig();
-                if (CutterConfig.Instance.CornercutterIsEnabled())
+                cornercutter.LoadCurrentConfig();
+                if (cornercutter.CornercutterIsEnabled())
                 {
-                    Console.WriteLine("Config loaded, let's rumble!");
+                    cornercutter.LogInfo("Config loaded, let's rumble!");
                 }
                 else
                 {
-                    Console.WriteLine("Config loaded, but disabled ):");
+                    cornercutter.LogInfo("Config loaded, but disabled ):");
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("Something went wrong loading the current mod:");
-                Console.WriteLine(e);
-                Console.WriteLine(e.InnerException);
-                Console.WriteLine(e.StackTrace);
+                cornercutter.LogError("Something went wrong loading the current mod:");
+                cornercutter.LogError(e);
 
-                Console.WriteLine("Resetting cornercutter to blank slate ...");
-                CutterConfig.Instance.ClearConfig();
+                cornercutter.LogError("Putting cornercutter to sleep ...");
+                cornercutter.ShutdownCornercutter();
             }
         }
     }

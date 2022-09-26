@@ -17,14 +17,15 @@ namespace cornercutter.ModFeature.ModSetting
             WeightedSkill[] startingSkills = CutterConfig.Instance.StartingSkills;
             if (startingSkills.Length == 0) return;
 
+            CutterConfig cornercutter = CutterConfig.Instance;
             ConfigOptions options = CutterConfig.Instance.ConfigOptions;
+
             if (currentFloor == 1 || options.HasFlag(ConfigOptions.AwardSkillsPerLevel))
             {
-                Console.WriteLine("Starting skills found, attaching...");
+                cornercutter.LogDebug("Starting skills found, attaching...");
                 foreach (WeightedSkill skill in startingSkills)
                 {
-                    // TODO: Move this out into a config-aware logger
-                    Console.WriteLine("Adding " + skill.Skill.gameObject.name);
+                    cornercutter.LogDebug("Adding " + skill.Skill.gameObject.name);
                     skill.Skill.GetComponentInChildren<EntityMod>().ApplyFromPrefab(Player.singlePlayer);
                 }
             }

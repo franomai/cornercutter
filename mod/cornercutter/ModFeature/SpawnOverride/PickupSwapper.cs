@@ -10,24 +10,9 @@ namespace cornercutter.ModFeature.SpawnOverride
     [HarmonyPatch(typeof(EntitySpawner), nameof(EntitySpawner.PickItemToSpawn))]
     class PickupSwapper
     {
-        // TODO: Move this out into a global logger
-        static bool LoggingEnabled()
+        static void LogReplacedSpawn(string spawnReplacedText)
         {
-            GlobalOptions globals = CutterConfig.Instance.GlobalOptions;
-            return globals.HasFlag(GlobalOptions.EnableExtraLogging);
-        }
-
-        static void PrintReplacedSpawn(string spawnReplacedText)
-        {
-            PrintExtraLogging("Replacing item spawn for " + spawnReplacedText);
-        }
-
-        static void PrintExtraLogging(string text)
-        {
-            if (LoggingEnabled())
-            {
-                Console.WriteLine(text);
-            }
+            CutterConfig.Instance.LogDebug("Replacing item spawn for " + spawnReplacedText);
         }
 
         static bool Prefix(ref EntitySpawner __instance, ref GameObject __result)
@@ -40,16 +25,14 @@ namespace cornercutter.ModFeature.SpawnOverride
             // We also don't touch anything if we are not in a dungeon, so skip those evocations as well
             if (parent == null || Singleton<DungeonManager>.instance == null) return true;
 
-            
+            CutterConfig cornercutter = CutterConfig.Instance;
             ConfigOptions options = CutterConfig.Instance.ConfigOptions;
 
-            if (LoggingEnabled()) {
-                Console.WriteLine("!--- Spawner values are:");
-                Console.WriteLine(__instance.name);
-                Console.WriteLine(parent.name);
-                Console.WriteLine(grandparent?.name);
-                Console.WriteLine("!---");
-            }
+            cornercutter.LogDebug("!--- Spawner values are:");
+            cornercutter.LogDebug(__instance.name);
+            cornercutter.LogDebug(parent.name);
+            cornercutter.LogDebug(grandparent?.name);
+            cornercutter.LogDebug("!---");
 
             SpawnCollection collectionToCheck = null;
             int currentFloor = Singleton<DungeonManager>.instance.currentFloor + 1;
@@ -60,13 +43,13 @@ namespace cornercutter.ModFeature.SpawnOverride
                 // Spawning in a treasure room, or the Ray skill room
                 if (parent.name.StartsWith("UpgradeSpawn"))
                 {
-                    PrintReplacedSpawn("treasure room!");
+                    LogReplacedSpawn("treasure room!");
                     collectionToCheck = floorConfig.FreeSkills;
                 }
                 else if (parent.name.StartsWith("SkillSpawner")
                     && grandparent != null && grandparent.name.StartsWith("Shop_Haunt"))
                 {
-                    PrintReplacedSpawn("curse room!");
+                    LogReplacedSpawn("curse room!");
                     collectionToCheck = floorConfig.CurseSkills;
                 }
             }
@@ -74,7 +57,7 @@ namespace cornercutter.ModFeature.SpawnOverride
             else if (__instance.name == "SkillSpawn" && parent.name.StartsWith("HauntMultiSpawner")
                     && grandparent != null && grandparent.name.StartsWith("Shop_Haunt"))
             {
-                PrintReplacedSpawn("curse room bonus skill (congrats)!");
+                LogReplacedSpawn("curse room bonus skill (congrats)!");
                 collectionToCheck = floorConfig.CurseSkills;
             }
 
@@ -82,7 +65,7 @@ namespace cornercutter.ModFeature.SpawnOverride
             else if (__instance.name == "SkillSpawn" && parent.name.StartsWith("TappiShopMultispawner")
                     && grandparent != null && grandparent.name.StartsWith("Stuff")) // :thinking:
             {
-                PrintReplacedSpawn("Tappi kiosk!");
+                LogReplacedSpawn("Tappi kiosk!");
                 collectionToCheck = floorConfig.ShopSkills;
             }
 
@@ -90,14 +73,14 @@ namespace cornercutter.ModFeature.SpawnOverride
             else if (__instance.name == "SkillSpawn" && parent.name.StartsWith("MultiSpawner")
                     && grandparent != null && grandparent.name.StartsWith("TreasureRoomPedestal"))
             {
-                PrintReplacedSpawn("treasure room pedastool (good luck)!");
+                LogReplacedSpawn("treasure room pedastool (good luck)!");
                 collectionToCheck = floorConfig.FreeSkills;
             }
 
             // Spawning in the shop
             else if (__instance.name == "ShopSpotCafeSkill")
             {
-                PrintReplacedSpawn("shop!");
+                LogReplacedSpawn("shop!");
                 collectionToCheck = floorConfig.ShopSkills;
             }
 
@@ -105,13 +88,13 @@ namespace cornercutter.ModFeature.SpawnOverride
             else if (__instance.name == "WeaponSpot Variant" ||
                 __instance.name == "ShopSpotCafeSkill Variant")
             {
-                PrintReplacedSpawn("shop reroll skill!");
+                LogReplacedSpawn("shop reroll skill!");
                 collectionToCheck = floorConfig.ShopSkills;
             }
 
             else if (__instance.name == "FinalRoomBattlePickup")
             {
-                PrintReplacedSpawn("finale!");
+                LogReplacedSpawn("finale!");
                 collectionToCheck = floorConfig.FinaleSkills;
             }
 
@@ -138,7 +121,7 @@ namespace cornercutter.ModFeature.SpawnOverride
                 swappedObject = GlobalSettings.defaults.fallbackSkill;
             }
 
-            PrintExtraLogging("Spawning in " + (swappedObject == null ? "nothing!" : swappedObject.name));
+            cornercutter.LogDebug("Spawning in " + (swappedObject == null ? "nothing!" : swappedObject.name));
 
             __result = swappedObject;
 
@@ -148,7 +131,7 @@ namespace cornercutter.ModFeature.SpawnOverride
 
         static void Postfix(ref GameObject __result)
         {
-            PrintExtraLogging("Final item, " + (__result == null ? "nothing!" : __result.name));
+            CutterConfig.Instance.LogDebug("Final item, " + (__result == null ? "nothing!" : __result.name));
         }
     }
 }

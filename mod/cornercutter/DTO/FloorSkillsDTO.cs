@@ -4,13 +4,13 @@ namespace cornercutter.DTO
 {
     class FloorSkillsDTO
     {
-        [JsonProperty("all_floors")]
+        [JsonProperty("allFloors")]
         public RoomSkillsDTO AllFloors { get; set; }
-        [JsonProperty("first_floor")]
+        [JsonProperty("firstFloor")]
         public RoomSkillsDTO FirstFloor { get; set; }
-        [JsonProperty("second_floor")]
+        [JsonProperty("secondFloor")]
         public RoomSkillsDTO SecondFloor { get; set; }
-        [JsonProperty("third_floor")]
+        [JsonProperty("thirdFloor")]
         public RoomSkillsDTO ThirdFloor { get; set; }
         [JsonProperty("boss")]
         public RoomSkillsDTO Boss { get; set; }
