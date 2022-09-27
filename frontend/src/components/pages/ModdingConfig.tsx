@@ -33,6 +33,7 @@ import ModList from '../mods/ModList';
 import FloorConfigTab from '../tabs/FloorConfigTab';
 import GeneralConfigTab from '../tabs/generalconfig';
 import NewMod from '../modals/NewMod';
+import ImportMod from '../modals/ImportMod';
 
 const ModdingConfig = () => {
     const dispatch = useDispatch();
@@ -41,7 +42,7 @@ const ModdingConfig = () => {
     const selectedMod = useSelector(getSelectedMod);
 
     const [newModId, setNewModId] = useState<string | null>(null);
-    const [importMod, setImportMod] = useState(false);
+    const [showImportMod, setShowImportMod] = useState(false);
 
     const handleNewMod = useCallback(() => {
         invoke<string>('get_new_mod_id')
@@ -50,8 +51,8 @@ const ModdingConfig = () => {
     }, [setNewModId]);
 
     const handleImportMod = useCallback(() => {
-        setImportMod(true);
-    }, [setImportMod]);
+        setShowImportMod(true);
+    }, [setShowImportMod]);
 
     const getTabs = useCallback((selectedMod: ModConfig): TabData[] => {
         const tabs: TabData[] = [
@@ -152,6 +153,11 @@ const ModdingConfig = () => {
                     handleDiscard={() => setNewModId(null)}
                 />
             )}
+            <ImportMod
+                isShown={showImportMod}
+                handleCreate={console.log}
+                handleDiscard={() => setShowImportMod(false)}
+            />
         </Box>
     );
 };

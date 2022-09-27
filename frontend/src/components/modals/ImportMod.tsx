@@ -17,18 +17,25 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import ModConfig from '../../types/Configuration';
 
-const ImportMod = ({ handleCreate, handleDiscard }: { handleDiscard(): void; handleCreate(mod: ModConfig): void }) => {
+const ImportMod = ({
+    isShown,
+    handleCreate,
+    handleDiscard,
+}: {
+    isShown: boolean;
+    handleDiscard(): void;
+    handleCreate(mod: ModConfig): void;
+}) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
+    const [modCode, setModCode] = useState('');
 
     useEffect(() => {
-        onOpen();
-    }, []);
+        if (isShown) {
+            onOpen();
+        }
+    }, [isShown]);
 
-    const canSave = name.trim().length !== 0;
-
-    const handleImportMod = useCallback(() => {}, [handleCreate, name, description]);
+    const handleImportMod = useCallback(() => {}, [handleCreate, modCode]);
 
     const handleDiscardMod = useCallback(() => {
         handleDiscard();
@@ -36,24 +43,30 @@ const ImportMod = ({ handleCreate, handleDiscard }: { handleDiscard(): void; han
     }, [handleDiscard, onClose]);
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal
+            isOpen={isOpen}
+            onClose={() => {
+                handleDiscard();
+                onClose();
+            }}
+        >
             <ModalOverlay />
-            <ModalCloseButton onClick={handleDiscardMod} />
             <ModalContent>
                 <ModalHeader>Import New Mod</ModalHeader>
+                <ModalCloseButton onClick={handleDiscardMod} />
                 <ModalBody>
                     <FormControl isRequired>
                         <FormLabel>Mod Code</FormLabel>
                         <Textarea
-                            variant="flushed"
+                            variant="filled"
                             placeholder="Shareable mod code..."
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
+                            value={modCode}
+                            onChange={(e) => setModCode(e.target.value)}
                         />
                     </FormControl>
                 </ModalBody>
                 <ModalFooter gap={2}>
-                    <Button onClick={handleImportMod} isDisabled={!canSave}>
+                    <Button onClick={handleImportMod} isDisabled={modCode.length === 0}>
                         Import Mod
                     </Button>
                 </ModalFooter>

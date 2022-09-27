@@ -70,22 +70,22 @@ const NewMod = ({
                         </FormControl>
                         <FormControl>
                             <Textarea
-                                variant="flushed"
+                                variant="filled"
                                 placeholder="Mod description..."
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                             />
                         </FormControl>
                     </Stack>
-                    <ModalFooter gap={2}>
-                        <Button onClick={handleDiscardMod} variant="outline">
-                            Discard Mod
-                        </Button>
-                        <Button onClick={handleCreateMod} isDisabled={!canSave}>
-                            Create Mod
-                        </Button>
-                    </ModalFooter>
                 </ModalBody>
+                <ModalFooter gap={2}>
+                    <Button onClick={handleDiscardMod} variant="outline">
+                        Discard Mod
+                    </Button>
+                    <Button onClick={handleCreateMod} isDisabled={!canSave}>
+                        Create Mod
+                    </Button>
+                </ModalFooter>
             </ModalContent>
         </Modal>
     );
