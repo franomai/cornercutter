@@ -165,37 +165,38 @@ fn save_mod(cache: State<CornercutterCache>, mod_config: ModConfig) {
 
 #[tauri::command]
 fn import_mod(cache: State<CornercutterCache>, encoded_config: String) -> Option<ModConfig> {
-    let config = cache.config.lock().unwrap();
+    // let config = cache.config.lock().unwrap();
 
-    let id = get_new_id(&cache.mods.lock().unwrap());
-    let parts = encoded_config.lines().collect::<Vec<_>>();
-    if parts.len() < 2 || parts.len() > 3 {
-        return None;
-    }
+    // let id = get_new_id(&cache.mods.lock().unwrap());
+    // let parts = encoded_config.lines().collect::<Vec<_>>();
+    // if parts.len() < 2 || parts.len() > 3 {
+    //     return None;
+    // }
 
-    let mod_info = if parts.len() == 2 {
-        ModInfo { name: String::from(*parts.get(0).unwrap()), description: String::from("") }
-    } else {
-        ModInfo { name: String::from(*parts.get(0).unwrap()), description: String::from(*parts.get(1).unwrap()) }
-    };
+    // let mod_info = if parts.len() == 2 {
+    //     ModInfo { name: String::from(*parts.get(0).unwrap()), description: String::from("") }
+    // } else {
+    //     ModInfo { name: String::from(*parts.get(0).unwrap()), description: String::from(*parts.get(1).unwrap()) }
+    // };
     
-    // TODO: Extract from encoded_config
-    let mod_config = ModConfig {
-        id: id.clone(),
-        info: mod_info,
-        general: GeneralConfig { spawns: SpawnType::Looped, curse_spawns: CurseSpawnType::Randomly, options: 0, starting_skills: Vec::new() },
-        floor_skills: FloorSkills {
-            all_floors: generate_room_skills(),
-            first_floor: generate_room_skills(),
-            second_floor: generate_room_skills(),
-            third_floor: generate_room_skills(),
-            boss: generate_room_skills(),
-        }
-    };
+    // // TODO: Extract from encoded_config
+    // let mod_config = ModConfig {
+    //     id: id.clone(),
+    //     info: mod_info,
+    //     general: GeneralConfig { spawns: SpawnType::Looped, curse_spawns: CurseSpawnType::Randomly, options: 0, starting_skills: Vec::new() },
+    //     floor_skills: FloorSkills {
+    //         all_floors: generate_room_skills(),
+    //         first_floor: generate_room_skills(),
+    //         second_floor: generate_room_skills(),
+    //         third_floor: generate_room_skills(),
+    //         boss: generate_room_skills(),
+    //     }
+    // };
 
-    serialize_mod(&config, &mod_config);
-    cache.mods.lock().unwrap().insert(id, mod_config.clone());
-    return Some(mod_config);
+    // serialize_mod(&config, &mod_config);
+    // cache.mods.lock().unwrap().insert(id, mod_config.clone());
+    //return Some(mod_config);
+    return None;
 }
 
 #[tauri::command]
