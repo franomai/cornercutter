@@ -1,7 +1,7 @@
 import { WeightedSkill } from './Skill';
 
 export default interface ModConfig {
-    id: number;
+    id: string;
     info: ModInfo;
     general: GeneralConfig;
     floorSkills: FloorSkills;
@@ -31,6 +31,7 @@ export enum CurseSpawnType {
     Randomly = 'Randomly',
     Always = 'Always',
     Never = 'Never',
+    AlwaysIfAble = 'AlwaysIfAble',
 }
 
 export enum Floor {

@@ -1,22 +1,16 @@
 import ModdingConfig from './components/pages/ModdingConfig';
-import './App.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { getCornercutterConfig, setCornercutterConfig } from './redux/slices/cornercutter';
+import { loadSavedData } from './redux/slices/cornercutter';
 import { useEffect } from 'react';
-import { invoke } from '@tauri-apps/api';
-import { CornerCutterConfig } from './types/CornerCutterConfig';
+import './App.css';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from './redux/store';
 
 function App() {
-    const dispatch = useDispatch();
-    const cornercutterConfig = useSelector(getCornercutterConfig);
+    const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
-        if (cornercutterConfig === null) {
-            invoke('get_cornercutter_config')
-                .then((config) => dispatch(setCornercutterConfig(config as CornerCutterConfig)))
-                .catch(console.error);
-        }
-    }, [cornercutterConfig]);
+        dispatch(loadSavedData());
+    }, []);
 
     return <ModdingConfig />;
 }

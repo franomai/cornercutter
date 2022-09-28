@@ -57,8 +57,10 @@ const Dropzone = ({
         );
     }
 
-    function getGridProps(): FlexProps {
-        return singleRow ? { overflowY: 'hidden', overflowX: 'auto' } : { flexWrap: 'wrap', height: 'full' };
+    function getFlexProps(): FlexProps {
+        return singleRow
+            ? { overflowY: 'hidden', overflowX: 'auto' }
+            : { flexWrap: 'wrap', height: 'full', overflowY: 'auto' };
     }
 
     return (
@@ -82,7 +84,7 @@ const Dropzone = ({
                 maxW="full"
                 direction="row"
                 alignContent="flex-start"
-                {...getGridProps()}
+                {...getFlexProps()}
             >
                 {skills.map((weightedSkill, skillIndex) => (
                     <SkillCard

@@ -1,7 +1,7 @@
-import { Box, Stack } from '@chakra-ui/react';
+import { Box, Stack, StackProps } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
-const ContentContainer = ({ children }: { children?: ReactNode }) => {
+const ContentContainer = ({ children, ...stackProps }: { children?: ReactNode } & StackProps) => {
     return (
         <Stack
             flexGrow={1}
@@ -16,6 +16,7 @@ const ContentContainer = ({ children }: { children?: ReactNode }) => {
             pt={8}
             spacing={8}
             style={{ scrollbarGutter: 'stable' }}
+            {...stackProps}
         >
             {children}
         </Stack>

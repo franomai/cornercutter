@@ -17,8 +17,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { invoke } from '@tauri-apps/api/tauri';
 import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setModInfo } from '../../../redux/slices/mod';
+import { deleteMod, setModInfo } from '../../../redux/slices/mod';
 import ModConfig from '../../../types/Configuration';
+import { saveMod } from '../../../utility/ConfigHelpers';
 
 const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const dispatch = useDispatch();
@@ -27,7 +28,6 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState(selectedMod.info.name);
     const [newDescription, setNewDescription] = useState(selectedMod.info.description);
-    const [configCode, setConfigCode] = useState<string | null>(null);
     const [showConfigCodePopup, setShowConfigCodePopup] = useState(false);
 
     useEffect(() => {
@@ -37,16 +37,22 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
         }
     }, [showConfigCodePopup]);
 
+    useEffect(() => {
+        setNewName(selectedMod.info.name);
+        setNewDescription(selectedMod.info.description);
+    }, [selectedMod]);
+
     const handleSaveChanges = useCallback(() => {
         if (newName !== selectedMod.info.name || newDescription !== selectedMod.info.description) {
             dispatch(setModInfo({ name: newName, description: newDescription }));
+            saveMod({ ...selectedMod, info: { name: newName, description: newDescription } });
         }
         setIsEditing(false);
     }, [dispatch, newName, newDescription, selectedMod.info]);
 
     useOutsideClick({
         ref: editableRef,
-        enabled: isEditing,
+        enabled: isEditing && newName.trim().length !== 0,
         handler: handleSaveChanges,
     });
 
@@ -67,13 +73,18 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
 
     const handleExportConfigCode = useCallback(async () => {
         try {
-            const code = await invoke<string>('get_config_code');
-            setConfigCode(code);
+            const code = await invoke<string>('get_config_code', { modConfig: selectedMod });
             navigator.clipboard.writeText(code).then(() => setShowConfigCodePopup(true));
         } catch (err) {
             console.error(err);
         }
-    }, []);
+    }, [selectedMod]);
+
+    const handleDeleteMod = useCallback(() => {
+        invoke('delete_mod', { modId: selectedMod.id })
+            .then(() => dispatch(deleteMod(selectedMod.id)))
+            .catch(console.error);
+    }, [selectedMod.id]);
 
     const renderEditableControls = useCallback(
         (canSave: boolean): ReactNode => {
@@ -128,6 +139,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
                                 title="Delete mod"
                                 aria-label="Delete mod"
                                 icon={<FontAwesomeIcon icon={faTrash} size="lg" />}
+                                onClick={handleDeleteMod}
                             />
                         </>
                     )}
@@ -140,12 +152,14 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const renderName = useCallback((): ReactNode => {
         return isEditing ? (
             <Input
+                variant="flushed"
+                maxW="500px"
                 fontSize="3xl"
                 fontWeight="bold"
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
+                placeholder="Mod Name..."
                 mr={4}
-                ml="-17px"
                 mt="-3px"
                 height="50px"
             />
@@ -159,11 +173,12 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const renderDescription = useCallback((): ReactNode => {
         return isEditing ? (
             <Input
-                ml="-17px"
-                mt={-2}
+                variant="flushed"
+                mt="-7px"
                 value={newDescription}
                 onChange={(e) => setNewDescription(e.target.value)}
-                mb={-2}
+                placeholder="Enter mod description here..."
+                mb={-3}
             />
         ) : (
             <Text mt="3px">{newDescription}</Text>
@@ -174,7 +189,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
         <Stack spacing={3} ref={editableRef} onKeyDown={handleKeyPress}>
             <Flex direction="row" justifyContent="space-between" alignItems="center">
                 {renderName()}
-                {renderEditableControls(newName.trim().length !== 0 && newDescription.trim().length !== 0)}
+                {renderEditableControls(newName.trim().length !== 0)}
             </Flex>
             <Box>{renderDescription()}</Box>
         </Stack>

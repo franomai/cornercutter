@@ -1,18 +1,13 @@
-import { Button, Stack } from '@chakra-ui/react';
-import { invoke } from '@tauri-apps/api/tauri';
-import { useCallback } from 'react';
+import { Stack } from '@chakra-ui/react';
+import { ReactNode } from 'react';
 import { useSelector } from 'react-redux';
 import { getAllMods, getEnabledMod, getSelectedMod } from '../../redux/slices/mod';
 import ModOverview from './ModOverview';
 
-const ModList = () => {
+const ModList = ({ children }: { children?: ReactNode }) => {
     const mods = useSelector(getAllMods);
     const enabledMod = useSelector(getEnabledMod);
     const selectedMod = useSelector(getSelectedMod);
-
-    const handleSave = useCallback(() => {
-        invoke('save_mod', { modConfig: selectedMod }).catch(console.error);
-    }, [selectedMod]);
 
     return (
         <Stack
@@ -25,7 +20,7 @@ const ModList = () => {
             justifyContent="space-between"
         >
             <Stack gap={2} h="full">
-                {mods.map((mod) => (
+                {Object.values(mods).map((mod) => (
                     <ModOverview
                         key={mod.id}
                         mod={mod}
@@ -34,11 +29,7 @@ const ModList = () => {
                     />
                 ))}
             </Stack>
-            {selectedMod && (
-                <Button variant="outline" w="full" onClick={handleSave}>
-                    Save
-                </Button>
-            )}
+            {children}
         </Stack>
     );
 };

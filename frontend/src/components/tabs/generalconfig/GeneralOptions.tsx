@@ -60,13 +60,9 @@ const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
                     <Radio value="Randomly">Randomly</Radio>
                     <Radio value="Always">Always</Radio>
                     <Radio value="Never">Never</Radio>
+                    <Radio value="AlwaysIfAble">Always if able</Radio>
                 </LabelledRadioGroup>
-                {renderOptionCheckboxes([
-                    Options.ConfigPerFloor,
-                    Options.ConfigPerRoom,
-                    Options.AwardSkillsPerFloor,
-                    Options.RemoveHealingItems,
-                ])}
+                {renderOptionCheckboxes([Options.ConfigPerFloor, Options.ConfigPerRoom, Options.AwardSkillsPerFloor])}
                 {renderOptionCheckboxes([
                     Options.DisableMentorAbilities,
                     Options.DisableGiftOfIntern,
