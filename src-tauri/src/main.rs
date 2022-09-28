@@ -164,39 +164,20 @@ fn save_mod(cache: State<CornercutterCache>, mod_config: ModConfig) {
 }
 
 #[tauri::command]
-fn import_mod(cache: State<CornercutterCache>, encoded_config: String) -> Option<ModConfig> {
-    // let config = cache.config.lock().unwrap();
+fn import_mod(cache: State<CornercutterCache>, config_string: String) -> Result<ModConfig, String> {
+    let config = cache.config.lock().unwrap();
+    let id = get_new_id(&cache.mods.lock().unwrap());
 
-    // let id = get_new_id(&cache.mods.lock().unwrap());
-    // let parts = encoded_config.lines().collect::<Vec<_>>();
-    // if parts.len() < 2 || parts.len() > 3 {
-    //     return None;
-    // }
-
-    // let mod_info = if parts.len() == 2 {
-    //     ModInfo { name: String::from(*parts.get(0).unwrap()), description: String::from("") }
-    // } else {
-    //     ModInfo { name: String::from(*parts.get(0).unwrap()), description: String::from(*parts.get(1).unwrap()) }
-    // };
+    let res = match decode_configuration(&config_string) {
+        Err(err) => Err(err),
+        Ok(mod_config) => {
+            serialize_mod(&config, &mod_config);
+            cache.mods.lock().unwrap().insert(id, mod_config.clone());
+            Ok(mod_config)
+        },
+    };
     
-    // // TODO: Extract from encoded_config
-    // let mod_config = ModConfig {
-    //     id: id.clone(),
-    //     info: mod_info,
-    //     general: GeneralConfig { spawns: SpawnType::Looped, curse_spawns: CurseSpawnType::Randomly, options: 0, starting_skills: Vec::new() },
-    //     floor_skills: FloorSkills {
-    //         all_floors: generate_room_skills(),
-    //         first_floor: generate_room_skills(),
-    //         second_floor: generate_room_skills(),
-    //         third_floor: generate_room_skills(),
-    //         boss: generate_room_skills(),
-    //     }
-    // };
-
-    // serialize_mod(&config, &mod_config);
-    // cache.mods.lock().unwrap().insert(id, mod_config.clone());
-    //return Some(mod_config);
-    return None;
+    return res;
 }
 
 #[tauri::command]
@@ -233,10 +214,10 @@ fn get_new_id(map: &HashMap<String, ModConfig>) -> String {
 }
 
 fn decode_configuration(config_string: &String) -> Result<ModConfig, String> {
-    let mut split = config_string.lines().collect::<Vec<&str>>();
-    let mut name = String::from("");
+    let split = config_string.lines().collect::<Vec<&str>>();
+    let name: String;
+    let config_string: String;
     let mut description= String::from("");
-    let mut config_string = String::from("");
 
     if split.len() == 1 {
         name = String::from("Imported mod");
@@ -255,11 +236,7 @@ fn decode_configuration(config_string: &String) -> Result<ModConfig, String> {
 
     let info = ModInfo{name: name.to_string(), description: description.to_string()};
     let mut config_array = string_to_u32_vec(&config_string)?;
-    let mod_config = match build_mod_config(&info, &mut config_array) {
-        Ok(mod_config) => mod_config,
-        Err(e) => return Err(e),
-    };
-    Ok(mod_config)
+    return build_mod_config(&info, &mut config_array);
 }
 
 fn get_commented_string(original_string: &str) -> Result<String, String> {

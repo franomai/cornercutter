@@ -32,22 +32,20 @@ const ImportMod = ({
 
     useEffect(() => {
         if (isShown) {
+            setModCode('');
+            setError('');
             onOpen();
         }
     }, [isShown]);
 
+    // TODO: Check clipboard for a mod code
+
     const handleImportMod = useCallback(() => {
-        invoke<ModConfig | null>('import_mod', { encodedConfig: modCode })
-            .then((mod) => {
-                if (mod) {
-                    handleCreate(mod);
-                } else {
-                    setError("That doesn't seem to be a valid mod code");
-                }
-            })
-            .catch((err) => {
-                setError('Something went wrong while importing the mod');
-                console.error(err);
+        invoke<ModConfig>('import_mod', { configString: modCode })
+            .then(handleCreate)
+            .catch((err: string) => {
+                console.log(err);
+                setError(err);
             });
     }, [handleCreate, modCode]);
 
