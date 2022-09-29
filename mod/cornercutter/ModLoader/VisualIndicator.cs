@@ -22,6 +22,7 @@ namespace cornercutter.ModLoader
             int width = Screen.width;
             int height = Screen.height;
             text.margin = new Vector4((float) width / 40, (float) height / 55);
+            CutterConfig.Instance.SetVisualIndicator(text);
         }
     }
 

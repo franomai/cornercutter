@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using TMPro;
 
 namespace cornercutter.ModLoader
 {
@@ -20,12 +21,15 @@ namespace cornercutter.ModLoader
 
         public SpawnCollectionType SpawnCollectionType { get; private set; }
         public CurseSpawnType CurseSpawnType { get; private set; }
-        
+        public PedestalSpawnType PedestalSpawnType { get; private set; } = PedestalSpawnType.AlwaysFirstFloor;
+        public MultiSpawnerType MultiSpawnerType { get; private set; } = MultiSpawnerType.AlwaysSkillIfAble;
+
         public ConfigOptions ConfigOptions { get; private set; }
         public WeightedSkill[] StartingSkills { get; private set; }
         private Dictionary<Floor, FloorConfig> floorConfigs;
 
         private ManualLogSource Logger = null;
+        private TextMeshProUGUI VisualIndicator = null;
         private ModReader Reader = new ModReader();
 
         private CutterConfig()
@@ -56,6 +60,7 @@ namespace cornercutter.ModLoader
             GlobalInfoDTO settings = Reader.ReadGlobalInfo(settingsLocation);
             GlobalOptions = settings.GlobalOptions;
             ModFileLocation = Path.GetFullPath(Path.Combine(cornercutterFolder, @"mods\" + settings.CurrentModFilename));
+            UpdateIndicatorVisibility();
         }
 
         public void LoadCurrentConfig()
@@ -134,6 +139,19 @@ namespace cornercutter.ModLoader
         {
             ClearConfig();
             GlobalOptions = GlobalOptions.DisableCornercutter;
+            UpdateIndicatorVisibility();
+        }
+
+        public void SetVisualIndicator(TextMeshProUGUI indicator)
+        {
+            VisualIndicator = indicator;
+            UpdateIndicatorVisibility();
+        }
+
+        public void UpdateIndicatorVisibility()
+        {
+            if (VisualIndicator == null) return;
+            VisualIndicator.enabled = CornercutterIsEnabled();
         }
 
         // Adding as a utility method here, given it is called in most features
