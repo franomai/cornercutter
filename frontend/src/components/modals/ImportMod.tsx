@@ -81,7 +81,7 @@ const ImportMod = ({
                         <FormLabel>Mod Code</FormLabel>
                         <Textarea
                             variant="filled"
-                            placeholder={`#Mod Name\n#Mod description...\nAAEAACYBAgRWL1IbAAEeARABXwJCNg==`}
+                            placeholder={`# Mod Name\n# Mod description...\nAAEAACYBAgRWL1IbAAEeARABXwJCNg==`}
                             value={modCode}
                             onChange={handleChangeModCode}
                             height="90px"

@@ -100,9 +100,9 @@ bitflags! {
 fn get_config_code(mod_config: ModConfig) -> String {
     let mut config_code = String::new();
     
-    config_code.push('#');
+    config_code.push_str("# ");
     config_code.push_str(mod_config.info.name.as_str());
-    config_code.push_str("\n#");
+    config_code.push_str("\n# ");
     config_code.push_str(mod_config.info.description.as_str());
     config_code.push('\n');
     config_code.push_str(encode_mod_config(&mod_config).as_str());
