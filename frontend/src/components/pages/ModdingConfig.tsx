@@ -148,14 +148,18 @@ const ModdingConfig = () => {
                     handleCreate={(mod) => {
                         setNewModId(null);
                         dispatch(addMod(mod));
-                        dispatch(setSelectedMod(newModId));
+                        dispatch(setSelectedMod(mod.id));
                     }}
                     handleDiscard={() => setNewModId(null)}
                 />
             )}
             <ImportMod
                 isShown={showImportMod}
-                handleCreate={console.log}
+                handleCreate={(mod) => {
+                    setShowImportMod(false);
+                    dispatch(addMod(mod));
+                    dispatch(setSelectedMod(mod.id));
+                }}
                 handleDiscard={() => setShowImportMod(false)}
             />
         </Box>

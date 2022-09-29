@@ -1,16 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { StoreState } from '../../store';
 
-import ModConfig, {
-    CurseSpawnType,
-    DEFAULT_CONFIG,
-    Floor,
-    ModInfo,
-    Options,
-    Room,
-    SpawnType,
-} from '../../../types/Configuration';
-import { generateEmptyFloorSkills, setModOptionFlag } from '../../../utility/ConfigHelpers';
+import ModConfig, { CurseSpawnType, Floor, ModInfo, Options, Room, SpawnType } from '../../../types/Configuration';
+import { setModOptionFlag } from '../../../utility/ConfigHelpers';
 import { WeightedSkill } from '../../../types/Skill';
 import { invoke } from '@tauri-apps/api';
 
