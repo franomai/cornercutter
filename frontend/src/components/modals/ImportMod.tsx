@@ -17,7 +17,7 @@ import { invoke } from '@tauri-apps/api/tauri';
 import React, { useCallback, useEffect, useState } from 'react';
 import ModConfig from '../../types/Configuration';
 
-const ModCodeRegex = /^(#[^\r\n]*\r?\n)?(#[^\r\n]*\r?\n)?([\w\d+/]+={0,2})$/g;
+const ModCodeRegex = /^(#[^\r\n]*\r?\n)?(#[^\r\n]*\r?\n)?([\w\d+/]+={0,2})$/;
 
 const ImportMod = ({
     isShown,
@@ -43,6 +43,8 @@ const ImportMod = ({
             }
             setError('');
             onOpen();
+        } else {
+            onClose();
         }
     }, [isShown]);
 
