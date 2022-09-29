@@ -17,6 +17,8 @@ import { invoke } from '@tauri-apps/api/tauri';
 import React, { useCallback, useEffect, useState } from 'react';
 import ModConfig from '../../types/Configuration';
 
+const ModCodeRegex = /^(#[^\r\n]*\r?\n)?(#[^\r\n]*\r?\n)?([\w\d+/]+={0,2})$/g;
+
 const ImportMod = ({
     isShown,
     handleCreate,
@@ -32,19 +34,23 @@ const ImportMod = ({
 
     useEffect(() => {
         if (isShown) {
-            setModCode('');
+            if (document.hasFocus()) {
+                navigator.clipboard.readText().then((clipboard) => {
+                    setModCode(ModCodeRegex.test(clipboard) ? clipboard : '');
+                });
+            } else {
+                setModCode('');
+            }
             setError('');
             onOpen();
         }
     }, [isShown]);
 
-    // TODO: Check clipboard for a mod code
-
     const handleImportMod = useCallback(() => {
         invoke<ModConfig>('import_mod', { configString: modCode })
             .then(handleCreate)
             .catch((err: string) => {
-                console.log(err);
+                console.error(err);
                 setError(err);
             });
     }, [handleCreate, modCode]);
