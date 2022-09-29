@@ -107,9 +107,6 @@ fn get_config_code(mod_config: ModConfig) -> String {
     config_code.push('\n');
     config_code.push_str(encode_mod_config(&mod_config).as_str());
 
-    println!("{}", encode_mod_config(&mod_config).as_str());
-    println!("{}", encode_mod_config(&decode_configuration(&encode_mod_config(&mod_config)).unwrap()).as_str());
-
     return config_code;
 }
 
@@ -168,7 +165,7 @@ fn import_mod(cache: State<CornercutterCache>, config_string: String) -> Result<
     let config = cache.config.lock().unwrap();
     let id = get_new_id(&cache.mods.lock().unwrap());
 
-    let res = match decode_configuration(&config_string) {
+    let res = match decode_configuration(&config_string, &id) {
         Err(err) => Err(err),
         Ok(mod_config) => {
             serialize_mod(&config, &mod_config);
@@ -213,7 +210,7 @@ fn get_new_id(map: &HashMap<String, ModConfig>) -> String {
     return uuid;
 }
 
-fn decode_configuration(config_string: &String) -> Result<ModConfig, String> {
+fn decode_configuration(config_string: &String, id: &String) -> Result<ModConfig, String> {
     let split = config_string.lines().collect::<Vec<&str>>();
     let name: String;
     let config_string: String;
@@ -236,7 +233,7 @@ fn decode_configuration(config_string: &String) -> Result<ModConfig, String> {
 
     let info = ModInfo{name: name.to_string(), description: description.to_string()};
     let mut config_array = string_to_u32_vec(&config_string)?;
-    return build_mod_config(&info, &mut config_array);
+    return build_mod_config(&info, &mut config_array, &id);
 }
 
 fn get_commented_string(original_string: &str) -> Result<String, String> {
@@ -280,7 +277,7 @@ fn string_to_u32_vec(config_string: &str) -> Result<VecDeque<u32>, String> {
     Ok(result)
 }
 
-fn build_mod_config(mod_info: &ModInfo,  config_array_original: &VecDeque<u32>) -> Result<ModConfig, String> {
+fn build_mod_config(mod_info: &ModInfo,  config_array_original: &VecDeque<u32>, id: &String) -> Result<ModConfig, String> {
     let mut config_array = config_array_original.clone();
     config_array.pop_front();
     let major = config_array.pop_front().unwrap();
@@ -352,7 +349,7 @@ fn build_mod_config(mod_info: &ModInfo,  config_array_original: &VecDeque<u32>) 
     };
 
     let mod_config = ModConfig {
-        id: "Imported mod".to_string(),
+        id: id.clone(),
         info: mod_info.clone(),
         general: general_config,
         floor_skills
