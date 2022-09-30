@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { StoreState } from '../../store';
+import { AppDispatch, StoreState } from '../../store';
 
 import ModConfig, { CurseSpawnType, Floor, ModInfo, Options, Room, SpawnType } from '../../../types/Configuration';
 import { setModOptionFlag } from '../../../utility/ConfigHelpers';
@@ -161,11 +161,6 @@ export const getAllMods = (state: StoreState) => state.mod.mods;
 
 export const updateEnabledMod = createAsyncThunk('mod/updateEnabledMod', (modId: string | null, thunkAPI) => {
     invoke('set_enabled_mod', { enabledMod: modId }).then(() => thunkAPI.dispatch(setEnabledMod(modId)));
-});
-
-export const updateSelectedMod = createAsyncThunk('mod/updateSelectedMod', async (modId: string, { dispatch }) => {
-    dispatch(saveSelectedMod);
-    dispatch(setSelectedMod(modId));
 });
 
 export default modSlice.reducer;

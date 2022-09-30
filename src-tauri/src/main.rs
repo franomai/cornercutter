@@ -123,8 +123,6 @@ fn get_cornercutter_config(cache: State<CornercutterCache>) -> CornercutterConfi
 
 #[tauri::command]
 fn get_mods(cache: State<CornercutterCache>) -> Vec<ModConfig> {
-    println!("Get mods!");
-    
     let mods = cache.mods.lock()
         .unwrap()
         .values()
