@@ -34,7 +34,7 @@ import FloorConfigTab from '../tabs/FloorConfigTab';
 import GeneralConfigTab from '../tabs/generalconfig';
 import NewMod from '../modals/NewMod';
 import ImportMod from '../modals/ImportMod';
-import { SkillSearchColumn } from '../searchbar';
+import { SkillSearchColumn } from '../skills/searchbar';
 
 const ModdingConfig = () => {
     const dispatch = useDispatch();

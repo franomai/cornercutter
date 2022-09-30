@@ -6,7 +6,7 @@ import { saveSelectedMod } from '../../../redux/slices/saving';
 import { AppDispatch } from '../../../redux/store';
 import ModConfig, { CurseSpawnType, Options, SpawnType } from '../../../types/Configuration';
 import { modHasOption } from '../../../utility/ConfigHelpers';
-import LabelledRadioGroup from './LabelledRadioGroup';
+import LabelledRadioGroup from '../../forms/LabelledRadioGroup';
 
 const optionLabels: Record<Options, string> = {
     [Options.ConfigPerFloor]: 'Configure spawns per floor',

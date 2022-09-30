@@ -1,8 +1,8 @@
 import { Stack, Text } from '@chakra-ui/react';
 import { ReactNode, useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getAllSkills } from '../../redux/slices/skills';
-import DraggableSkillCard from '../skills/DraggableSkillCard';
+import { getAllSkills } from '../../../redux/slices/skills';
+import DraggableSkillCard from '../DraggableSkillCard';
 import SearchBar from './SearchBar';
 
 const SkillSearchColumn = () => {

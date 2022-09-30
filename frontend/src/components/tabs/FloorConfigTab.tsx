@@ -6,7 +6,7 @@ import ModConfig, { Floor, Options, Room } from '../../types/Configuration';
 import { modHasOption } from '../../utility/ConfigHelpers';
 import { capitalise } from '../../utility/Utils';
 import LabelledDropzone from '../dropzone';
-import HelpIcon from '../helpicon';
+import HelpIcon from '../forms/helpicon';
 import ContentContainer from '../layout/ContentContainer';
 
 const roomLabels: Record<string, ReactNode> = {
