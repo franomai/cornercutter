@@ -155,9 +155,10 @@ fn delete_mod(cache: State<CornercutterCache>, mod_id: String) {
 }
 
 #[tauri::command]
-fn save_mod(cache: State<CornercutterCache>, mod_config: ModConfig) {
-    serialize_mod(&cache.config.lock().unwrap(), &mod_config);
+fn save_mod(cache: State<CornercutterCache>, mod_config: ModConfig) -> Result<(), String> {
+    let result = serialize_mod(&cache.config.lock().unwrap(), &mod_config);
     cache.mods.lock().unwrap().insert(mod_config.id.clone(), mod_config);
+    return result;
 }
 
 #[tauri::command]
@@ -168,9 +169,9 @@ fn import_mod(cache: State<CornercutterCache>, config_string: String) -> Result<
     let res = match decode_configuration(&config_string, &id) {
         Err(err) => Err(err),
         Ok(mod_config) => {
-            serialize_mod(&config, &mod_config);
+            let result  = serialize_mod(&config, &mod_config);
             cache.mods.lock().unwrap().insert(id, mod_config.clone());
-            Ok(mod_config)
+            result.map(|_| mod_config)
         },
     };
     
@@ -437,7 +438,7 @@ fn build_skill_array(skills_list: &Vec<WeightedSkill>, is_weighted: bool) -> Vec
 
 fn build_skill(source: &mut VecDeque<u32>, num_skills: u32, is_weighted: bool) -> Vec<WeightedSkill> {
     let mut skills: Vec<WeightedSkill> = Vec::new();
-    for x in 0..num_skills {
+    for _ in 0..num_skills {
         let id = source.pop_front().unwrap();
         let weight;
         if is_weighted {

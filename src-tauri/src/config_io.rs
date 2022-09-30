@@ -117,19 +117,19 @@ pub fn load_mods(config: &CornercutterConfig) -> HashMap<String, ModConfig> {
     return mods;
 }
 
-pub fn serialize_mod(config: &CornercutterConfig, mod_config: &ModConfig) {
+pub fn serialize_mod(config: &CornercutterConfig, mod_config: &ModConfig) -> Result<(), String> {
     let filename = get_mod_filename(mod_config.id.clone());
     let path = get_relative_dir(config, CC_MODS_DIR).join(filename.as_str());
     let file_result = File::create(path);
     if file_result.is_err() {
-        println!("couldn't create {}: {}", filename, file_result.unwrap_err());
-        return;
+        return Err("There was an error creating the mod file".to_string());
     }
 
     let res = serde_json::to_writer(file_result.unwrap(), mod_config);
     if res.is_err() {
-        println!("Error writing mod config {}: {}", filename, res.unwrap_err());
+        return Err("There seems to be something wrong with the mod JSON".to_string());
     }
+    Ok(())
 }
 
 pub fn delete_mod_file(config: &CornercutterConfig, mod_config: &ModConfig) -> io::Result<()> {
