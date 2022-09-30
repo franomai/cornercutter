@@ -8,7 +8,6 @@ import { capitalise } from '../../utility/Utils';
 import LabelledDropzone from '../dropzone';
 import HelpIcon from '../helpicon';
 import ContentContainer from '../layout/ContentContainer';
-import SideSearchColumnLayout from '../layout/SideSearchColumnLayout';
 
 const roomLabels: Record<string, ReactNode> = {
     [Room.Free]: (
