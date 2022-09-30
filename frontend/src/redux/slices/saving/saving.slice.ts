@@ -10,11 +10,13 @@ import { addMods, setEnabledMod } from '../mod';
 export interface State {
     status: 'idle' | 'pending';
     currentRequestId?: string;
+    lastSaved: number;
     error: SerializedError | null;
 }
 
 export const initialState: State = {
     status: 'idle',
+    lastSaved: Date.now(),
     error: null,
 };
 
@@ -34,6 +36,7 @@ const savingSlice = createSlice({
                 if (state.status === 'pending' && state.currentRequestId === action.meta.requestId) {
                     state.status = 'idle';
                     state.currentRequestId = undefined;
+                    state.lastSaved = Date.now();
                     state.error = null;
                 }
             })
@@ -57,7 +60,6 @@ export const saveSelectedMod = createAsyncThunk<void, undefined, { state: StoreS
             return;
         }
         const selectedMod = state.mod.mods[state.mod.selectedMod];
-        console.log(selectedMod);
         await invoke<void>('save_mod', { modConfig: selectedMod });
     },
 );
@@ -82,8 +84,6 @@ export const loadSavedData = createAsyncThunk<void, undefined, { state: StoreSta
     },
 );
 
-export const getSavingStatus = (state: StoreState) => state.saving.status;
-
-export const getSavingError = (state: StoreState) => state.saving.error;
+export const getSavingState = (store: StoreState) => store.saving;
 
 export default savingSlice.reducer;

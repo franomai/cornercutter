@@ -18,6 +18,7 @@ import {
     TabPanel,
     TabPanels,
     Tabs,
+    Text,
 } from '@chakra-ui/react';
 import { invoke } from '@tauri-apps/api/tauri';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
@@ -35,6 +36,7 @@ import GeneralConfigTab from '../tabs/generalconfig';
 import NewMod from '../modals/NewMod';
 import ImportMod from '../modals/ImportMod';
 import { SkillSearchColumn } from '../skills/searchbar';
+import Savingstatus from '../savingstatus';
 
 const ModdingConfig = () => {
     const dispatch = useDispatch();
@@ -143,7 +145,12 @@ const ModdingConfig = () => {
         return (
             <Flex flexDirection="row" w="full" overflow="hidden">
                 {renderTabs(selectedMod)}
-                <SkillSearchColumn />
+                <Stack alignItems="flex-end">
+                    <Box minH="58px" w="full" maxW="full">
+                        <Savingstatus />
+                    </Box>
+                    <SkillSearchColumn />
+                </Stack>
             </Flex>
         );
     }, [selectedMod, mods, renderTabs]);
@@ -158,9 +165,7 @@ const ModdingConfig = () => {
                     Import Mod
                 </Button>
             </ModList>
-            <Stack direction="column" h="full" w="full" maxW="full" overflowX="hidden">
-                {renderLayout()}
-            </Stack>
+            {renderLayout()}
             {config && <FindGoingUnder config={config} />}
             {newModId && (
                 <NewMod
