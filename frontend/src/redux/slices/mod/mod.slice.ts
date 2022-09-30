@@ -5,6 +5,7 @@ import ModConfig, { CurseSpawnType, Floor, ModInfo, Options, Room, SpawnType } f
 import { setModOptionFlag } from '../../../utility/ConfigHelpers';
 import { WeightedSkill } from '../../../types/Skill';
 import { invoke } from '@tauri-apps/api';
+import { saveSelectedMod } from '../saving';
 
 export interface State {
     mods: Record<string, ModConfig>;
@@ -158,8 +159,13 @@ export const getEnabledMod = (state: StoreState) =>
 
 export const getAllMods = (state: StoreState) => state.mod.mods;
 
-export const updateEnabledMod = createAsyncThunk('mod/updateEnabledMod', async (modId: string | null, thunkAPI) => {
-    await invoke('set_enabled_mod', { enabledMod: modId }).then(() => thunkAPI.dispatch(setEnabledMod(modId)));
+export const updateEnabledMod = createAsyncThunk('mod/updateEnabledMod', (modId: string | null, thunkAPI) => {
+    invoke('set_enabled_mod', { enabledMod: modId }).then(() => thunkAPI.dispatch(setEnabledMod(modId)));
+});
+
+export const updateSelectedMod = createAsyncThunk('mod/updateSelectedMod', async (modId: string, { dispatch }) => {
+    dispatch(saveSelectedMod);
+    dispatch(setSelectedMod(modId));
 });
 
 export default modSlice.reducer;
