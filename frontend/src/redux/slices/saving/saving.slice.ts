@@ -56,7 +56,9 @@ export const saveSelectedMod = createAsyncThunk<void, undefined, { state: StoreS
         if (state.mod.selectedMod === null || state.saving.currentRequestId !== requestId) {
             return;
         }
-        await invoke<void>('save_mod', { modConfig: state.mod.mods[state.mod.selectedMod] });
+        const selectedMod = state.mod.mods[state.mod.selectedMod];
+        console.log(selectedMod);
+        await invoke<void>('save_mod', { modConfig: selectedMod });
     },
 );
 

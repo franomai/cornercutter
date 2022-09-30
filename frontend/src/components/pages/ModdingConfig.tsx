@@ -1,6 +1,7 @@
 import {
     Box,
     Button,
+    Flex,
     FormControl,
     FormHelperText,
     FormLabel,
@@ -17,7 +18,6 @@ import {
     TabPanel,
     TabPanels,
     Tabs,
-    useDisclosure,
 } from '@chakra-ui/react';
 import { invoke } from '@tauri-apps/api/tauri';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
@@ -34,6 +34,7 @@ import FloorConfigTab from '../tabs/FloorConfigTab';
 import GeneralConfigTab from '../tabs/generalconfig';
 import NewMod from '../modals/NewMod';
 import ImportMod from '../modals/ImportMod';
+import { SkillSearchColumn } from '../searchbar';
 
 const ModdingConfig = () => {
     const dispatch = useDispatch();
@@ -91,6 +92,40 @@ const ModdingConfig = () => {
         return tabs;
     }, []);
 
+    const renderTabs = useCallback(
+        (selectedMod: ModConfig): ReactNode => {
+            const tabs = getTabs(selectedMod);
+
+            return (
+                <Tabs
+                    h="full"
+                    w="full"
+                    maxW="full"
+                    display="flex"
+                    style={{ flexDirection: 'column' }}
+                    overflow="hidden"
+                >
+                    <TabList background="blackAlpha.200" w="full">
+                        {tabs.map((tab) => (
+                            <Tab key={tab.name} fontWeight="semibold" pt={5} pb={3}>
+                                {tab.name}
+                            </Tab>
+                        ))}
+                    </TabList>
+                    {/* Height subtracted is the height of the TabList */}
+                    <TabPanels minH="calc(100% - 58px)" maxH="calc(100% - 58px)">
+                        {tabs.map((tab) => (
+                            <TabPanel key={tab.name} h="full" p={0}>
+                                {tab.tab}
+                            </TabPanel>
+                        ))}
+                    </TabPanels>
+                </Tabs>
+            );
+        },
+        [getTabs],
+    );
+
     const renderLayout = useCallback((): ReactNode => {
         if (!selectedMod) {
             return (
@@ -105,28 +140,13 @@ const ModdingConfig = () => {
             );
         }
 
-        const tabs = getTabs(selectedMod);
-
         return (
-            <Tabs h="full" maxW="full" display="flex" style={{ flexDirection: 'column' }} overflow="hidden">
-                <TabList background="blackAlpha.200" w="full">
-                    {tabs.map((tab) => (
-                        <Tab key={tab.name} fontWeight="semibold" pt={5} pb={3}>
-                            {tab.name}
-                        </Tab>
-                    ))}
-                </TabList>
-                {/* Height subtracted is the height of the TabList */}
-                <TabPanels minH="calc(100% - 58px)" maxH="calc(100% - 58px)">
-                    {tabs.map((tab) => (
-                        <TabPanel key={tab.name} h="full" p={0}>
-                            {tab.tab}
-                        </TabPanel>
-                    ))}
-                </TabPanels>
-            </Tabs>
+            <Flex flexDirection="row" w="full" overflow="hidden">
+                {renderTabs(selectedMod)}
+                <SkillSearchColumn />
+            </Flex>
         );
-    }, [selectedMod, mods, getTabs]);
+    }, [selectedMod, mods, renderTabs]);
 
     return (
         <Box display="flex" flexDirection="row" h="full" maxW="full" w="full" overflowX="hidden">

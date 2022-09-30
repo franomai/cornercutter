@@ -7,6 +7,7 @@ import { modHasOption } from '../../utility/ConfigHelpers';
 import { capitalise } from '../../utility/Utils';
 import LabelledDropzone from '../dropzone';
 import HelpIcon from '../helpicon';
+import ContentContainer from '../layout/ContentContainer';
 import SideSearchColumnLayout from '../layout/SideSearchColumnLayout';
 
 const roomLabels: Record<string, ReactNode> = {
@@ -51,7 +52,7 @@ const FloorConfigTab = ({ selectedMod, floor }: { selectedMod: ModConfig; floor:
         return renderDropzone(Room.All, false);
     }, [selectedMod.general, selectedMod.floorSkills[floor]]);
 
-    return <SideSearchColumnLayout>{renderDropzones()}</SideSearchColumnLayout>;
+    return <ContentContainer>{renderDropzones()}</ContentContainer>;
 };
 
 export default FloorConfigTab;
