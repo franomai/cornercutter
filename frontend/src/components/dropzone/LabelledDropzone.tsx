@@ -3,16 +3,19 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactNode, useCallback } from 'react';
 import Dropzone, { DropzoneProps } from './Dropzone';
+import HelpIcon from '../forms/HelpIcon';
 
 const LabelledDropzone = ({
     label,
     handleClearAllSkills,
     rotateLabel,
+    tooltip,
     ...dropzoneProps
 }: {
     label: ReactNode;
     rotateLabel?: boolean;
     handleClearAllSkills(): void;
+    tooltip?: string;
 } & DropzoneProps) => {
     const renderLabel = useCallback(() => {
         if (rotateLabel)
@@ -28,6 +31,7 @@ const LabelledDropzone = ({
                         alignItems="center"
                         style={{ transform: 'rotate(-90deg)' }}
                     >
+                        {!tooltip || <HelpIcon tooltip={tooltip} size="sm" />}
                         <Box fontSize="2xl" fontWeight="bold">
                             {label}
                         </Box>
@@ -43,6 +47,7 @@ const LabelledDropzone = ({
             );
         return (
             <Flex direction="row" gap={2} alignItems="center">
+                {!tooltip || <HelpIcon tooltip={tooltip} size="sm" />}
                 <Box fontSize="2xl" fontWeight="bold">
                     {label}
                 </Box>

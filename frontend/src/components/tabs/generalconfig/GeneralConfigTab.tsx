@@ -21,6 +21,7 @@ const GeneralConfigTab = ({ selectedMod }: { selectedMod: ModConfig }) => {
             <GeneralOptions selectedMod={selectedMod} />
             <LabelledDropzone
                 label="Starting Skills"
+                tooltip='Grants these skills at the start of the dungeon, or at the start of every floor if the option is selected. Can contain duplicates.'
                 skills={selectedMod.general.startingSkills}
                 handleDropSkill={(weightedSkill) => dispatch(addStartingSkill(weightedSkill))}
                 handleDeleteSkill={(skillIndex) => dispatch(deleteStartingSkill(skillIndex))}
