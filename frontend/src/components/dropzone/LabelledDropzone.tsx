@@ -28,9 +28,9 @@ const LabelledDropzone = ({
                         alignItems="center"
                         style={{ transform: 'rotate(-90deg)' }}
                     >
-                        <Text as={Box} fontSize="2xl" fontWeight="bold">
+                        <Box fontSize="2xl" fontWeight="bold">
                             {label}
-                        </Text>
+                        </Box>
                         <IconButton
                             variant="ghost"
                             title="Clear all skills"
@@ -43,9 +43,9 @@ const LabelledDropzone = ({
             );
         return (
             <Flex direction="row" gap={2} alignItems="center">
-                <Text fontSize="2xl" fontWeight="bold">
+                <Box fontSize="2xl" fontWeight="bold">
                     {label}
-                </Text>
+                </Box>
                 <IconButton
                     variant="ghost"
                     title="Clear all skills"
