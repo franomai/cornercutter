@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace cornercutter
+namespace cornercutter.ModFeature.SpawnOverride.CollectionTypes
 {
     class WeightedSpawnCollection : SpawnCollection
     {
@@ -24,6 +22,7 @@ namespace cornercutter
         public override Entity GetNextSkill()
         {
             Entity selectedSkill = null;
+
             // Roll the dice for the item - pick a weight, then find the item in the right weight range
             int selectedWeight = rng.Next(0, currentTotal);
             int rollingWeight = 0;
