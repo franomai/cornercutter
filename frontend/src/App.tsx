@@ -1,9 +1,11 @@
 import ModdingConfig from './components/pages/ModdingConfig';
-import { loadSavedData } from './redux/slices/cornercutter';
+
 import { useEffect } from 'react';
-import './App.css';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from './redux/store';
+import { loadSavedData } from './redux/slices/saving';
+
+import './App.css';
 
 function App() {
     const dispatch = useDispatch<AppDispatch>();

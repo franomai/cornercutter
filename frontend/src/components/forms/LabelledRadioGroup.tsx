@@ -1,6 +1,6 @@
 import { RadioGroup, RadioGroupProps, Stack, StackProps, Text } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import HelpIcon from '../../helpicon';
+import HelpIcon from '../forms/helpicon';
 
 const LabelledRadioGroup = ({
     title,

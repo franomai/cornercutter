@@ -17,7 +17,7 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactNode, useEffect, useState } from 'react';
 import Skill from '../../types/Skill';
-import HelpIcon from '../helpicon';
+import HelpIcon from '../forms/HelpIcon';
 
 export interface SkillCardProps {
     skill: Skill;

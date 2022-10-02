@@ -1,6 +1,7 @@
 import {
     Box,
     Button,
+    Flex,
     FormControl,
     FormHelperText,
     FormLabel,
@@ -17,7 +18,7 @@ import {
     TabPanel,
     TabPanels,
     Tabs,
-    useDisclosure,
+    Text,
 } from '@chakra-ui/react';
 import { invoke } from '@tauri-apps/api/tauri';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
@@ -34,6 +35,8 @@ import FloorConfigTab from '../tabs/FloorConfigTab';
 import GeneralConfigTab from '../tabs/generalconfig';
 import NewMod from '../modals/NewMod';
 import ImportMod from '../modals/ImportMod';
+import { SkillSearchColumn } from '../skills/searchbar';
+import Savingstatus from '../savingstatus';
 
 const ModdingConfig = () => {
     const dispatch = useDispatch();
@@ -91,6 +94,40 @@ const ModdingConfig = () => {
         return tabs;
     }, []);
 
+    const renderTabs = useCallback(
+        (selectedMod: ModConfig): ReactNode => {
+            const tabs = getTabs(selectedMod);
+
+            return (
+                <Tabs
+                    h="full"
+                    w="full"
+                    maxW="full"
+                    display="flex"
+                    style={{ flexDirection: 'column' }}
+                    overflow="hidden"
+                >
+                    <TabList background="blackAlpha.200" w="full">
+                        {tabs.map((tab) => (
+                            <Tab key={tab.name} fontWeight="semibold" pt={5} pb={3}>
+                                {tab.name}
+                            </Tab>
+                        ))}
+                    </TabList>
+                    {/* Height subtracted is the height of the TabList */}
+                    <TabPanels minH="calc(100% - 58px)" maxH="calc(100% - 58px)">
+                        {tabs.map((tab) => (
+                            <TabPanel key={tab.name} h="full" p={0}>
+                                {tab.tab}
+                            </TabPanel>
+                        ))}
+                    </TabPanels>
+                </Tabs>
+            );
+        },
+        [getTabs],
+    );
+
     const renderLayout = useCallback((): ReactNode => {
         if (!selectedMod) {
             return (
@@ -105,28 +142,18 @@ const ModdingConfig = () => {
             );
         }
 
-        const tabs = getTabs(selectedMod);
-
         return (
-            <Tabs h="full" maxW="full" display="flex" style={{ flexDirection: 'column' }} overflow="hidden">
-                <TabList background="blackAlpha.200" w="full">
-                    {tabs.map((tab) => (
-                        <Tab key={tab.name} fontWeight="semibold" pt={5} pb={3}>
-                            {tab.name}
-                        </Tab>
-                    ))}
-                </TabList>
-                {/* Height subtracted is the height of the TabList */}
-                <TabPanels minH="calc(100% - 58px)" maxH="calc(100% - 58px)">
-                    {tabs.map((tab) => (
-                        <TabPanel key={tab.name} h="full" p={0}>
-                            {tab.tab}
-                        </TabPanel>
-                    ))}
-                </TabPanels>
-            </Tabs>
+            <Flex flexDirection="row" w="full" overflow="hidden">
+                {renderTabs(selectedMod)}
+                <Stack alignItems="flex-end">
+                    <Box minH="58px" w="full" maxW="full">
+                        <Savingstatus />
+                    </Box>
+                    <SkillSearchColumn />
+                </Stack>
+            </Flex>
         );
-    }, [selectedMod, mods, getTabs]);
+    }, [selectedMod, mods, renderTabs]);
 
     return (
         <Box display="flex" flexDirection="row" h="full" maxW="full" w="full" overflowX="hidden">
@@ -138,9 +165,7 @@ const ModdingConfig = () => {
                     Import Mod
                 </Button>
             </ModList>
-            <Stack direction="column" h="full" w="full" maxW="full" overflowX="hidden">
-                {renderLayout()}
-            </Stack>
+            {renderLayout()}
             {config && <FindGoingUnder config={config} />}
             {newModId && (
                 <NewMod
@@ -148,14 +173,18 @@ const ModdingConfig = () => {
                     handleCreate={(mod) => {
                         setNewModId(null);
                         dispatch(addMod(mod));
-                        dispatch(setSelectedMod(newModId));
+                        dispatch(setSelectedMod(mod.id));
                     }}
                     handleDiscard={() => setNewModId(null)}
                 />
             )}
             <ImportMod
                 isShown={showImportMod}
-                handleCreate={console.log}
+                handleCreate={(mod) => {
+                    setShowImportMod(false);
+                    dispatch(addMod(mod));
+                    dispatch(setSelectedMod(mod.id));
+                }}
                 handleDiscard={() => setShowImportMod(false)}
             />
         </Box>

@@ -1,8 +1,8 @@
 import {
     Button,
     FormControl,
+    FormErrorMessage,
     FormLabel,
-    Input,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -10,12 +10,14 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
-    Stack,
     Textarea,
     useDisclosure,
 } from '@chakra-ui/react';
-import { useCallback, useEffect, useState } from 'react';
+import { invoke } from '@tauri-apps/api/tauri';
+import React, { useCallback, useEffect, useState } from 'react';
 import ModConfig from '../../types/Configuration';
+
+const ModCodeRegex = /^(#[^\r\n]*\r?\n)?(#[^\r\n]*\r?\n)?([\w\d+/]+={0,2})$/;
 
 const ImportMod = ({
     isShown,
@@ -28,19 +30,47 @@ const ImportMod = ({
 }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [modCode, setModCode] = useState('');
+    const [error, setError] = useState('');
 
     useEffect(() => {
         if (isShown) {
+            if (document.hasFocus()) {
+                navigator.clipboard.readText().then((clipboard) => {
+                    setModCode(ModCodeRegex.test(clipboard) ? clipboard : '');
+                });
+            } else {
+                setModCode('');
+            }
+            setError('');
             onOpen();
+        } else {
+            onClose();
         }
     }, [isShown]);
 
-    const handleImportMod = useCallback(() => {}, [handleCreate, modCode]);
+    const handleImportMod = useCallback(() => {
+        invoke<ModConfig>('import_mod', { configString: modCode })
+            .then(handleCreate)
+            .catch((err: string) => {
+                console.error(err);
+                setError(err);
+            });
+    }, [handleCreate, modCode]);
 
     const handleDiscardMod = useCallback(() => {
         handleDiscard();
         onClose();
     }, [handleDiscard, onClose]);
+
+    const handleChangeModCode = useCallback(
+        (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            if (error.length !== 0) {
+                setError('');
+            }
+            setModCode(e.target.value);
+        },
+        [error],
+    );
 
     return (
         <Modal
@@ -55,14 +85,16 @@ const ImportMod = ({
                 <ModalHeader>Import New Mod</ModalHeader>
                 <ModalCloseButton onClick={handleDiscardMod} />
                 <ModalBody>
-                    <FormControl isRequired>
+                    <FormControl isRequired isInvalid={error.length !== 0}>
                         <FormLabel>Mod Code</FormLabel>
                         <Textarea
                             variant="filled"
-                            placeholder="Shareable mod code..."
+                            placeholder={`# Mod Name\n# Mod description...\nAAEAACYBAgRWL1IbAAEeARABXwJCNg==`}
                             value={modCode}
-                            onChange={(e) => setModCode(e.target.value)}
+                            onChange={handleChangeModCode}
+                            height="90px"
                         />
+                        <FormErrorMessage>{error}</FormErrorMessage>
                     </FormControl>
                 </ModalBody>
                 <ModalFooter gap={2}>

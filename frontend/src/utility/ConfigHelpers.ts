@@ -1,4 +1,3 @@
-import { invoke } from '@tauri-apps/api';
 import ModConfig, { DEFAULT_CONFIG, Floor, FloorSkills, Options, Room } from '../types/Configuration';
 import { WeightedSkill } from '../types/Skill';
 
@@ -14,10 +13,6 @@ export function setModOptionFlag(mod: ModConfig, flag: Options, isSet: boolean) 
         // Remove flag
         mod.general.options &= ~flag;
     }
-}
-
-export function saveMod(mod: ModConfig): Promise<void> {
-    return invoke('save_mod', { modConfig: mod });
 }
 
 export function generateEmptyMod(id: string): ModConfig {

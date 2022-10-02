@@ -18,11 +18,12 @@ import { invoke } from '@tauri-apps/api/tauri';
 import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { deleteMod, setModInfo } from '../../../redux/slices/mod';
+import { saveSelectedMod } from '../../../redux/slices/saving';
+import { AppDispatch } from '../../../redux/store';
 import ModConfig from '../../../types/Configuration';
-import { saveMod } from '../../../utility/ConfigHelpers';
 
 const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const editableRef = useRef<HTMLDivElement>(null);
 
     const [isEditing, setIsEditing] = useState(false);
@@ -45,7 +46,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const handleSaveChanges = useCallback(() => {
         if (newName !== selectedMod.info.name || newDescription !== selectedMod.info.description) {
             dispatch(setModInfo({ name: newName, description: newDescription }));
-            saveMod({ ...selectedMod, info: { name: newName, description: newDescription } });
+            dispatch(saveSelectedMod());
         }
         setIsEditing(false);
     }, [dispatch, newName, newDescription, selectedMod.info]);
