@@ -2,7 +2,9 @@ use serde::{Serialize, Deserialize};
 
 use crate::types::enums::{
     SpawnType,
-    CurseSpawnType
+    CurseSpawnType,
+    PedestalSpawnType,
+    MultiSpawnerType
 };
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -25,6 +27,8 @@ pub struct ModInfo {
 pub struct GeneralConfig {
     pub spawns: SpawnType,
     pub curse_spawns: CurseSpawnType,
+    pub pedestal_spawns: PedestalSpawnType,
+    pub multi_spawners: MultiSpawnerType,
     pub options: u32,
     pub starting_skills: Vec<WeightedSkill>,
 }

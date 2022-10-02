@@ -21,8 +21,8 @@ namespace cornercutter.ModLoader
 
         public SpawnCollectionType SpawnCollectionType { get; private set; }
         public CurseSpawnType CurseSpawnType { get; private set; }
-        public PedestalSpawnType PedestalSpawnType { get; private set; } = PedestalSpawnType.AlwaysFirstFloor;
-        public MultiSpawnerType MultiSpawnerType { get; private set; } = MultiSpawnerType.AlwaysSkillIfAble;
+        public PedestalSpawnType PedestalSpawnType { get; private set; }
+        public MultiSpawnerType MultiSpawnerType { get; private set; }
 
         public ConfigOptions ConfigOptions { get; private set; }
         public WeightedSkill[] StartingSkills { get; private set; }
@@ -71,6 +71,8 @@ namespace cornercutter.ModLoader
             ModConfigDTO config = Reader.ReadMod(ModFileLocation);
             SpawnCollectionType = config.GeneralConfig.SpawnCollectionType;
             CurseSpawnType = config.GeneralConfig.CurseSpawnType;
+            PedestalSpawnType = config.GeneralConfig.PedestalSpawnType;
+            MultiSpawnerType = config.GeneralConfig.MultiSpawnerType;
             ConfigOptions = config.GeneralConfig.ConfigOptions;
             StartingSkills = FetchSkills(config.GeneralConfig.StartingSkills);
 

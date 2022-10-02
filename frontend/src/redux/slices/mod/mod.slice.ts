@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AppDispatch, StoreState } from '../../store';
 
-import ModConfig, { CurseSpawnType, Floor, ModInfo, Options, Room, SpawnType } from '../../../types/Configuration';
+import ModConfig, { CurseSpawnType, Floor, ModInfo, MultiSpawnerType, Options, PedestalSpawnType, Room, SpawnType } from '../../../types/Configuration';
 import { setModOptionFlag } from '../../../utility/ConfigHelpers';
 import { WeightedSkill } from '../../../types/Skill';
 import { invoke } from '@tauri-apps/api';
@@ -77,6 +77,16 @@ const modSlice = createSlice({
                 state.mods[state.selectedMod].general.curseSpawns = action.payload;
             }
         },
+        setPedestalSpawns(state, action: { payload: PedestalSpawnType }) {
+            if (state.selectedMod !== null) {
+                state.mods[state.selectedMod].general.pedestalSpawns = action.payload;
+            }
+        },
+        setMultiSpawners(state, action: { payload: MultiSpawnerType }) {
+            if (state.selectedMod !== null) {
+                state.mods[state.selectedMod].general.multiSpawners = action.payload;
+            }
+        },
         setOption(state, action: { payload: { flag: Options; isEnabled: boolean } }) {
             if (state.selectedMod !== null) {
                 setModOptionFlag(state.mods[state.selectedMod], action.payload.flag, action.payload.isEnabled);
@@ -140,6 +150,8 @@ export const {
     setModInfo,
     setSpawns,
     setCurseSpawns,
+    setPedestalSpawns,
+    setMultiSpawners,
     setOption,
     addStartingSkill,
     deleteStartingSkill,

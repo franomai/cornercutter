@@ -15,6 +15,8 @@ export interface ModInfo {
 export interface GeneralConfig {
     spawns: SpawnType;
     curseSpawns: CurseSpawnType;
+    pedestalSpawns: PedestalSpawnType;
+    multiSpawners: MultiSpawnerType;
     options: Options;
     startingSkills: WeightedSkill[];
 }
@@ -32,6 +34,19 @@ export enum CurseSpawnType {
     Always = 'Always',
     Never = 'Never',
     AlwaysIfAble = 'AlwaysIfAble',
+}
+
+export enum PedestalSpawnType {
+    Randomly = 'Randomly',
+    AlwaysFirstFloor = 'AlwaysFirstFloor',
+    AlwaysLastFloor = 'AlwaysLastFloor',
+    Never = 'Never',
+}
+
+export enum MultiSpawnerType {
+    Randomly = 'Randomly',
+    AlwaysSkillIfAble = 'AlwaysSkillIfAble',
+    Never = 'Never',
 }
 
 export enum Floor {
@@ -54,7 +69,7 @@ export enum Options {
     NoneSelected = 0,
     ConfigPerFloor = 1 << 0,
     ConfigPerRoom = 1 << 1,
-    RemoveHealingItems = 1 << 2,
+    SelectRandomItemOnEmpty = 1 << 2,
     DisableMentorAbilities = 1 << 3,
     DisableGiftOfIntern = 1 << 4,
     DisablePinned = 1 << 5,
@@ -64,6 +79,8 @@ export enum Options {
 export const DEFAULT_CONFIG: GeneralConfig = {
     spawns: SpawnType.Looped,
     curseSpawns: CurseSpawnType.Randomly,
-    options: Options.RemoveHealingItems | Options.DisablePinned,
+    pedestalSpawns: PedestalSpawnType.Randomly,
+    multiSpawners: MultiSpawnerType.Randomly,
+    options: Options.SelectRandomItemOnEmpty | Options.DisablePinned,
     startingSkills: [],
 };

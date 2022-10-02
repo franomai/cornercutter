@@ -11,7 +11,19 @@ pub enum SpawnType {
 #[derive(Debug)]
 #[derive(Serialize, Deserialize, Copy, Clone, FromPrimitive)]
 pub enum CurseSpawnType {
-    None = 0, Randomly = 1, Always = 2, Never = 3, AlwaysIfAble = 4,
+    None = 0, Randomly = 1, Always = 2, AlwaysIfAble = 3, Never = 4, 
+}
+
+#[derive(Debug)]
+#[derive(Serialize, Deserialize, Copy, Clone, FromPrimitive)]
+pub enum PedestalSpawnType {
+    None = 0, Randomly = 1, AlwaysFirstFloor = 2, AlwaysLastFloor = 3, Never = 4,
+}
+
+#[derive(Debug)]
+#[derive(Serialize, Deserialize, Copy, Clone, FromPrimitive)]
+pub enum MultiSpawnerType {
+    None = 0, Randomly = 1, AlwaysSkillIfAble = 2, Never = 3
 }
 
 bitflags! {

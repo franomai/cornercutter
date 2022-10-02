@@ -42,6 +42,8 @@ fn build_mod_array(config: &ModConfig) ->  Vec<u32> {
         (config.general.options as u32),
         (config.general.spawns as u32),
         (config.general.curse_spawns as u32),
+        (config.general.pedestal_spawns as u32),
+        (config.general.multi_spawners as u32),
     ]);
     array.push(config.general.starting_skills.len() as u32);
     let is_weighted = config.general.spawns == SpawnType::Weighted;

@@ -14,6 +14,8 @@ use crate::types::structs::{
 use crate::types::enums::{
     SpawnType,
     CurseSpawnType,
+    PedestalSpawnType,
+    MultiSpawnerType,
     Options, 
 };
 
@@ -58,6 +60,8 @@ fn build_mod_config(mod_info: &ModInfo,  config_array_original: &VecDeque<u32>, 
     let options = config_array.pop_front().unwrap();
     let spawns: SpawnType = FromPrimitive::from_u32(config_array.pop_front().unwrap()).unwrap();
     let curse_spawns: CurseSpawnType = FromPrimitive::from_u32(config_array.pop_front().unwrap()).unwrap();
+    let pedestal_spawns: PedestalSpawnType = FromPrimitive::from_u32(config_array.pop_front().unwrap()).unwrap();
+    let multi_spawners: MultiSpawnerType = FromPrimitive::from_u32(config_array.pop_front().unwrap()).unwrap();
     let mut num_skills = config_array.pop_front().unwrap();
     let is_weighted = spawns == SpawnType::Weighted;
     let starting_skills = build_skill(&mut config_array, num_skills, is_weighted);
@@ -116,6 +120,8 @@ fn build_mod_config(mod_info: &ModInfo,  config_array_original: &VecDeque<u32>, 
     let general_config = GeneralConfig {
         spawns,
         curse_spawns,
+        pedestal_spawns,
+        multi_spawners,
         options,
         starting_skills: starting_skills.to_vec()
     };
