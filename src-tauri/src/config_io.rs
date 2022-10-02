@@ -6,7 +6,7 @@ use std::sync::Mutex;
 use std::env::current_dir;
 use serde::{Serialize, Deserialize};
 
-use crate::{ModConfig};
+use  crate::types::structs::ModConfig;
 
 const CC_FILE: &str = "cornercutter.json";
 const CC_MODS_DIR: &str = "cornercutter/mods";
