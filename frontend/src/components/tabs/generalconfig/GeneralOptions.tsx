@@ -48,16 +48,25 @@ const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
             <SimpleGrid columns={{ sm: 1, xl: 2 }} spacingX={2} spacingY={6}>
                 <LabelledRadioGroup
                     title="Skill Spawns"
-                    tooltip="Select how skills should be spawned."
+                    tooltip="Select how skills should be spawned for all spawners."
                     value={selectedMod.general.spawns}
                     onChange={(newValue) => {
                         dispatch(setSpawns(newValue as SpawnType));
                         dispatch(saveSelectedMod());
                     }}
                 >
-                    <Radio value="Looped">Looped</Radio>
-                    <Radio value="Weighted">Weighted</Radio>
-                    <Radio value="Consecutive">Consecutive</Radio>
+                    <Radio title="Pick values from the pool left to right, then go back to the first one when there are no more left."
+                        value="Looped">
+                            Looped
+                    </Radio>
+                    <Radio title="A dice will be rolled to select skills, using the chances you've said. For example, one at 10 and a second at 20 means you are twice as likely to get the second item."
+                        value="Weighted">
+                            Weighted
+                    </Radio>
+                    <Radio title="Pick values from the pool left to right. At the end, either a random item, gift of the intern, or nothing will be selected, depending on mod settings."
+                        value="Consecutive">
+                            Consecutive
+                    </Radio>
                 </LabelledRadioGroup>
                 <LabelledRadioGroup
                     title="Curse Room Spawns"
