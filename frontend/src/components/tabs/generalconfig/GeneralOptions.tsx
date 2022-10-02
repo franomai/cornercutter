@@ -4,9 +4,16 @@ import { useDispatch } from 'react-redux';
 import { setCurseSpawns, setMultiSpawners, setOption, setPedestalSpawns, setSpawns } from '../../../redux/slices/mod';
 import { saveSelectedMod } from '../../../redux/slices/saving';
 import { AppDispatch } from '../../../redux/store';
-import ModConfig, { CurseSpawnType, Options, SpawnType, PedestalSpawnType, MultiSpawnerType } from '../../../types/Configuration';
+import ModConfig, {
+    CurseSpawnType,
+    Options,
+    SpawnType,
+    PedestalSpawnType,
+    MultiSpawnerType,
+} from '../../../types/Configuration';
 import { modHasOption } from '../../../utility/ConfigHelpers';
 import LabelledRadioGroup from '../../forms/LabelledRadioGroup';
+import TooltipRadio from '../../forms/TooltipRadio';
 
 const optionLabels: Record<Options, string> = {
     [Options.ConfigPerFloor]: 'Configure spawns per floor',
@@ -55,17 +62,23 @@ const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
                         dispatch(saveSelectedMod());
                     }}
                 >
-                    <Radio title="Pick values from the pool left to right, then go back to the first one when there are no more left."
-                        value="Looped">
-                            Looped
+                    <TooltipRadio
+                        tooltip="Pick values from the pool left to right, then go back to the first one when there are no more left."
+                        value="Looped"
+                    >
+                        Looped
+                    </TooltipRadio>
+                    <Radio
+                        title="A dice will be rolled to select skills, using the chances you've said. For example, one at 10 and a second at 20 means you are twice as likely to get the second item."
+                        value="Weighted"
+                    >
+                        Weighted
                     </Radio>
-                    <Radio title="A dice will be rolled to select skills, using the chances you've said. For example, one at 10 and a second at 20 means you are twice as likely to get the second item."
-                        value="Weighted">
-                            Weighted
-                    </Radio>
-                    <Radio title="Pick values from the pool left to right. At the end, either a random item, gift of the intern, or nothing will be selected, depending on mod settings."
-                        value="Consecutive">
-                            Consecutive
+                    <Radio
+                        title="Pick values from the pool left to right. At the end, either a random item, gift of the intern, or nothing will be selected, depending on mod settings."
+                        value="Consecutive"
+                    >
+                        Consecutive
                     </Radio>
                 </LabelledRadioGroup>
                 <LabelledRadioGroup
@@ -113,7 +126,7 @@ const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
                     Options.ConfigPerFloor,
                     Options.ConfigPerRoom,
                     Options.AwardSkillsPerFloor,
-                    Options.SelectRandomItemOnEmpty
+                    Options.SelectRandomItemOnEmpty,
                 ])}
                 {renderOptionCheckboxes([
                     Options.DisableMentorAbilities,
