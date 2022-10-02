@@ -71,14 +71,15 @@ namespace cornercutter.ModFeature.SpawnOverride
 
             // Handle case where a TreasureRoomPedastool has spawned mid-dungeon
             else if (__instance.name == "SkillSpawn" && parent.name.StartsWith("MultiSpawner")
-                    && grandparent != null && grandparent.name.StartsWith("TreasureRoomPedestal"))
+                    && grandparent != null && (grandparent.name.StartsWith("TreasureRoomPedestal")
+                    || grandparent.name.StartsWith("TreasureRoomPedastool"))) // Typo in source ):
             {
-                LogReplacedSpawn("treasure room pedastool (good luck)!");
+                LogReplacedSpawn("treasure room pedestal (good luck)!");
                 collectionToCheck = floorConfig.FreeSkills;
             }
 
-            // Spawning in the shop
-            else if (__instance.name == "ShopSpotCafeSkill")
+            // Spawning in the shop - Styx shop will have this cloned with a (1) suffix
+            else if (__instance.name.StartsWith("ShopSpotCafeSkill"))
             {
                 LogReplacedSpawn("shop!");
                 collectionToCheck = floorConfig.ShopSkills;
@@ -112,6 +113,7 @@ namespace cornercutter.ModFeature.SpawnOverride
             if (swappedObject == null && options.HasFlag(ConfigOptions.SelectRandomItemOnEmpty))
             {
                 // We couldn't give them an item, so use the default spawner instead
+                cornercutter.LogDebug("Skill pool exhausted, reverting to usual spawner.");
                 return true;
             }
 
