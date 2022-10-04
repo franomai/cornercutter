@@ -73,13 +73,14 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     }, [selectedMod.info]);
 
     const handleExportConfigCode = useCallback(async () => {
+        console.log(selectedMod);
         try {
             const code = await invoke<string>('get_config_code', { modConfig: selectedMod });
             navigator.clipboard.writeText(code).then(() => setShowConfigCodePopup(true));
         } catch (err) {
             console.error(err);
         }
-    }, [selectedMod]);
+    }, [selectedMod, navigator.clipboard]);
 
     const handleDeleteMod = useCallback(() => {
         invoke('delete_mod', { modId: selectedMod.id })
@@ -147,7 +148,14 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
                 </Stack>
             );
         },
-        [isEditing, showConfigCodePopup, handleSaveChanges, handleDiscardChanges],
+        [
+            isEditing,
+            showConfigCodePopup,
+            handleSaveChanges,
+            handleDiscardChanges,
+            handleDeleteMod,
+            handleExportConfigCode,
+        ],
     );
 
     const renderName = useCallback((): ReactNode => {

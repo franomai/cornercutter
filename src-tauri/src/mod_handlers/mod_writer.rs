@@ -12,6 +12,7 @@ use crate::types::enums::{
 use crate::mod_handlers::mod_util::u32_vec_to_string;
 
 pub fn encode_configuration(mod_config: ModConfig) -> String {
+    println!("{}", mod_config.general.starting_skills.len());
     let mut config_code = String::new();
     
     config_code.push_str("# ");

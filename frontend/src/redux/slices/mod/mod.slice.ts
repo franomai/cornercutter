@@ -105,14 +105,9 @@ const modSlice = createSlice({
                 ) as ModOptions;
             }
         },
-        addStartingSkill(state, action: { payload: WeightedSkill }) {
+        setStartingSkills(state, action: { payload: WeightedSkill[] }) {
             if (state.selectedMod !== null) {
-                state.mods[state.selectedMod].general.startingSkills.push(action.payload);
-            }
-        },
-        deleteStartingSkill(state, action: { payload: number }) {
-            if (state.selectedMod !== null) {
-                state.mods[state.selectedMod].general.startingSkills.splice(action.payload, 1);
+                state.mods[state.selectedMod].general.startingSkills = action.payload;
             }
         },
         clearStartingSkills(state) {
@@ -120,36 +115,16 @@ const modSlice = createSlice({
                 state.mods[state.selectedMod].general.startingSkills = [];
             }
         },
-        updateStartingSkillWeight(state, action: { payload: { skillIndex: number; newWeight: number } }) {
+        setFloorSkills(state, action: { payload: FloorRoom & { skills: WeightedSkill[] } }) {
             if (state.selectedMod !== null) {
-                const startingSkills = state.mods[state.selectedMod].general.startingSkills;
-                startingSkills[action.payload.skillIndex].weight = action.payload.newWeight;
+                state.mods[state.selectedMod].floorSkills[action.payload.floor][action.payload.room] =
+                    action.payload.skills;
             }
         },
-        addFloorSkill(state, action: { payload: FloorRoom & { skill: WeightedSkill } }) {
-            ifModSelected(state, (selectedMod) =>
-                selectedMod.floorSkills[action.payload.floor][action.payload.room].push(action.payload.skill),
-            );
-        },
-        deleteFloorSkill(state, action: { payload: FloorRoom & { skillIndex: number } }) {
-            ifModSelected(state, (selectedMod) =>
-                selectedMod.floorSkills[action.payload.floor][action.payload.room].splice(action.payload.skillIndex, 1),
-            );
-        },
         clearFloorSkills(state, action: { payload: FloorRoom }) {
-            ifModSelected(
-                state,
-                (selectedMod) => (selectedMod.floorSkills[action.payload.floor][action.payload.room] = []),
-            );
-        },
-        updateFloorSkillWeight(state, action: { payload: FloorRoom & { skillIndex: number; newWeight: number } }) {
-            ifModSelected(
-                state,
-                (selectedMod) =>
-                    (selectedMod.floorSkills[action.payload.floor][action.payload.room][
-                        action.payload.skillIndex
-                    ].weight = action.payload.newWeight),
-            );
+            if (state.selectedMod !== null) {
+                state.mods[state.selectedMod].floorSkills[action.payload.floor][action.payload.room] = [];
+            }
         },
     },
 });
@@ -166,14 +141,10 @@ export const {
     setPedestalSpawns,
     setMultiSpawners,
     setOption,
-    addStartingSkill,
-    deleteStartingSkill,
+    setStartingSkills,
     clearStartingSkills,
-    updateStartingSkillWeight,
-    addFloorSkill,
-    deleteFloorSkill,
     clearFloorSkills,
-    updateFloorSkillWeight,
+    setFloorSkills,
 } = modSlice.actions;
 
 export const getSelectedMod = (state: StoreState) =>

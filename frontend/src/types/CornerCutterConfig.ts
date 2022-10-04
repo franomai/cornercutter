@@ -1,4 +1,4 @@
-import GlobalOptions from './Configuration';
+import { GlobalOptions } from './Configuration';
 
 export interface CornerCutterConfig {
     goingUnderDir?: string;

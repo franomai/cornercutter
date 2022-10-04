@@ -1,9 +1,4 @@
-import {
-    addStartingSkill,
-    clearStartingSkills,
-    deleteStartingSkill,
-    updateStartingSkillWeight,
-} from '../../../redux/slices/mod';
+import { clearStartingSkills, setStartingSkills } from '../../../redux/slices/mod';
 import { useDispatch } from 'react-redux';
 
 import ContentContainer from '../../layout/ContentContainer';
@@ -21,14 +16,10 @@ const GeneralConfigTab = ({ selectedMod }: { selectedMod: ModConfig }) => {
             <GeneralOptions selectedMod={selectedMod} />
             <LabelledDropzone
                 label="Starting Skills"
-                tooltip='Grants these skills at the start of the dungeon, or at the start of every floor if the option is selected. Can contain duplicates.'
+                tooltip="Grants these skills at the start of the dungeon, or at the start of every floor if the option is selected. Can contain duplicates."
                 skills={selectedMod.general.startingSkills}
-                handleDropSkill={(weightedSkill) => dispatch(addStartingSkill(weightedSkill))}
-                handleDeleteSkill={(skillIndex) => dispatch(deleteStartingSkill(skillIndex))}
                 handleClearAllSkills={() => dispatch(clearStartingSkills())}
-                handleUpdateSkillWeight={(skillIndex, newWeight) =>
-                    dispatch(updateStartingSkillWeight({ skillIndex, newWeight }))
-                }
+                handleSetSkills={(skills) => dispatch(setStartingSkills(skills))}
             />
         </ContentContainer>
     );

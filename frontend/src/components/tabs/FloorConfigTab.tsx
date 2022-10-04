@@ -1,7 +1,7 @@
 import { Flex } from '@chakra-ui/react';
 import { ReactNode, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { addFloorSkill, clearFloorSkills, deleteFloorSkill, updateFloorSkillWeight } from '../../redux/slices/mod';
+import { clearFloorSkills, setFloorSkills } from '../../redux/slices/mod';
 import ModConfig, { Floor, ModOptions, Room } from '../../types/Configuration';
 import { hasOptionSet } from '../../utility/ConfigHelpers';
 import { capitalise } from '../../utility/Utils';
@@ -54,11 +54,7 @@ const FloorConfigTab = ({ selectedMod, floor }: { selectedMod: ModConfig; floor:
                     skills={selectedMod.floorSkills[floor][room]}
                     label={renderRoomTooltip(room)}
                     handleClearAllSkills={() => dispatch(clearFloorSkills({ floor, room }))}
-                    handleDeleteSkill={(skillIndex) => dispatch(deleteFloorSkill({ floor, room, skillIndex }))}
-                    handleDropSkill={(weightedSkill) => dispatch(addFloorSkill({ floor, room, skill: weightedSkill }))}
-                    handleUpdateSkillWeight={(skillIndex, newWeight) =>
-                        dispatch(updateFloorSkillWeight({ floor, room, skillIndex, newWeight }))
-                    }
+                    handleSetSkills={(skills) => dispatch(setFloorSkills({ floor, room, skills }))}
                 />
             );
         },
