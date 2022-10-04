@@ -3,7 +3,7 @@ use std::fs::{File, create_dir_all, read_dir, remove_file, copy};
 use std::io::{self, ErrorKind};
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
-use std::env::current_dir;
+use std::env::{current_dir, self};
 use serde::{Serialize, Deserialize};
 
 use crate::types::enums::GlobalOptions;
@@ -53,7 +53,7 @@ impl CornercutterGlobalSettings {
     }
 }
 
-pub fn file_exists(path: &Path) -> bool {
+pub fn file_exists<P>(path: P) -> bool where P: AsRef<Path> {
     return File::open(path).is_ok();
 }
 
@@ -156,7 +156,17 @@ pub fn delete_mod_file(config: &CornercutterConfig, mod_config: &ModConfig) -> i
 }
 
 pub fn serialize_cornercutter_config(config: &CornercutterConfig) {
-    let config_file_path = Path::new(CC_FILE);
+    let appdata = env::var("APPDATA").unwrap();
+    let appdata_path = Path::new(appdata.as_str()).join("cornercutter");
+    println!("{}", appdata_path.to_str().unwrap_or("Doesn't exist"));
+    if !file_exists(&appdata_path) {
+        let res = create_dir_all(&appdata_path);
+        if !res.is_ok() {
+            println!("Something went very badly...");
+        }
+    }
+
+    let config_file_path = appdata_path.join(CC_FILE);
     // Open a file in write-only mode
     let file_result = File::create(config_file_path);
     if file_result.is_err() {
