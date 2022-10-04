@@ -19,6 +19,8 @@ import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { setOptionFlag, hasOptionSet } from '../../utility/ConfigHelpers';
 import ModConfig, { DEFAULT_CONFIG, GlobalOptions } from '../../types/Configuration';
 import { generateEmptyFloorSkills } from '../../utility/ConfigHelpers';
+import { useSelector } from 'react-redux';
+import { getGlobalOptions } from '../../redux/slices/cornercutter';
 
 const optionLabels: Record<GlobalOptions, string> = {
     [GlobalOptions.DisableCornercutter]: 'Disable Cornercutter',
@@ -31,26 +33,41 @@ const optionLabels: Record<GlobalOptions, string> = {
 
 const optionTooltips: Record<GlobalOptions, string> = {
     [GlobalOptions.DisableCornercutter]: 'Turns cornercutter off for the next run. No indicator will show in-game.',
-    [GlobalOptions.DisableHighscores]: 'New best times with Cornercutter enabled will not be saved, unless it is the fist clear for that dungeon.',
+    [GlobalOptions.DisableHighscores]:
+        'New best times with Cornercutter enabled will not be saved, unless it is the fist clear for that dungeon.',
     [GlobalOptions.DisableSteamAchievements]: 'Turns off steam achievements for progression and unlocks.',
-    [GlobalOptions.RespectUnlocks]: 'While enabled, mods will not spawn items not unlocked in gain - effectively, the pool will be reduced.',
+    [GlobalOptions.RespectUnlocks]:
+        'While enabled, mods will not spawn items not unlocked in gain - effectively, the pool will be reduced.',
     [GlobalOptions.EnableDebugMenu]: 'Activates the debug menu in the pause screen.',
     [GlobalOptions.EnableExtraLogging]: 'Adds some extra logging to Cornercutter to help diagnose spawning issues.',
 };
 
-const Settings = ({ settings }: { settings: GlobalOptions }) => ({
+const Settings = ({
+    isShown,
     handleSaveChanges,
     handleDiscardChanges,
 }: {
-    id: string;
+    isShown: boolean;
     handleDiscardChanges(): void;
     handleSaveChanges(settings: GlobalOptions): void;
 }) => {
+    const globalOptions = useSelector(getGlobalOptions);
+
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [updatedSettings, setUpdatedSettings] = useState(settings);
+    const [updatedSettings, setUpdatedSettings] = useState(globalOptions);
+
+    useEffect(() => {
+        if (isShown) {
+            onOpen();
+            setUpdatedSettings(globalOptions);
+        } else {
+            onClose();
+        }
+    }, [globalOptions, handleSaveChanges, handleDiscardChanges]);
+
     const handleSave = useCallback(() => {
         handleSaveChanges(updatedSettings);
-    }, [handleSaveChanges]);
+    }, [handleSaveChanges, updatedSettings]);
 
     const handleDiscard = useCallback(() => {
         handleDiscardChanges();
@@ -74,7 +91,11 @@ const Settings = ({ settings }: { settings: GlobalOptions }) => ({
     }
 
     function renderOptionCheckboxes(flags: GlobalOptions[]): ReactNode {
-        return <Stack spacing={2}>{flags.map((flag) => renderOptionCheckbox(flag, optionLabels[flag], optionTooltips[flag]))}</Stack>;
+        return (
+            <Stack spacing={2}>
+                {flags.map((flag) => renderOptionCheckbox(flag, optionLabels[flag], optionTooltips[flag]))}
+            </Stack>
+        );
     }
 
     return (
@@ -87,8 +108,6 @@ const Settings = ({ settings }: { settings: GlobalOptions }) => ({
                         GlobalOptions.DisableCornercutter,
                         GlobalOptions.DisableHighscores,
                         GlobalOptions.DisableSteamAchievements,
-                    ])}
-                    {renderOptionCheckboxes([
                         GlobalOptions.RespectUnlocks,
                         GlobalOptions.EnableDebugMenu,
                         GlobalOptions.EnableExtraLogging,

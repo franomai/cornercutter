@@ -23,7 +23,6 @@ pub struct CornercutterCache {
 pub struct CornercutterConfig {
     pub going_under_dir: Option<String>,
     pub set_directory: bool,
-    pub global_options: u32,
 }
 
 impl CornercutterConfig {
@@ -31,7 +30,6 @@ impl CornercutterConfig {
         CornercutterConfig { 
             going_under_dir: try_find_going_under_dir(),
             set_directory: false,
-            global_options: 0
         }
     }
 }

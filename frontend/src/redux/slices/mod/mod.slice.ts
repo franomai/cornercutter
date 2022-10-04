@@ -1,7 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AppDispatch, StoreState } from '../../store';
 
-import ModConfig, { CurseSpawnType, Floor, ModInfo, MultiSpawnerType, ModOptions, PedestalSpawnType, Room, SpawnType } from '../../../types/Configuration';
+import ModConfig, {
+    CurseSpawnType,
+    Floor,
+    ModInfo,
+    MultiSpawnerType,
+    ModOptions,
+    PedestalSpawnType,
+    Room,
+    SpawnType,
+} from '../../../types/Configuration';
 import { setOptionFlag } from '../../../utility/ConfigHelpers';
 import { WeightedSkill } from '../../../types/Skill';
 import { invoke } from '@tauri-apps/api';
@@ -89,7 +98,11 @@ const modSlice = createSlice({
         },
         setOption(state, action: { payload: { flag: ModOptions; isEnabled: boolean } }) {
             if (state.selectedMod !== null) {
-                setOptionFlag(state.mods[state.selectedMod].general.options, action.payload.flag, action.payload.isEnabled);
+                setOptionFlag(
+                    state.mods[state.selectedMod].general.options,
+                    action.payload.flag,
+                    action.payload.isEnabled,
+                );
             }
         },
         addStartingSkill(state, action: { payload: WeightedSkill }) {

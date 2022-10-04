@@ -70,9 +70,9 @@ fn set_going_under_dir(cache: State<CornercutterCache>, dir: String) -> bool {
 
 #[tauri::command]
 fn set_global_options(cache: State<CornercutterCache>, options: u32) -> bool {
-    let mut config = cache.config.lock().unwrap();
-    config.global_options = options;
-    serialize_cornercutter_config(&config)?;
+    let mut settings = cache.current_mod.lock().unwrap();
+    settings.global_options = options;
+    serialize_current_mod_config(&cache.config.lock().unwrap(), &settings);
     return true;
 }
 
@@ -151,7 +151,8 @@ fn main() {
             get_mods,
             import_mod,
             get_new_mod_id,
-            set_enabled_mod
+            set_enabled_mod,
+            set_global_options
         ])
         .run(context)
         .expect("error while running tauri application");
