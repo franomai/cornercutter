@@ -73,7 +73,6 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     }, [selectedMod.info]);
 
     const handleExportConfigCode = useCallback(async () => {
-        console.log(selectedMod);
         try {
             const code = await invoke<string>('get_config_code', { modConfig: selectedMod });
             navigator.clipboard.writeText(code).then(() => setShowConfigCodePopup(true));
