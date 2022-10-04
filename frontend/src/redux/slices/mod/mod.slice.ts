@@ -98,11 +98,11 @@ const modSlice = createSlice({
         },
         setOption(state, action: { payload: { flag: ModOptions; isEnabled: boolean } }) {
             if (state.selectedMod !== null) {
-                setOptionFlag(
+                state.mods[state.selectedMod].general.options = setOptionFlag(
                     state.mods[state.selectedMod].general.options,
                     action.payload.flag,
                     action.payload.isEnabled,
-                );
+                ) as ModOptions;
             }
         },
         addStartingSkill(state, action: { payload: WeightedSkill }) {
