@@ -35,7 +35,20 @@ namespace cornercutter.ModFeature.SpawnOverride
             cornercutter.LogDebug("!---");
 
             SpawnCollection collectionToCheck = null;
-            int currentFloor = Singleton<DungeonManager>.instance.currentFloor + 1;
+            int currentFloor = Singleton<DungeonManager>.instance.currentFloor;
+
+            // If the run is an imposter run, use a repeating 1 -> 2 -> boss structure;
+            if (Singleton<DungeonManager>.instance.isBigRun)
+            {
+                currentFloor %= 3;
+                if (currentFloor == 2)
+                {
+                    currentFloor = 3;
+                }
+            }
+            currentFloor += 1;
+
+            cornercutter.LogDebug("Getting config for floor " + currentFloor);
             FloorConfig floorConfig = CutterConfig.Instance.GetFloorConfig(currentFloor);
 
             if (__instance.name == "ItemSpawnSpot")

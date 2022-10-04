@@ -23,7 +23,7 @@ namespace cornercutter.ModFeature.ModSetting
                     __result = currentFloor == 1;
                     break;
                 case PedestalSpawnType.AlwaysLastFloor:
-                    __result = currentFloor == 3;
+                    __result = currentFloor == (__instance.isBigRun ? 3 : 8);
                     break;
                 case PedestalSpawnType.Never:
                     __result = false;

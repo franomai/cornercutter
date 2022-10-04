@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using TMPro;
+using UnityEngine;
 
 namespace cornercutter.ModLoader
 {
@@ -30,6 +31,7 @@ namespace cornercutter.ModLoader
 
         private ManualLogSource Logger = null;
         private TextMeshProUGUI VisualIndicator = null;
+        private PauseTabButton DebugMenu = null;
         private ModReader Reader = new ModReader();
 
         private CutterConfig()
@@ -61,6 +63,7 @@ namespace cornercutter.ModLoader
             GlobalOptions = settings.GlobalOptions;
             ModFileLocation = Path.GetFullPath(Path.Combine(cornercutterFolder, @"mods\" + settings.CurrentModFilename));
             UpdateIndicatorVisibility();
+            UpdateDebugVisibility();
         }
 
         public void LoadCurrentConfig()
@@ -142,6 +145,7 @@ namespace cornercutter.ModLoader
             ClearConfig();
             GlobalOptions = GlobalOptions.DisableCornercutter;
             UpdateIndicatorVisibility();
+            UpdateDebugVisibility();
         }
 
         public void SetVisualIndicator(TextMeshProUGUI indicator)
@@ -154,6 +158,19 @@ namespace cornercutter.ModLoader
         {
             if (VisualIndicator == null) return;
             VisualIndicator.enabled = CornercutterIsEnabled();
+        }
+
+        public void SetDebugMenu(PauseTabButton debugMenu)
+        {
+            if (debugMenu == null && DebugMenu != null) return;
+            DebugMenu = debugMenu;
+            UpdateDebugVisibility();
+        }
+
+        public void UpdateDebugVisibility()
+        {
+            if (DebugMenu == null) return;
+            DebugMenu.gameObject.SetActive(GlobalOptions.HasFlag(GlobalOptions.EnableDebugMenu));
         }
 
         // Adding as a utility method here, given it is called in most features
