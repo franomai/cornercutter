@@ -106,7 +106,11 @@ pub fn load_cornercutter_config() -> CornercutterConfig {
 }
 
 pub fn load_global_settings(config: &CornercutterConfig) -> CornercutterGlobalSettings {
-    return deserialize_settings_config(config).unwrap_or_else(|_err| CornercutterGlobalSettings::new());
+    if config.going_under_dir.is_some() {
+        return deserialize_settings_config(config).unwrap_or_else(|_err| CornercutterGlobalSettings::new());
+    } else {
+        return CornercutterGlobalSettings::new();
+    }
 }
 
 pub fn load_mods(config: &CornercutterConfig) -> HashMap<String, ModConfig> {
@@ -180,8 +184,13 @@ pub fn serialize_cornercutter_config(config: &CornercutterConfig) {
 }
 
 pub fn deserialize_cornercutter_config() -> Result<CornercutterConfig, io::Error> {
-    let config_file_path = Path::new(CC_FILE);
-    let file = File::open(&config_file_path);
+    let appdata = env::var("APPDATA").unwrap();
+    let appdata_path = Path::new(appdata.as_str()).join("cornercutter").join(CC_FILE);
+
+    
+    println!("{}", appdata_path.to_str().unwrap());
+
+    let file = File::open(&appdata_path);
 
     if file.is_ok() {
         let deserialized: Result<CornercutterConfig, serde_json::Error> = serde_json::from_reader(file.unwrap());
