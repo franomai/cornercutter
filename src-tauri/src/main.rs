@@ -9,13 +9,13 @@ mod config_io;
 use config_io::{
     CornercutterConfig,
     CornercutterCache,
-    CornercutterModSettings,
+    CornercutterGlobalSettings,
     is_valid_going_under_dir,
     create_cornercutter_folders,
     load_cornercutter_cache,
     serialize_mod,
     get_mod_filename,
-    serialize_current_mod_config,
+    serialize_settings_config,
     delete_mod_file
 };
 
@@ -34,7 +34,7 @@ use uuid::Uuid;
 use crate::config_io::serialize_cornercutter_config;
 
 #[tauri::command]
-fn get_settings(cache: State<CornercutterCache>) -> CornercutterModSettings {
+fn get_settings(cache: State<CornercutterCache>) -> CornercutterGlobalSettings {
     return cache.settings.lock().unwrap().clone();
 }
 
@@ -72,7 +72,7 @@ fn set_going_under_dir(cache: State<CornercutterCache>, dir: String) -> bool {
 fn set_global_options(cache: State<CornercutterCache>, options: u32) -> bool {
     let mut settings = cache.settings.lock().unwrap();
     settings.global_options = options;
-    serialize_current_mod_config(&cache.config.lock().unwrap(), &settings);
+    serialize_settings_config(&cache.config.lock().unwrap(), &settings);
     return true;
 }
 
@@ -119,7 +119,7 @@ fn set_enabled_mod(cache: State<CornercutterCache>, enabled_mod: Option<String>)
     let config = cache.config.lock().unwrap();
 
     cache.settings.lock().unwrap().current_mod = enabled_mod.map(|id| get_mod_filename(id));
-    serialize_current_mod_config(&config, &cache.settings.lock().unwrap())
+    serialize_settings_config(&config, &cache.settings.lock().unwrap())
 }
 
 #[tauri::command]

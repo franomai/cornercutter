@@ -6,14 +6,15 @@ use std::sync::Mutex;
 use std::env::current_dir;
 use serde::{Serialize, Deserialize};
 
+use crate::types::enums::GlobalOptions;
 use  crate::types::structs::ModConfig;
 
 const CC_FILE: &str = "cornercutter.json";
 const CC_MODS_DIR: &str = "cornercutter/mods";
-const CC_CURRENT_MOD_DIR: &str = "cornercutter/settings.json";
+const CC_GLOBAL_SETTINGS_DIR: &str = "cornercutter/settings.json";
 
 pub struct CornercutterCache {
-    pub settings: Mutex<CornercutterModSettings>,
+    pub settings: Mutex<CornercutterGlobalSettings>,
     pub config: Mutex<CornercutterConfig>,
     pub mods: Mutex<HashMap<String, ModConfig>>,
 }
@@ -34,11 +35,22 @@ impl CornercutterConfig {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all="camelCase")]
-pub struct CornercutterModSettings {
+pub struct CornercutterGlobalSettings {
     pub current_mod: Option<String>,
     pub global_options: u32
+}
+
+impl CornercutterGlobalSettings {
+    pub fn new() -> Self {
+        let global_defaults = GlobalOptions::DISABLE_HIGHSCORES | GlobalOptions::DISABLE_STEAM_ACHIEVEMENTS;
+
+        CornercutterGlobalSettings { 
+            current_mod: None,
+            global_options: global_defaults.bits(),
+        }
+    }
 }
 
 pub fn file_exists(path: &Path) -> bool {
@@ -79,17 +91,22 @@ pub fn is_valid_going_under_dir(dir: &str) -> bool {
 
 pub fn load_cornercutter_cache() -> CornercutterCache {
     let config = load_cornercutter_config();
+    let settings = load_global_settings(&config);
     let mods = load_mods(&config);
 
     return CornercutterCache {
-        settings: Mutex::new(CornercutterModSettings { current_mod: None, global_options: 0 }),
         config: Mutex::new(config),
+        settings: Mutex::new(settings),
         mods: Mutex::new(mods),
     }
 }
 
 pub fn load_cornercutter_config() -> CornercutterConfig {
     return deserialize_cornercutter_config().unwrap_or_else(|_err| CornercutterConfig::new());
+}
+
+pub fn load_global_settings(config: &CornercutterConfig) -> CornercutterGlobalSettings {
+    return deserialize_settings_config(config).unwrap_or_else(|_err| CornercutterGlobalSettings::new());
 }
 
 pub fn load_mods(config: &CornercutterConfig) -> HashMap<String, ModConfig> {
@@ -173,20 +190,41 @@ pub fn deserialize_cornercutter_config() -> Result<CornercutterConfig, io::Error
     }
 }
 
-pub fn serialize_current_mod_config(config: &CornercutterConfig, current_mod: &CornercutterModSettings) {
-    let config_file_path = get_relative_dir(config, CC_CURRENT_MOD_DIR);
+pub fn serialize_settings_config(config: &CornercutterConfig, settings: &CornercutterGlobalSettings) {
+    let config_file_path = get_relative_dir(config, CC_GLOBAL_SETTINGS_DIR);
     // Open a file in write-only mode
     let file_result = File::create(config_file_path);
     if file_result.is_err() {
-        println!("couldn't create {}: {}", CC_CURRENT_MOD_DIR, file_result.unwrap_err());
+        println!("couldn't create {}: {}", CC_GLOBAL_SETTINGS_DIR, file_result.unwrap_err());
         return;
     }
 
-    let res = serde_json::to_writer(file_result.unwrap(), current_mod);
+    let res = serde_json::to_writer(file_result.unwrap(), settings);
     if res.is_err() {
         println!("Error writing current mod config: {}", res.unwrap_err());
     }
 }
+
+pub fn deserialize_settings_config(config: &CornercutterConfig) -> Result<CornercutterGlobalSettings, io::Error> {
+    let config_file_path = get_relative_dir(config, CC_GLOBAL_SETTINGS_DIR);
+    let file = File::open(&config_file_path);
+
+    if file.is_ok() {
+        let deserialized: Result<CornercutterGlobalSettings, serde_json::Error> = serde_json::from_reader(file.unwrap());
+        if deserialized.is_ok() {
+            let settings = deserialized.unwrap();
+            return Ok(settings);
+        }
+        else {
+            return Err(as_io_error(deserialized.unwrap_err()))
+        }
+    } else {
+        let settings = CornercutterGlobalSettings::new();
+        serialize_settings_config(&config, &settings);
+        return Ok(settings);
+    }
+}
+
 
 // https://stackoverflow.com/a/65192210, no out of the box solution
 pub fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<()> {
@@ -223,9 +261,9 @@ pub fn create_cornercutter_folders(config: &CornercutterConfig) {
         println!("Error installing mod: {}", res.unwrap_err());
     }
 
-    let current_mod = CornercutterModSettings {
+    let current_mod = CornercutterGlobalSettings {
         current_mod: None,
         global_options: 0
     };
-    serialize_current_mod_config(config, &current_mod);
+    serialize_settings_config(config, &current_mod);
 }

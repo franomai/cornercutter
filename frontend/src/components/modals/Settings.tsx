@@ -53,6 +53,8 @@ const Settings = ({
 }) => {
     const globalOptions = useSelector(getGlobalOptions);
 
+    console.log(globalOptions);
+
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [updatedSettings, setUpdatedSettings] = useState(globalOptions);
 

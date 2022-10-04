@@ -75,7 +75,7 @@ export const loadSavedData = createAsyncThunk<void, undefined, { state: StoreSta
                 invoke<ModConfig[]>('get_mods'),
             ]);
 
-            settings.globalOptions;
+            console.log(settings);
 
             thunkAPI.dispatch(setCornercutterConfig(cornercutterConfig));
             thunkAPI.dispatch(addMods(mods));
