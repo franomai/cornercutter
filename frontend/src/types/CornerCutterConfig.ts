@@ -5,7 +5,7 @@ export interface CornerCutterConfig {
     setDirectory: boolean;
 }
 
-export interface CurrentModConfig {
+export interface CornerCutterModSettings {
     currentMod?: string;
     globalOptions: GlobalOptions;
 }

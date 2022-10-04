@@ -2,9 +2,9 @@ import ModConfig from '../../../types/Configuration';
 
 import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 import { invoke } from '@tauri-apps/api/tauri';
-import { CornerCutterConfig, CurrentModConfig } from '../../../types/CornerCutterConfig';
+import { CornerCutterConfig, CornerCutterModSettings } from '../../../types/CornerCutterConfig';
 import { StoreState } from '../../store';
-import { setCornercutterConfig } from '../cornercutter';
+import { setCornercutterConfig, setGlobalOptions } from '../cornercutter';
 import { addMods, setEnabledMod } from '../mod';
 
 export interface State {
@@ -69,15 +69,16 @@ export const loadSavedData = createAsyncThunk<void, undefined, { state: StoreSta
     async (_, thunkAPI) => {
         try {
             console.log('Fetching saved data...');
-            const [currentModConfig, cornercutterConfig, mods] = await Promise.all([
-                invoke<CurrentModConfig>('get_current_mod'),
+            const [settings, cornercutterConfig, mods] = await Promise.all([
+                invoke<CornerCutterModSettings>('get_settings'),
                 invoke<CornerCutterConfig>('get_cornercutter_config'),
                 invoke<ModConfig[]>('get_mods'),
             ]);
 
             thunkAPI.dispatch(setCornercutterConfig(cornercutterConfig));
             thunkAPI.dispatch(addMods(mods));
-            thunkAPI.dispatch(setEnabledMod(currentModConfig.currentMod?.replace(/.json$/, '') ?? null));
+            thunkAPI.dispatch(setEnabledMod(settings.currentMod?.replace(/.json$/, '') ?? null));
+            thunkAPI.dispatch(setGlobalOptions(settings.globalOptions));
         } catch (err) {
             console.error(err);
         }

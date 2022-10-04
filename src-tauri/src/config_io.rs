@@ -13,7 +13,7 @@ const CC_MODS_DIR: &str = "cornercutter/mods";
 const CC_CURRENT_MOD_DIR: &str = "cornercutter/settings.json";
 
 pub struct CornercutterCache {
-    pub current_mod: Mutex<CornercutterCurrentMod>,
+    pub settings: Mutex<CornercutterModSettings>,
     pub config: Mutex<CornercutterConfig>,
     pub mods: Mutex<HashMap<String, ModConfig>>,
 }
@@ -36,7 +36,7 @@ impl CornercutterConfig {
 
 #[derive(Serialize, Deserialize, Clone)]
 #[serde(rename_all="camelCase")]
-pub struct CornercutterCurrentMod {
+pub struct CornercutterModSettings {
     pub current_mod: Option<String>,
     pub global_options: u32
 }
@@ -82,7 +82,7 @@ pub fn load_cornercutter_cache() -> CornercutterCache {
     let mods = load_mods(&config);
 
     return CornercutterCache {
-        current_mod: Mutex::new(CornercutterCurrentMod { current_mod: None, global_options: 0 }),
+        settings: Mutex::new(CornercutterModSettings { current_mod: None, global_options: 0 }),
         config: Mutex::new(config),
         mods: Mutex::new(mods),
     }
@@ -173,7 +173,7 @@ pub fn deserialize_cornercutter_config() -> Result<CornercutterConfig, io::Error
     }
 }
 
-pub fn serialize_current_mod_config(config: &CornercutterConfig, current_mod: &CornercutterCurrentMod) {
+pub fn serialize_current_mod_config(config: &CornercutterConfig, current_mod: &CornercutterModSettings) {
     let config_file_path = get_relative_dir(config, CC_CURRENT_MOD_DIR);
     // Open a file in write-only mode
     let file_result = File::create(config_file_path);
@@ -223,7 +223,7 @@ pub fn create_cornercutter_folders(config: &CornercutterConfig) {
         println!("Error installing mod: {}", res.unwrap_err());
     }
 
-    let current_mod = CornercutterCurrentMod {
+    let current_mod = CornercutterModSettings {
         current_mod: None,
         global_options: 0
     };
