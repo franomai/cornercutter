@@ -158,11 +158,10 @@ pub fn delete_mod_file(config: &CornercutterConfig, mod_config: &ModConfig) -> i
 pub fn serialize_cornercutter_config(config: &CornercutterConfig) {
     let appdata = env::var("APPDATA").unwrap();
     let appdata_path = Path::new(appdata.as_str()).join("cornercutter");
-    println!("{}", appdata_path.to_str().unwrap_or("Doesn't exist"));
     if !file_exists(&appdata_path) {
         let res = create_dir_all(&appdata_path);
         if !res.is_ok() {
-            println!("Something went very badly...");
+            println!("Couldn't create cornercutter.json folder in AppData");
         }
     }
 
@@ -170,7 +169,7 @@ pub fn serialize_cornercutter_config(config: &CornercutterConfig) {
     // Open a file in write-only mode
     let file_result = File::create(config_file_path);
     if file_result.is_err() {
-        println!("couldn't create {}: {}", CC_FILE, file_result.unwrap_err());
+        println!("Couldn't create {}: {}", CC_FILE, file_result.unwrap_err());
         return;
     }
 
