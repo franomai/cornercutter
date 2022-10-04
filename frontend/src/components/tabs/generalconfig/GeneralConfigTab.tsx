@@ -1,4 +1,4 @@
-import { clearStartingSkills, setStartingSkills } from '../../../redux/slices/mod';
+import { setStartingSkills } from '../../../redux/slices/mod';
 import { useDispatch } from 'react-redux';
 
 import ContentContainer from '../../layout/ContentContainer';
@@ -18,7 +18,6 @@ const GeneralConfigTab = ({ selectedMod }: { selectedMod: ModConfig }) => {
                 label="Starting Skills"
                 tooltip="Grants these skills at the start of the dungeon, or at the start of every floor if the option is selected. Can contain duplicates."
                 skills={selectedMod.general.startingSkills}
-                handleClearAllSkills={() => dispatch(clearStartingSkills())}
                 handleSetSkills={(skills) => dispatch(setStartingSkills(skills))}
             />
         </ContentContainer>

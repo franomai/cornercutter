@@ -110,20 +110,10 @@ const modSlice = createSlice({
                 state.mods[state.selectedMod].general.startingSkills = action.payload;
             }
         },
-        clearStartingSkills(state) {
-            if (state.selectedMod !== null) {
-                state.mods[state.selectedMod].general.startingSkills = [];
-            }
-        },
         setFloorSkills(state, action: { payload: FloorRoom & { skills: WeightedSkill[] } }) {
             if (state.selectedMod !== null) {
                 state.mods[state.selectedMod].floorSkills[action.payload.floor][action.payload.room] =
                     action.payload.skills;
-            }
-        },
-        clearFloorSkills(state, action: { payload: FloorRoom }) {
-            if (state.selectedMod !== null) {
-                state.mods[state.selectedMod].floorSkills[action.payload.floor][action.payload.room] = [];
             }
         },
     },
@@ -142,8 +132,6 @@ export const {
     setMultiSpawners,
     setOption,
     setStartingSkills,
-    clearStartingSkills,
-    clearFloorSkills,
     setFloorSkills,
 } = modSlice.actions;
 

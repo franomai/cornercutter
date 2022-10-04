@@ -7,14 +7,13 @@ import HelpIcon from '../forms/HelpIcon';
 
 const LabelledDropzone = ({
     label,
-    handleClearAllSkills,
+    handleSetSkills,
     rotateLabel,
     tooltip,
     ...dropzoneProps
 }: {
     label: ReactNode;
     rotateLabel?: boolean;
-    handleClearAllSkills(): void;
     tooltip?: string;
 } & DropzoneProps) => {
     const renderLabel = useCallback(() => {
@@ -39,7 +38,7 @@ const LabelledDropzone = ({
                             variant="ghost"
                             title="Clear all skills"
                             aria-label="Clear all skills"
-                            onClick={() => handleClearAllSkills()}
+                            onClick={() => handleSetSkills([])}
                             icon={<FontAwesomeIcon icon={faTrash} />}
                         />
                     </Flex>
@@ -55,17 +54,17 @@ const LabelledDropzone = ({
                     variant="ghost"
                     title="Clear all skills"
                     aria-label="Clear all skills"
-                    onClick={() => handleClearAllSkills()}
+                    onClick={() => handleSetSkills([])}
                     icon={<FontAwesomeIcon icon={faTrash} />}
                 />
             </Flex>
         );
-    }, [label, handleClearAllSkills, rotateLabel]);
+    }, [label, handleSetSkills, rotateLabel]);
 
     return (
         <Stack spacing={6} height="full" w="full" direction={rotateLabel ? 'row' : 'column'} userSelect="none">
             {renderLabel()}
-            <Dropzone {...dropzoneProps} />
+            <Dropzone handleSetSkills={handleSetSkills} {...dropzoneProps} />
         </Stack>
     );
 };
