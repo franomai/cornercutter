@@ -2,8 +2,8 @@ import { Flex } from '@chakra-ui/react';
 import { ReactNode, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { addFloorSkill, clearFloorSkills, deleteFloorSkill, updateFloorSkillWeight } from '../../redux/slices/mod';
-import ModConfig, { Floor, Options, Room } from '../../types/Configuration';
-import { modHasOption } from '../../utility/ConfigHelpers';
+import ModConfig, { Floor, ModOptions, Room } from '../../types/Configuration';
+import { hasOptionSet } from '../../utility/ConfigHelpers';
 import { capitalise } from '../../utility/Utils';
 import LabelledDropzone from '../dropzone';
 import HelpIcon from '../forms/HelpIcon';
@@ -66,7 +66,7 @@ const FloorConfigTab = ({ selectedMod, floor }: { selectedMod: ModConfig; floor:
     );
 
     const renderDropzones = useCallback((): ReactNode => {
-        if (modHasOption(selectedMod, Options.ConfigPerRoom)) {
+        if (hasOptionSet(selectedMod.general.options, ModOptions.ConfigPerRoom)) {
             return [Room.Free, Room.Shop, Room.Curse, Room.Finale].map((room) => renderDropzone(room, true));
         }
 

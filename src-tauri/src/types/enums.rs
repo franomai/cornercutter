@@ -38,3 +38,15 @@ bitflags! {
         const AWARD_SKILLS_PER_LEVEL = 1 << 6;
     }
 }
+
+bitflags! {
+    pub struct GlobalOptions: u32 {
+        const NONE_SELECTED = 0;
+        const DISABLE_CORNERCUTTER = 1 << 0;
+        const DISABLE_HIGHSCORES = 1 << 1;
+        const DISABLE_STEAM_ACHIEVEMENTS = 1 << 2;
+        const RESPECT_UNLOCKS = 1 << 3;
+        const ENABLE_DEBUG_MENU = 1 << 4;
+        const ENABLE_EXTRA_LOGGING = 1 << 5;
+    }
+}

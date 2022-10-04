@@ -1,18 +1,19 @@
-import ModConfig, { DEFAULT_CONFIG, Floor, FloorSkills, Options, Room } from '../types/Configuration';
+import ModConfig, { DEFAULT_CONFIG, Floor, FloorSkills, ModOptions, GlobalOptions, Options,  Room } from '../types/Configuration';
 import { WeightedSkill } from '../types/Skill';
 
-export function modHasOption(mod: ModConfig, flag: Options) {
-    return flag === (mod.general.options & flag);
+export function hasOptionSet(option: Options, flag: Options) {
+    return flag === (option & flag);
 }
 
-export function setModOptionFlag(mod: ModConfig, flag: Options, isSet: boolean) {
+export function setOptionFlag (option: ModOptions | GlobalOptions, flag: ModOptions | GlobalOptions, isSet: boolean): ModOptions | GlobalOptions {
     if (isSet) {
         // Append flag
-        mod.general.options |= flag;
+        option |= flag;
     } else {
         // Remove flag
-        mod.general.options &= ~flag;
+        option &= ~flag;
     }
+    return option;
 }
 
 export function generateEmptyMod(id: string): ModConfig {

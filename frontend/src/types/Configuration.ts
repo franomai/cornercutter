@@ -17,7 +17,7 @@ export interface GeneralConfig {
     curseSpawns: CurseSpawnType;
     pedestalSpawns: PedestalSpawnType;
     multiSpawners: MultiSpawnerType;
-    options: Options;
+    options: ModOptions;
     startingSkills: WeightedSkill[];
 }
 
@@ -65,7 +65,9 @@ export enum Room {
     Finale = 'finale',
 }
 
-export enum Options {
+export type Options = number & (ModOptions | GlobalOptions);
+
+export enum ModOptions {
     NoneSelected = 0,
     ConfigPerFloor = 1 << 0,
     ConfigPerRoom = 1 << 1,
@@ -76,11 +78,21 @@ export enum Options {
     AwardSkillsPerFloor = 1 << 6,
 }
 
+export enum GlobalOptions {
+    NoneSelected = 0,
+    DisableCornercutter = 1 << 0,
+    DisableHighscores = 1 << 1,
+    DisableSteamAchievements = 1 << 2,
+    RespectUnlocks = 1 << 3,
+    EnableDebugMenu = 1 << 4,
+    EnableExtraLogging = 1 << 5
+}
+
 export const DEFAULT_CONFIG: GeneralConfig = {
-    spawns: SpawnType.Looped,
+    spawns: SpawnType.Consecutive,
     curseSpawns: CurseSpawnType.Randomly,
     pedestalSpawns: PedestalSpawnType.Randomly,
     multiSpawners: MultiSpawnerType.Randomly,
-    options: Options.SelectRandomItemOnEmpty | Options.DisablePinned,
+    options: ModOptions.SelectRandomItemOnEmpty,
     startingSkills: [],
 };

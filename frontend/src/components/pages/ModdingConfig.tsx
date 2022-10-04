@@ -23,11 +23,11 @@ import {
 import { invoke } from '@tauri-apps/api/tauri';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCornercutterConfig } from '../../redux/slices/cornercutter';
+import { getCornercutterConfig, setCornercutterConfig } from '../../redux/slices/cornercutter';
 import { addMod, getAllMods, getSelectedMod, setSelectedMod } from '../../redux/slices/mod';
-import ModConfig, { Floor, Options } from '../../types/Configuration';
+import ModConfig, { Floor, ModOptions, GlobalOptions } from '../../types/Configuration';
 import TabData from '../../types/TabData';
-import { modHasOption } from '../../utility/ConfigHelpers';
+import { hasOptionSet } from '../../utility/ConfigHelpers';
 import BlankTextLayout from '../layout/BlankTextLayout';
 import FindGoingUnder from '../modals/FindGoingUnder';
 import ModList from '../mods/ModList';
@@ -57,6 +57,13 @@ const ModdingConfig = () => {
         setShowImportMod(true);
     }, [setShowImportMod]);
 
+
+    const handleSettingsSave = useCallback((settings: GlobalOptions) => {
+        invoke<boolean>('set_going_under_dir', { options: settings }).then(() => {
+            dispatch(setCornercutterConfig({...config, globalOptions: settings}));
+        });
+    }, [setCornercutterConfig]);
+
     const getTabs = useCallback((selectedMod: ModConfig): TabData[] => {
         const tabs: TabData[] = [
             {
@@ -65,7 +72,7 @@ const ModdingConfig = () => {
             },
         ];
 
-        if (modHasOption(selectedMod, Options.ConfigPerFloor)) {
+        if (hasOptionSet(selectedMod.general.options, ModOptions.ConfigPerFloor)) {
             tabs.push(
                 {
                     name: 'Floor 1',
@@ -167,6 +174,18 @@ const ModdingConfig = () => {
             </ModList>
             {renderLayout()}
             {config && <FindGoingUnder config={config} />}
+            {
+            config && (
+                <Settings
+                    config={newModId}
+                    handleCreate={(mod) => {
+                        setNewModId(null);
+                        dispatch(addMod(mod));
+                        dispatch(setSelectedMod(mod.id));
+                    }}
+                    handleDiscard={() => setNewModId(null)}
+                />
+            )}
             {newModId && (
                 <NewMod
                     id={newModId}

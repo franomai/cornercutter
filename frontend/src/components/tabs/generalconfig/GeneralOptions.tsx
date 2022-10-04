@@ -6,43 +6,43 @@ import { saveSelectedMod } from '../../../redux/slices/saving';
 import { AppDispatch } from '../../../redux/store';
 import ModConfig, {
     CurseSpawnType,
-    Options,
+    ModOptions,
     SpawnType,
     PedestalSpawnType,
     MultiSpawnerType,
 } from '../../../types/Configuration';
-import { modHasOption } from '../../../utility/ConfigHelpers';
+import { hasOptionSet } from '../../../utility/ConfigHelpers';
 import LabelledRadioGroup from '../../forms/LabelledRadioGroup';
 import TooltipRadio from '../../forms/TooltipRadio';
 
-const optionLabels: Record<Options, string> = {
-    [Options.ConfigPerFloor]: 'Configure spawns per floor',
-    [Options.ConfigPerRoom]: 'Configure spawns per room',
-    [Options.AwardSkillsPerFloor]: 'Award starting skills per floor',
-    [Options.SelectRandomItemOnEmpty]: 'Grant random item when out of mod items',
-    [Options.DisableMentorAbilities]: 'Disable mentor abilities',
-    [Options.DisableGiftOfIntern]: 'Disable gift of the intern',
-    [Options.DisablePinned]: 'Disable pinned skills',
+const optionLabels: Record<ModOptions, string> = {
+    [ModOptions.ConfigPerFloor]: 'Configure spawns per floor',
+    [ModOptions.ConfigPerRoom]: 'Configure spawns per room',
+    [ModOptions.AwardSkillsPerFloor]: 'Award starting skills per floor',
+    [ModOptions.SelectRandomItemOnEmpty]: 'Grant random item when out of mod items',
+    [ModOptions.DisableMentorAbilities]: 'Disable mentor abilities',
+    [ModOptions.DisableGiftOfIntern]: 'Disable gift of the intern',
+    [ModOptions.DisablePinned]: 'Disable pinned skills',
 };
 
-const optionTooltips: Record<Options, string> = {
-    [Options.ConfigPerFloor]: 'Set skills up on a floor by floor basis.',
-    [Options.ConfigPerRoom]: 'Set skills up based on room type / function. Non-applicable types will be ignored (for example, finale for boss floors).',
-    [Options.AwardSkillsPerFloor]: 'Enabling this will grant starting skills at the start of every floor. Otherwise, they will only be granted on dungeon start.',
-    [Options.SelectRandomItemOnEmpty]: 'If a spawn pool runs out, or a pool has no skills added, enabling this will fallback to the usual spawner logic for that room. Otherwise, gift of the intern will spawn.',
-    [Options.DisableMentorAbilities]: 'When enabled, any mentor abilities will be deactivated.',
-    [Options.DisableGiftOfIntern]: 'Gift of the intern is a fallback skill that spawns when nothing else can, granting a small bonus (cash, an app, health, etc.) - enabling this will spawn nothing instead.',
-    [Options.DisablePinned]: 'When enabled, the pinned skill will not be granted at the start of the dungeon,',
+const optionTooltips: Record<ModOptions, string> = {
+    [ModOptions.ConfigPerFloor]: 'Set skills up on a floor by floor basis.',
+    [ModOptions.ConfigPerRoom]: 'Set skills up based on room type / function. Non-applicable types will be ignored (for example, finale for boss floors).',
+    [ModOptions.AwardSkillsPerFloor]: 'Enabling this will grant starting skills at the start of every floor. Otherwise, they will only be granted on dungeon start.',
+    [ModOptions.SelectRandomItemOnEmpty]: 'If a spawn pool runs out, or a pool has no skills added, enabling this will fallback to the usual spawner logic for that room. Otherwise, gift of the intern will spawn.',
+    [ModOptions.DisableMentorAbilities]: 'When enabled, any mentor abilities will be deactivated.',
+    [ModOptions.DisableGiftOfIntern]: 'Gift of the intern is a fallback skill that spawns when nothing else can, granting a small bonus (cash, an app, health, etc.) - enabling this will spawn nothing instead.',
+    [ModOptions.DisablePinned]: 'When enabled, the pinned skill will not be granted at the start of the dungeon,',
 };
 
 const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const dispatch = useDispatch<AppDispatch>();
 
-    function renderOptionCheckbox(flag: Options, label: string, tooltip: string): ReactNode {
+    function renderOptionCheckbox(flag: ModOptions, label: string, tooltip: string): ReactNode {
         return (
             <Checkbox
                 key={flag}
-                isChecked={modHasOption(selectedMod, flag)}
+                isChecked={hasOptionSet(selectedMod.general.options, flag)}
                 onChange={(e) => {
                     dispatch(setOption({ flag, isEnabled: e.target.checked }));
                     dispatch(saveSelectedMod());
@@ -56,7 +56,7 @@ const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
         );
     }
 
-    function renderOptionCheckboxes(flags: Options[]): ReactNode {
+    function renderOptionCheckboxes(flags: ModOptions[]): ReactNode {
         return <Stack spacing={2}>{flags.map((flag) => renderOptionCheckbox(flag, optionLabels[flag], optionTooltips[flag]))}</Stack>;
     }
 
@@ -191,15 +191,15 @@ const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
                     </TooltipRadio>
                 </LabelledRadioGroup>
                 {renderOptionCheckboxes([
-                    Options.ConfigPerFloor,
-                    Options.ConfigPerRoom,
-                    Options.AwardSkillsPerFloor,
-                    Options.SelectRandomItemOnEmpty,
+                    ModOptions.ConfigPerFloor,
+                    ModOptions.ConfigPerRoom,
+                    ModOptions.AwardSkillsPerFloor,
+                    ModOptions.SelectRandomItemOnEmpty,
                 ])}
                 {renderOptionCheckboxes([
-                    Options.DisableMentorAbilities,
-                    Options.DisableGiftOfIntern,
-                    Options.DisablePinned,
+                    ModOptions.DisableMentorAbilities,
+                    ModOptions.DisableGiftOfIntern,
+                    ModOptions.DisablePinned,
                 ])}
             </SimpleGrid>
         </Stack>

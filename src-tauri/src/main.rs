@@ -69,6 +69,14 @@ fn set_going_under_dir(cache: State<CornercutterCache>, dir: String) -> bool {
 }
 
 #[tauri::command]
+fn set_global_options(cache: State<CornercutterCache>, options: u32) -> bool {
+    let mut config = cache.config.lock().unwrap();
+    config.global_options = options;
+    serialize_cornercutter_config(&config)?;
+    return true;
+}
+
+#[tauri::command]
 fn delete_mod(cache: State<CornercutterCache>, mod_id: String) {
     let mut mods = cache.mods.lock().unwrap();
     if mods.contains_key(&mod_id) {
@@ -118,8 +126,6 @@ fn set_enabled_mod(cache: State<CornercutterCache>, enabled_mod: Option<String>)
 fn get_config_code(mod_config: ModConfig) -> String {
     return encode_configuration(mod_config);
 }
-
-
 
 fn get_new_id(map: &HashMap<String, ModConfig>) -> String {
     let mut uuid = Uuid::new_v4().to_string();
