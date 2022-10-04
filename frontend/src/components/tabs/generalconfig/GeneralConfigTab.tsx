@@ -6,9 +6,11 @@ import ModConfig from '../../../types/Configuration';
 import LabelledDropzone from '../../dropzone';
 import GeneralOptions from './GeneralOptions';
 import ModInformation from './ModInformation';
+import { saveSelectedMod } from '../../../redux/slices/saving';
+import { AppDispatch } from '../../../redux/store';
 
 const GeneralConfigTab = ({ selectedMod }: { selectedMod: ModConfig }) => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
     return (
         <ContentContainer>
@@ -18,7 +20,10 @@ const GeneralConfigTab = ({ selectedMod }: { selectedMod: ModConfig }) => {
                 label="Starting Skills"
                 tooltip="Grants these skills at the start of the dungeon, or at the start of every floor if the option is selected. Can contain duplicates."
                 skills={selectedMod.general.startingSkills}
-                handleSetSkills={(skills) => dispatch(setStartingSkills(skills))}
+                handleSetSkills={(skills) => {
+                    dispatch(setStartingSkills(skills));
+                    dispatch(saveSelectedMod());
+                }}
             />
         </ContentContainer>
     );

@@ -63,7 +63,6 @@ const ModdingConfig = () => {
         (globalOptions: GlobalOptions) => {
             setShowSettings(false);
             invoke('set_global_options', { options: globalOptions }).then(() => {
-                console.log('Then' + globalOptions);
                 dispatch(setGlobalOptions(globalOptions));
             });
         },

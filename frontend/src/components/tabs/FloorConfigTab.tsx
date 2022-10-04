@@ -2,6 +2,8 @@ import { Flex } from '@chakra-ui/react';
 import { ReactNode, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { setFloorSkills } from '../../redux/slices/mod';
+import { saveSelectedMod } from '../../redux/slices/saving';
+import { AppDispatch } from '../../redux/store';
 import ModConfig, { Floor, ModOptions, Room } from '../../types/Configuration';
 import { hasOptionSet } from '../../utility/ConfigHelpers';
 import { capitalise } from '../../utility/Utils';
@@ -22,7 +24,7 @@ const roomToolTip: Record<string, string> = {
 };
 
 const FloorConfigTab = ({ selectedMod, floor }: { selectedMod: ModConfig; floor: Floor }) => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
     const renderRoomLabel = useCallback((room: Room) => {
         if (room === Room.All) return 'All Rooms';
@@ -53,7 +55,10 @@ const FloorConfigTab = ({ selectedMod, floor }: { selectedMod: ModConfig; floor:
                     rotateLabel={singleRow}
                     skills={selectedMod.floorSkills[floor][room]}
                     label={renderRoomTooltip(room)}
-                    handleSetSkills={(skills) => dispatch(setFloorSkills({ floor, room, skills }))}
+                    handleSetSkills={(skills) => {
+                        dispatch(setFloorSkills({ floor, room, skills }));
+                        dispatch(saveSelectedMod());
+                    }}
                 />
             );
         },

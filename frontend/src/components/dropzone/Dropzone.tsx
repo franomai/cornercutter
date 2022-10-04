@@ -24,7 +24,7 @@ const Dropzone = ({ skills, singleRow, handleSetSkills }: DropzoneProps) => {
 
     const [prevSkillCount, setPrevSkillCount] = useState(0);
     const [updatedSkills, setUpdatedSkills] = useState(skills);
-    const debouncedSkills = useDebounce(updatedSkills, 400);
+    const debouncedSkills = useDebounce(updatedSkills, 600);
 
     const [{ canDrop }, dropRef] = useDrop<{ id: number }, unknown, { canDrop: boolean }>(() => ({
         accept: ItemType.SKILL,
@@ -41,14 +41,14 @@ const Dropzone = ({ skills, singleRow, handleSetSkills }: DropzoneProps) => {
     }, [skills]);
 
     useEffect(() => {
-        if (singleRow && skills.length > prevSkillCount) {
+        if (singleRow && updatedSkills.length > prevSkillCount) {
             scrollRef.current?.scrollTo({
                 left: scrollRef.current.scrollWidth,
                 behavior: 'smooth',
             });
         }
-        setPrevSkillCount(skills.length);
-    }, [skills.length, singleRow, prevSkillCount]);
+        setPrevSkillCount(updatedSkills.length);
+    }, [updatedSkills.length, singleRow, prevSkillCount]);
 
     useEffect(() => {
         if (debouncedSkills !== skills) {

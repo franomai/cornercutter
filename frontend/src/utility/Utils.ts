@@ -14,7 +14,7 @@ const ONE_DAY = 24 * ONE_HOUR;
 export function getRelativeTimeSince(time: number): string {
     const relativeTime = Date.now() - time;
 
-    if (relativeTime < 5 * ONE_SECOND) {
+    if (relativeTime < 2 * ONE_SECOND) {
         return 'just now';
     } else if (relativeTime < ONE_MINUTE) {
         return 'a few seconds ago';
