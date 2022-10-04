@@ -99,10 +99,16 @@ const Settings = ({
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal
+            isOpen={isOpen}
+            onClose={() => {
+                handleDiscardChanges();
+                onClose();
+            }}
+        >
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Create New Mod</ModalHeader>
+                <ModalHeader>Global Option</ModalHeader>
                 <ModalBody>
                     {renderOptionCheckboxes([
                         GlobalOptions.DisableCornercutter,
