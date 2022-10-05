@@ -45,7 +45,14 @@ namespace cornercutter.ModLoader
                 cornercutter.LoadCurrentConfig();
                 if (cornercutter.CornercutterIsEnabled())
                 {
-                    cornercutter.LogInfo("Config loaded, let's rumble!");
+                    if (cornercutter.HasCurrentMod)
+                    {
+                        cornercutter.LogInfo("Config loaded, let's rumble!");
+                    }
+                    else
+                    {
+                        cornercutter.LogInfo("Config loaded, no current mod ):");
+                    }  
                 }
                 else
                 {

@@ -18,6 +18,7 @@ namespace cornercutter.ModLoader
         public static CutterConfig Instance { get; } = new CutterConfig();
 
         private string ModFileLocation;
+        public bool HasCurrentMod { get; private set; }
         public GlobalOptions GlobalOptions { get; private set; }
 
         public SpawnCollectionType SpawnCollectionType { get; private set; }
@@ -61,6 +62,7 @@ namespace cornercutter.ModLoader
             string settingsLocation = Path.GetFullPath(Path.Combine(cornercutterFolder, "settings.json"));
             GlobalInfoDTO settings = Reader.ReadGlobalInfo(settingsLocation);
             GlobalOptions = settings.GlobalOptions;
+            HasCurrentMod = settings.CurrentModFilename != null;
             ModFileLocation = Path.GetFullPath(Path.Combine(cornercutterFolder, @"mods\" + settings.CurrentModFilename));
             UpdateIndicatorVisibility();
             UpdateDebugVisibility();
@@ -70,7 +72,7 @@ namespace cornercutter.ModLoader
         {
             ClearConfig();
             LoadGlobalSettings();
-
+            if (!HasCurrentMod) return;
             ModConfigDTO config = Reader.ReadMod(ModFileLocation);
             SpawnCollectionType = config.GeneralConfig.SpawnCollectionType;
             CurseSpawnType = config.GeneralConfig.CurseSpawnType;
@@ -131,6 +133,7 @@ namespace cornercutter.ModLoader
         {
             ModFileLocation = null;
             GlobalOptions = GlobalOptions.NoneSelected;
+            HasCurrentMod = false;
 
             SpawnCollectionType = SpawnCollectionType.NoneSelected;
             CurseSpawnType = CurseSpawnType.NoneSelected;
@@ -157,6 +160,7 @@ namespace cornercutter.ModLoader
         public void UpdateIndicatorVisibility()
         {
             if (VisualIndicator == null) return;
+            VisualIndicator.text = HasCurrentMod ? "Cutting corners..." : "Not cutting corners!";
             VisualIndicator.enabled = CornercutterIsEnabled();
         }
 
@@ -170,7 +174,10 @@ namespace cornercutter.ModLoader
         public void UpdateDebugVisibility()
         {
             if (DebugMenu == null) return;
-            DebugMenu.gameObject.SetActive(GlobalOptions.HasFlag(GlobalOptions.EnableDebugMenu));
+            DebugMenu.gameObject.SetActive(
+                CornercutterIsEnabled() &&
+                GlobalOptions.HasFlag(GlobalOptions.EnableDebugMenu)
+            );
         }
 
         // Adding as a utility method here, given it is called in most features

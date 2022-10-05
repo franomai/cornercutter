@@ -12,9 +12,10 @@ namespace cornercutter.ModFeature.ModSetting
         // AFAIK, this is only referenced in one spot (dungeon generation for curse rooms)
         static void Postfix(ref float __result)
         {
-            if (!CutterConfig.Instance.CornercutterIsEnabled()) return;
+            CutterConfig cornercutter = CutterConfig.Instance;
+            if (!(cornercutter.CornercutterIsEnabled() && cornercutter.HasCurrentMod)) return;
 
-            CurseSpawnType curseSpawnType = CutterConfig.Instance.CurseSpawnType;
+            CurseSpawnType curseSpawnType = cornercutter.CurseSpawnType;
             switch (curseSpawnType)
             {
                 case CurseSpawnType.Always:

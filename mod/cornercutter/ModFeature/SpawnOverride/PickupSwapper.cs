@@ -17,6 +17,9 @@ namespace cornercutter.ModFeature.SpawnOverride
 
         static bool Prefix(ref EntitySpawner __instance, ref GameObject __result)
         {
+            CutterConfig cornercutter = CutterConfig.Instance;
+            if (!(cornercutter.CornercutterIsEnabled() && cornercutter.HasCurrentMod)) return true;
+
             // Fetch this spawners parent, and their parent also
             GameObject parent = __instance.transform.parent?.gameObject;
             GameObject grandparent = parent?.transform.parent?.gameObject;
@@ -25,7 +28,6 @@ namespace cornercutter.ModFeature.SpawnOverride
             // We also don't touch anything if we are not in a dungeon, so skip those evocations as well
             if (parent == null || Singleton<DungeonManager>.instance == null) return true;
 
-            CutterConfig cornercutter = CutterConfig.Instance;
             ConfigOptions options = CutterConfig.Instance.ConfigOptions;
 
             cornercutter.LogDebug("!--- Spawner values are:");

@@ -12,9 +12,11 @@ namespace cornercutter.ModFeature.ModSetting
     {
         static void Prefix(ref GameObject __state)
         {
-            ConfigOptions options = CutterConfig.Instance.ConfigOptions;
-            if (CutterConfig.Instance.CornercutterIsEnabled()
-                && options.HasFlag(ConfigOptions.DisableGiftOfIntern))
+            CutterConfig cornercutter = CutterConfig.Instance;
+            ConfigOptions options = cornercutter.ConfigOptions;
+            bool modEnabled = cornercutter.CornercutterIsEnabled() && cornercutter.HasCurrentMod;
+
+            if (modEnabled && options.HasFlag(ConfigOptions.DisableGiftOfIntern))
             {
                 __state = GlobalSettings.defaults.fallbackSkill;
                 GlobalSettings.defaults.fallbackSkill = null;
@@ -35,9 +37,11 @@ namespace cornercutter.ModFeature.ModSetting
     {
         static bool Prefix(ref SwompShoplift __instance)
         {
-            ConfigOptions options = CutterConfig.Instance.ConfigOptions;
-            if (CutterConfig.Instance.CornercutterIsEnabled()
-                && options.HasFlag(ConfigOptions.DisableGiftOfIntern))
+            CutterConfig cornercutter = CutterConfig.Instance;
+            ConfigOptions options = cornercutter.ConfigOptions;
+            bool modEnabled = cornercutter.CornercutterIsEnabled() && cornercutter.HasCurrentMod;
+
+            if (modEnabled && options.HasFlag(ConfigOptions.DisableGiftOfIntern))
             {
                 // shopEntities referenced in the OG method is private so we have to recreate the same collection here
                 ShopEntity[] entities = (from e in DungeonManager.currentRoom.GetComponentsInChildren<ShopEntity>()
