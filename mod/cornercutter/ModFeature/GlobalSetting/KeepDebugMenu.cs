@@ -1,6 +1,7 @@
 ﻿using cornercutter.Enum;
 using cornercutter.ModLoader;
 using HarmonyLib;
+using UnityEngine;
 
 namespace cornercutter.ModFeature.GlobalSetting
 {
@@ -8,15 +9,12 @@ namespace cornercutter.ModFeature.GlobalSetting
     class KeepDebugMenu
     {
         // TODO: Verify this will get recreated properly when this feature is toggled
-        static bool Prefix()
+        static bool Prefix(DestroyIfNotDebug __instance)
         {
-            bool cornercutterEnabled = CutterConfig.Instance.CornercutterIsEnabled();
-
-            GlobalOptions globals = CutterConfig.Instance.GlobalOptions;
-            bool debugMenuEnabled = globals.HasFlag(GlobalOptions.EnableDebugMenu);
-
+            CutterConfig.Instance.LogDebug("Setting debug menu...");
+            CutterConfig.Instance.SetDebugMenu(__instance.GetComponentInChildren<PauseTabButton>());
             // false -> skip the original method which removes the debug menu
-            return !(cornercutterEnabled && debugMenuEnabled);
+            return false;
         }
     }
 }

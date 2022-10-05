@@ -1,34 +1,79 @@
-use std::fs::{File};
+use std::collections::HashMap;
+use std::fs::{File, create_dir_all, read_dir, remove_file, copy};
 use std::io::{self, ErrorKind};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::sync::Mutex;
+use std::env::{current_dir, self};
 use serde::{Serialize, Deserialize};
 
-const CORNER_CUTTER_FILE: &str = "cornercutter.json";
+use crate::types::enums::GlobalOptions;
+use  crate::types::structs::ModConfig;
 
-pub struct CornerCutterCache {
-    pub config: Mutex<CornerCutterConfig>,
+const CC_FILE: &str = "cornercutter.json";
+const CC_MODS_DIR: &str = "cornercutter/mods";
+const CC_GLOBAL_SETTINGS_DIR: &str = "cornercutter/settings.json";
+
+pub struct CornercutterCache {
+    pub settings: Mutex<CornercutterGlobalSettings>,
+    pub config: Mutex<CornercutterConfig>,
+    pub mods: Mutex<HashMap<String, ModConfig>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all="camelCase")]
-pub struct CornerCutterConfig {
+pub struct CornercutterConfig {
     pub going_under_dir: Option<String>,
     pub set_directory: bool,
 }
 
-impl CornerCutterConfig {
+impl CornercutterConfig {
     pub fn new() -> Self {
-        CornerCutterConfig { 
+        CornercutterConfig { 
             going_under_dir: try_find_going_under_dir(),
             set_directory: false,
         }
     }
 }
 
-pub fn file_exists(dir: &str) -> bool {
-    let path = Path::new(dir);
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all="camelCase")]
+pub struct CornercutterGlobalSettings {
+    pub current_mod: Option<String>,
+    pub global_options: u32
+}
+
+impl CornercutterGlobalSettings {
+    pub fn new() -> Self {
+        let global_defaults = GlobalOptions::DISABLE_HIGHSCORES | GlobalOptions::DISABLE_STEAM_ACHIEVEMENTS;
+
+        CornercutterGlobalSettings { 
+            current_mod: None,
+            global_options: global_defaults.bits(),
+        }
+    }
+}
+
+pub fn file_exists<P>(path: P) -> bool where P: AsRef<Path> {
     return File::open(path).is_ok();
+}
+
+pub fn has_extension(path: &Path, extension: &str) -> bool {
+    return path.extension().map_or(false, |e| e.eq_ignore_ascii_case(extension));
+}
+
+pub fn get_relative_dir(config: &CornercutterConfig, dir: &str) -> PathBuf {
+    let path_buf = Path::new(config.going_under_dir.as_ref().unwrap()).join(dir);
+    return path_buf;
+}
+
+pub fn as_io_error(err: serde_json::Error) -> io::Error {
+    return io::Error::new(ErrorKind::Other, err);
+}
+
+pub fn get_mod_filename(id: String) -> String {
+    let mut str = id.clone();
+    str.push_str(".json");
+    return str;
 }
 
 pub fn try_find_going_under_dir() -> Option<String> {
@@ -41,44 +86,202 @@ pub fn try_find_going_under_dir() -> Option<String> {
 }
 
 pub fn is_valid_going_under_dir(dir: &str) -> bool {
-    return file_exists(&[dir, "\\Going Under.exe"].join(""));
+    return file_exists(Path::new(dir).join("Going Under.exe").as_path());
 }
 
-pub fn load_cornercutter_config() -> CornerCutterConfig {
-    return deserialize_cornercutter_config().unwrap_or_else(|_err| CornerCutterConfig::new());
+pub fn load_cornercutter_cache() -> CornercutterCache {
+    let config = load_cornercutter_config();
+    let settings = load_global_settings(&config);
+    let mods = load_mods(&config);
+
+    return CornercutterCache {
+        config: Mutex::new(config),
+        settings: Mutex::new(settings),
+        mods: Mutex::new(mods),
+    }
 }
 
-pub fn serialize_cornercutter_config(config: &CornerCutterConfig) {
-    let config_file_path = Path::new(CORNER_CUTTER_FILE);
-    // Open a file in write-only mode
-    let file_result = File::create(&config_file_path);
+pub fn load_cornercutter_config() -> CornercutterConfig {
+    return deserialize_cornercutter_config().unwrap_or_else(|_err| CornercutterConfig::new());
+}
+
+pub fn load_global_settings(config: &CornercutterConfig) -> CornercutterGlobalSettings {
+    if config.going_under_dir.is_some() {
+        return deserialize_settings_config(config).unwrap_or_else(|_err| CornercutterGlobalSettings::new());
+    } else {
+        return CornercutterGlobalSettings::new();
+    }
+}
+
+pub fn load_mods(config: &CornercutterConfig) -> HashMap<String, ModConfig> {
+    let mut mods: HashMap<String, ModConfig> = HashMap::new();
+    if config.going_under_dir.is_some() {
+        let files = read_dir(get_relative_dir(config, CC_MODS_DIR));
+        if files.is_ok() {
+            for file in files.unwrap() {
+                if file.is_err() {
+                    continue;
+                }
+                let path = file.unwrap().path();
+                if !has_extension(path.as_path(), "json") {
+                    continue;
+                }
+
+                let deserialised: Result<ModConfig, serde_json::Error> = serde_json::from_reader(File::open(path).unwrap());
+                if deserialised.is_ok() {
+                    let mod_config = deserialised.unwrap();
+                    mods.insert(mod_config.id.clone(), mod_config);
+                }
+            }
+        }
+    }
+    return mods;
+}
+
+pub fn serialize_mod(config: &CornercutterConfig, mod_config: &ModConfig) -> Result<(), String> {
+    let filename = get_mod_filename(mod_config.id.clone());
+    let path = get_relative_dir(config, CC_MODS_DIR).join(filename.as_str());
+    let file_result = File::create(path);
     if file_result.is_err() {
-        println!("couldn't create {}: {}", CORNER_CUTTER_FILE, file_result.unwrap_err());
+        return Err("There was an error creating the mod file".to_string());
+    }
+
+    let res = serde_json::to_writer(file_result.unwrap(), mod_config);
+    if res.is_err() {
+        return Err("There seems to be something wrong with the mod JSON".to_string());
+    }
+    Ok(())
+}
+
+pub fn delete_mod_file(config: &CornercutterConfig, mod_config: &ModConfig) -> io::Result<()> {
+    let filename = get_mod_filename(mod_config.id.clone());
+    let path = get_relative_dir(config, CC_MODS_DIR).join(filename.as_str());
+    return remove_file(path);
+}
+
+pub fn serialize_cornercutter_config(config: &CornercutterConfig) {
+    let appdata = env::var("APPDATA").unwrap();
+    let appdata_path = Path::new(appdata.as_str()).join("cornercutter");
+    if !file_exists(&appdata_path) {
+        let res = create_dir_all(&appdata_path);
+        if !res.is_ok() {
+            println!("Couldn't create cornercutter.json folder in AppData");
+        }
+    }
+
+    let config_file_path = appdata_path.join(CC_FILE);
+    // Open a file in write-only mode
+    let file_result = File::create(config_file_path);
+    if file_result.is_err() {
+        println!("Couldn't create {}: {}", CC_FILE, file_result.unwrap_err());
         return;
     }
 
     let res = serde_json::to_writer(file_result.unwrap(), config);
     if res.is_err() {
-        println!("Error writing  cornercutter config: {}", res.unwrap_err());
+        println!("Error writing cornercutter config: {}", res.unwrap_err());
     }
 }
 
-pub fn deserialize_cornercutter_config() -> Result<CornerCutterConfig, io::Error> {
-    let config_file_path = Path::new(CORNER_CUTTER_FILE);
-    let file = File::open(&config_file_path);
+pub fn deserialize_cornercutter_config() -> Result<CornercutterConfig, io::Error> {
+    let appdata = env::var("APPDATA").unwrap();
+    let appdata_path = Path::new(appdata.as_str()).join("cornercutter").join(CC_FILE);
+
+    
+    println!("{}", appdata_path.to_str().unwrap());
+
+    let file = File::open(&appdata_path);
 
     if file.is_ok() {
-        let deserialized: Result<CornerCutterConfig, serde_json::Error> = serde_json::from_reader(file.unwrap());
+        let deserialized: Result<CornercutterConfig, serde_json::Error> = serde_json::from_reader(file.unwrap());
         if deserialized.is_ok() {
             let config = deserialized.unwrap();
             return Ok(config);
         }
         else {
-            return Err(io::Error::new(ErrorKind::Other, deserialized.unwrap_err().to_string()))
+            return Err(as_io_error(deserialized.unwrap_err()))
         }
     } else {
-        let config = CornerCutterConfig::new();
+        let config = CornercutterConfig::new();
         serialize_cornercutter_config(&config);
         return Ok(config);
     }
+}
+
+pub fn serialize_settings_config(config: &CornercutterConfig, settings: &CornercutterGlobalSettings) {
+    let config_file_path = get_relative_dir(config, CC_GLOBAL_SETTINGS_DIR);
+    // Open a file in write-only mode
+    let file_result = File::create(config_file_path);
+    if file_result.is_err() {
+        println!("couldn't create {}: {}", CC_GLOBAL_SETTINGS_DIR, file_result.unwrap_err());
+        return;
+    }
+
+    let res = serde_json::to_writer(file_result.unwrap(), settings);
+    if res.is_err() {
+        println!("Error writing current mod config: {}", res.unwrap_err());
+    }
+}
+
+pub fn deserialize_settings_config(config: &CornercutterConfig) -> Result<CornercutterGlobalSettings, io::Error> {
+    let config_file_path = get_relative_dir(config, CC_GLOBAL_SETTINGS_DIR);
+    let file = File::open(&config_file_path);
+
+    if file.is_ok() {
+        let deserialized: Result<CornercutterGlobalSettings, serde_json::Error> = serde_json::from_reader(file.unwrap());
+        if deserialized.is_ok() {
+            let settings = deserialized.unwrap();
+            return Ok(settings);
+        }
+        else {
+            return Err(as_io_error(deserialized.unwrap_err()))
+        }
+    } else {
+        let settings = CornercutterGlobalSettings::new();
+        serialize_settings_config(&config, &settings);
+        return Ok(settings);
+    }
+}
+
+
+// https://stackoverflow.com/a/65192210, no out of the box solution
+pub fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<()> {
+    create_dir_all(&dst)?;
+    for entry in read_dir(src)? {
+        let entry = entry?;
+        let ty = entry.file_type()?;
+        if ty.is_dir() {
+            copy_dir_all(entry.path(), dst.as_ref().join(entry.file_name()))?;
+        } else {
+            copy(entry.path(), dst.as_ref().join(entry.file_name()))?;
+        }
+    }
+    Ok(())
+}
+
+pub fn create_cornercutter_folders(config: &CornercutterConfig) {
+    if config.going_under_dir.is_none() {
+        return;
+    }
+
+    match create_dir_all(get_relative_dir(config, CC_MODS_DIR)) {
+        Err(why) => {
+            println!("Error creating mods directory {}: {}", CC_MODS_DIR, why);
+            return;
+        },
+        Ok(_) => {},
+    }
+
+    let mod_dir = current_dir().unwrap().join("built-mod");
+    println!("Installing mod from {}", mod_dir.display());
+    let res = copy_dir_all(mod_dir, Path::new(config.going_under_dir.as_ref().unwrap()));
+    if res.is_err() {
+        println!("Error installing mod: {}", res.unwrap_err());
+    }
+
+    let current_mod = CornercutterGlobalSettings {
+        current_mod: None,
+        global_options: 0
+    };
+    serialize_settings_config(config, &current_mod);
 }

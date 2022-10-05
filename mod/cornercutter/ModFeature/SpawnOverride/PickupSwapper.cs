@@ -35,7 +35,20 @@ namespace cornercutter.ModFeature.SpawnOverride
             cornercutter.LogDebug("!---");
 
             SpawnCollection collectionToCheck = null;
-            int currentFloor = Singleton<DungeonManager>.instance.currentFloor + 1;
+            int currentFloor = Singleton<DungeonManager>.instance.currentFloor;
+
+            // If the run is an imposter run, use a repeating 1 -> 2 -> boss structure;
+            if (Singleton<DungeonManager>.instance.isBigRun)
+            {
+                currentFloor %= 3;
+                if (currentFloor == 2)
+                {
+                    currentFloor = 3;
+                }
+            }
+            currentFloor += 1;
+
+            cornercutter.LogDebug("Getting config for floor " + currentFloor);
             FloorConfig floorConfig = CutterConfig.Instance.GetFloorConfig(currentFloor);
 
             if (__instance.name == "ItemSpawnSpot")
@@ -46,11 +59,35 @@ namespace cornercutter.ModFeature.SpawnOverride
                     LogReplacedSpawn("treasure room!");
                     collectionToCheck = floorConfig.FreeSkills;
                 }
-                else if (parent.name.StartsWith("SkillSpawner")
-                    && grandparent != null && grandparent.name.StartsWith("Shop_Haunt"))
+                else if (parent.name.StartsWith("SkillSpawner") && grandparent != null)
                 {
-                    LogReplacedSpawn("curse room!");
-                    collectionToCheck = floorConfig.CurseSkills;
+                    if (grandparent != null)
+                    {
+                        if (grandparent.name.StartsWith("Shop_Haunt"))
+                        {
+                            LogReplacedSpawn("curse room!");
+                            collectionToCheck = floorConfig.CurseSkills;
+                        }
+                        else if (grandparent.name.StartsWith("ChaosRoomSkill"))
+                        {
+                            LogReplacedSpawn("coworking space skill!");
+                            collectionToCheck = floorConfig.FreeSkills;
+                        }
+                        // These are the Cubicle boss shops before Avie
+                        else if (grandparent.name.StartsWith("GameObject") ||
+                            grandparent.name.StartsWith("CubicleRoomLILLI") ||
+                            grandparent.name.StartsWith("CubicleRoomZANS"))
+                        {
+                            LogReplacedSpawn("cubicle shop!");
+                            collectionToCheck = floorConfig.ShopSkills;
+                        }
+                    }
+                    else
+                    {
+                        // No grandparent - for example, the thrown items in the Avie boss fight. It's F R E E
+                        LogReplacedSpawn("free skill!");
+                        collectionToCheck = floorConfig.FreeSkills;
+                    }
                 }
             }
             // Check to see if this is the curse room bonus skill

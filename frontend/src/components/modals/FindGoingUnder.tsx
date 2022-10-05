@@ -35,8 +35,7 @@ const FindGoingUnder = ({ config }: { config: CornerCutterConfig }) => {
 
     const handleSaveGoingUnderDir = useCallback(() => {
         let strippedDir = dir.replace(/\\Going Under.exe$/, '');
-        invoke('set_going_under_dir', { dir: strippedDir }).then((res) => {
-            const isValid = res as boolean;
+        invoke<boolean>('set_going_under_dir', { dir: strippedDir }).then((isValid) => {
             setIsValid(isValid);
             if (isValid) {
                 onClose();

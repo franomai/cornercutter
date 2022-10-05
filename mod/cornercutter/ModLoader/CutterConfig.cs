@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using TMPro;
+using UnityEngine;
 
 namespace cornercutter.ModLoader
 {
@@ -21,8 +22,8 @@ namespace cornercutter.ModLoader
 
         public SpawnCollectionType SpawnCollectionType { get; private set; }
         public CurseSpawnType CurseSpawnType { get; private set; }
-        public PedestalSpawnType PedestalSpawnType { get; private set; } = PedestalSpawnType.AlwaysFirstFloor;
-        public MultiSpawnerType MultiSpawnerType { get; private set; } = MultiSpawnerType.AlwaysSkillIfAble;
+        public PedestalSpawnType PedestalSpawnType { get; private set; }
+        public MultiSpawnerType MultiSpawnerType { get; private set; }
 
         public ConfigOptions ConfigOptions { get; private set; }
         public WeightedSkill[] StartingSkills { get; private set; }
@@ -30,6 +31,7 @@ namespace cornercutter.ModLoader
 
         private ManualLogSource Logger = null;
         private TextMeshProUGUI VisualIndicator = null;
+        private PauseTabButton DebugMenu = null;
         private ModReader Reader = new ModReader();
 
         private CutterConfig()
@@ -61,6 +63,7 @@ namespace cornercutter.ModLoader
             GlobalOptions = settings.GlobalOptions;
             ModFileLocation = Path.GetFullPath(Path.Combine(cornercutterFolder, @"mods\" + settings.CurrentModFilename));
             UpdateIndicatorVisibility();
+            UpdateDebugVisibility();
         }
 
         public void LoadCurrentConfig()
@@ -71,6 +74,8 @@ namespace cornercutter.ModLoader
             ModConfigDTO config = Reader.ReadMod(ModFileLocation);
             SpawnCollectionType = config.GeneralConfig.SpawnCollectionType;
             CurseSpawnType = config.GeneralConfig.CurseSpawnType;
+            PedestalSpawnType = config.GeneralConfig.PedestalSpawnType;
+            MultiSpawnerType = config.GeneralConfig.MultiSpawnerType;
             ConfigOptions = config.GeneralConfig.ConfigOptions;
             StartingSkills = FetchSkills(config.GeneralConfig.StartingSkills);
 
@@ -140,6 +145,7 @@ namespace cornercutter.ModLoader
             ClearConfig();
             GlobalOptions = GlobalOptions.DisableCornercutter;
             UpdateIndicatorVisibility();
+            UpdateDebugVisibility();
         }
 
         public void SetVisualIndicator(TextMeshProUGUI indicator)
@@ -152,6 +158,19 @@ namespace cornercutter.ModLoader
         {
             if (VisualIndicator == null) return;
             VisualIndicator.enabled = CornercutterIsEnabled();
+        }
+
+        public void SetDebugMenu(PauseTabButton debugMenu)
+        {
+            if (debugMenu == null && DebugMenu != null) return;
+            DebugMenu = debugMenu;
+            UpdateDebugVisibility();
+        }
+
+        public void UpdateDebugVisibility()
+        {
+            if (DebugMenu == null) return;
+            DebugMenu.gameObject.SetActive(GlobalOptions.HasFlag(GlobalOptions.EnableDebugMenu));
         }
 
         // Adding as a utility method here, given it is called in most features

@@ -10,8 +10,8 @@ namespace cornercutter.Enum
     public enum MultiSpawnerType
     {
         NoneSelected,
+        Randomly,
         AlwaysSkillIfAble,
         Never,
-        Randomly
     }
 }

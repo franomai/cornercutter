@@ -1,7 +1,7 @@
 import { WeightedSkill } from './Skill';
 
 export default interface ModConfig {
-    id: number;
+    id: string;
     info: ModInfo;
     general: GeneralConfig;
     floorSkills: FloorSkills;
@@ -15,7 +15,9 @@ export interface ModInfo {
 export interface GeneralConfig {
     spawns: SpawnType;
     curseSpawns: CurseSpawnType;
-    options: Options;
+    pedestalSpawns: PedestalSpawnType;
+    multiSpawners: MultiSpawnerType;
+    options: ModOptions;
     startingSkills: WeightedSkill[];
 }
 
@@ -30,6 +32,20 @@ export enum SpawnType {
 export enum CurseSpawnType {
     Randomly = 'Randomly',
     Always = 'Always',
+    Never = 'Never',
+    AlwaysIfAble = 'AlwaysIfAble',
+}
+
+export enum PedestalSpawnType {
+    Randomly = 'Randomly',
+    AlwaysFirstFloor = 'AlwaysFirstFloor',
+    AlwaysLastFloor = 'AlwaysLastFloor',
+    Never = 'Never',
+}
+
+export enum MultiSpawnerType {
+    Randomly = 'Randomly',
+    AlwaysSkillIfAble = 'AlwaysSkillIfAble',
     Never = 'Never',
 }
 
@@ -49,20 +65,34 @@ export enum Room {
     Finale = 'finale',
 }
 
-export enum Options {
+export type Options = number & (ModOptions | GlobalOptions);
+
+export enum ModOptions {
     NoneSelected = 0,
     ConfigPerFloor = 1 << 0,
     ConfigPerRoom = 1 << 1,
-    RemoveHealingItems = 1 << 2,
+    SelectRandomItemOnEmpty = 1 << 2,
     DisableMentorAbilities = 1 << 3,
     DisableGiftOfIntern = 1 << 4,
     DisablePinned = 1 << 5,
     AwardSkillsPerFloor = 1 << 6,
 }
 
+export enum GlobalOptions {
+    NoneSelected = 0,
+    DisableCornercutter = 1 << 0,
+    DisableHighscores = 1 << 1,
+    DisableSteamAchievements = 1 << 2,
+    RespectUnlocks = 1 << 3,
+    EnableDebugMenu = 1 << 4,
+    EnableExtraLogging = 1 << 5
+}
+
 export const DEFAULT_CONFIG: GeneralConfig = {
-    spawns: SpawnType.Looped,
+    spawns: SpawnType.Consecutive,
     curseSpawns: CurseSpawnType.Randomly,
-    options: Options.RemoveHealingItems | Options.DisablePinned,
+    pedestalSpawns: PedestalSpawnType.Randomly,
+    multiSpawners: MultiSpawnerType.Randomly,
+    options: ModOptions.SelectRandomItemOnEmpty,
     startingSkills: [],
 };

@@ -10,6 +10,10 @@ namespace cornercutter.DTO
         public SpawnCollectionType SpawnCollectionType { get; set; }
         [JsonProperty("curseSpawns")]
         public CurseSpawnType CurseSpawnType { get; set; }
+        [JsonProperty("pedestalSpawns")]
+        public PedestalSpawnType PedestalSpawnType { get; set; }
+        [JsonProperty("multiSpawners")]
+        public MultiSpawnerType MultiSpawnerType { get; set; }
         [JsonProperty("options")]
         public ConfigOptions ConfigOptions { get; set; }
         [JsonProperty("startingSkills")]

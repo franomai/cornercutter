@@ -1,14 +1,15 @@
 import { Checkbox, Stack, Text } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
-import { setEnabledMod, setSelectedMod } from '../../redux/slices/mod';
+import { updateEnabledMod, setSelectedMod } from '../../redux/slices/mod';
+import { AppDispatch } from '../../redux/store';
 
 import ModConfig from '../../types/Configuration';
 
 const ModOverview = ({ mod, isEnabled, isSelected }: { mod: ModConfig; isEnabled: boolean; isSelected: boolean }) => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
     const handleEnable = () => {
-        dispatch(setEnabledMod(isEnabled ? -1 : mod.id));
+        dispatch(updateEnabledMod(isEnabled ? null : mod.id));
     };
 
     const handleSelect = () => {

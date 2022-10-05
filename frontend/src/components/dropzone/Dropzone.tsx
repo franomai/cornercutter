@@ -1,7 +1,8 @@
 import { Box, Flex, FlexProps, SimpleGrid, SimpleGridProps, Stack, Text } from '@chakra-ui/react';
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useSelector } from 'react-redux';
+import useDebounce from '../../hooks/UseDebounce';
 import { getSelectedMod } from '../../redux/slices/mod';
 import { getAllSkills } from '../../redux/slices/skills';
 import { SpawnType } from '../../types/Configuration';
@@ -13,41 +14,63 @@ import SkillCard from '../skills/SkillCard';
 export interface DropzoneProps {
     skills: WeightedSkill[];
     singleRow?: boolean;
-    handleDeleteSkill(skillIndex: number): void;
-    handleDropSkill(weightedSkill: WeightedSkill): void;
-    handleUpdateSkillWeight(skillIndex: number, newWeight: number): void;
+    handleSetSkills(skills: WeightedSkill[]): void;
 }
 
-const Dropzone = ({
-    skills,
-    singleRow,
-    handleDropSkill,
-    handleDeleteSkill,
-    handleUpdateSkillWeight,
-}: DropzoneProps) => {
+const Dropzone = ({ skills, singleRow, handleSetSkills }: DropzoneProps) => {
     const selectedMod = useSelector(getSelectedMod);
-
-    const scrollRef = useRef<HTMLDivElement>(null);
     const allSkills = useSelector(getAllSkills);
+    const scrollRef = useRef<HTMLDivElement>(null);
+
+    const [prevSkillCount, setPrevSkillCount] = useState(0);
+    const [updatedSkills, setUpdatedSkills] = useState(skills);
+    const debouncedSkills = useDebounce(updatedSkills, 600);
+
     const [{ canDrop }, dropRef] = useDrop<{ id: number }, unknown, { canDrop: boolean }>(() => ({
         accept: ItemType.SKILL,
-        drop: ({ id }) => handleDropSkill({ id, weight: 10 }),
+        drop: ({ id }) => {
+            setUpdatedSkills((updatedSkills) => [...updatedSkills, { id, weight: 10 }]);
+        },
         collect: (monitor) => ({
             canDrop: monitor.canDrop(),
         }),
     }));
 
-    const [prevSkillCount, setPrevSkillCount] = useState(0);
+    useEffect(() => {
+        setUpdatedSkills(skills);
+    }, [skills]);
 
     useEffect(() => {
-        if (singleRow && skills.length > prevSkillCount) {
+        if (singleRow && updatedSkills.length > prevSkillCount) {
             scrollRef.current?.scrollTo({
                 left: scrollRef.current.scrollWidth,
                 behavior: 'smooth',
             });
         }
-        setPrevSkillCount(skills.length);
-    }, [skills.length, singleRow, prevSkillCount]);
+        setPrevSkillCount(updatedSkills.length);
+    }, [updatedSkills.length, singleRow, prevSkillCount]);
+
+    useEffect(() => {
+        if (debouncedSkills !== skills) {
+            handleSetSkills(debouncedSkills);
+        }
+    }, [debouncedSkills]);
+
+    const handleDeleteSkill = useCallback(
+        (skillIndex: number) => {
+            setUpdatedSkills(updatedSkills.filter((_, index) => index !== skillIndex));
+        },
+        [setUpdatedSkills, updatedSkills],
+    );
+
+    const handleUpdateSkillWeight = useCallback(
+        (skillIndex: number, newWeight: number) => {
+            setUpdatedSkills(
+                updatedSkills.map((skill, index) => (index === skillIndex ? { ...skill, weight: newWeight } : skill)),
+            );
+        },
+        [setUpdatedSkills, updatedSkills],
+    );
 
     function renderInCenter(children: ReactNode): ReactNode {
         return (
@@ -57,8 +80,10 @@ const Dropzone = ({
         );
     }
 
-    function getGridProps(): FlexProps {
-        return singleRow ? { overflowY: 'hidden', overflowX: 'auto' } : { flexWrap: 'wrap', height: 'full' };
+    function getFlexProps(): FlexProps {
+        return singleRow
+            ? { overflowY: 'hidden', overflowX: 'auto' }
+            : { flexWrap: 'wrap', height: 'full', overflowY: 'auto' };
     }
 
     return (
@@ -82,9 +107,9 @@ const Dropzone = ({
                 maxW="full"
                 direction="row"
                 alignContent="flex-start"
-                {...getGridProps()}
+                {...getFlexProps()}
             >
-                {skills.map((weightedSkill, skillIndex) => (
+                {updatedSkills.map((weightedSkill, skillIndex) => (
                     <SkillCard
                         key={skillIndex}
                         isWeighted={selectedMod?.general.spawns === SpawnType.Weighted}

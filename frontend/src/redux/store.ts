@@ -1,21 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
-import modSlice, { State as ModState } from './slices/mod';
-import skillsSlice, { State as SkillsState } from './slices/skills';
-import cornercutterSlice, { State as CornerCutterState } from './slices/cornercutter';
-
-export interface StoreState {
-    mod: ModState;
-    skills: SkillsState;
-    cornercutter: CornerCutterState;
-}
+import modSlice from './slices/mod';
+import skillsSlice from './slices/skills';
+import cornercutterSlice from './slices/cornercutter';
+import savingSlice from './slices/saving/saving.slice';
 
 const store = configureStore({
     reducer: {
         mod: modSlice,
         skills: skillsSlice,
         cornercutter: cornercutterSlice,
+        saving: savingSlice,
     },
 });
 
 export default store;
 export type AppDispatch = typeof store.dispatch;
+export type StoreState = ReturnType<typeof store.getState>;

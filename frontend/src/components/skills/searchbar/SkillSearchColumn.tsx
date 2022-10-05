@@ -1,11 +1,11 @@
-import { Box, Stack, Text } from '@chakra-ui/react';
+import { Flex, Stack, Text } from '@chakra-ui/react';
 import { ReactNode, useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getAllSkills } from '../../redux/slices/skills';
-import DraggableSkillCard from '../skills/DraggableSkillCard';
+import { getAllSkills } from '../../../redux/slices/skills';
+import DraggableSkillCard from '../DraggableSkillCard';
 import SearchBar from './SearchBar';
 
-const SearchColumn = () => {
+const SkillSearchColumn = () => {
     const skills = useSelector(getAllSkills);
 
     const allSkills = useCallback(() => {
@@ -35,13 +35,24 @@ const SearchColumn = () => {
     }
 
     return (
-        <Stack minW="240px" maxW="240px" minH="full" background="blackAlpha.200" pt={2} px={4} gap={1} pb={2}>
+        <Flex
+            minW="240px"
+            maxW="240px"
+            minH="full"
+            background="blackAlpha.200"
+            pt={2}
+            px={4}
+            gap={1}
+            pb={2}
+            flexDirection="column"
+            style={{ marginTop: 0 }}
+        >
             <SearchBar handleSearch={filterSkills} />
             <Stack gap={1} overflowY="auto" pr={2} h="full" style={{ scrollbarGutter: 'stable' }}>
                 {renderItems()}
             </Stack>
-        </Stack>
+        </Flex>
     );
 };
 
-export default SearchColumn;
+export default SkillSearchColumn;
