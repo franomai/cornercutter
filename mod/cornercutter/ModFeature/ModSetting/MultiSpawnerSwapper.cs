@@ -11,9 +11,10 @@ namespace cornercutter.ModFeature.ModSetting
     {
         static void Prefix(ref MultiSpawner __instance)
         {
-            if (!CutterConfig.Instance.CornercutterIsEnabled()) return;
+            CutterConfig cornercutter = CutterConfig.Instance;
+            if (!(cornercutter.CornercutterIsEnabled() && cornercutter.HasCurrentMod)) return;
 
-            MultiSpawnerType multiSpawnerType = CutterConfig.Instance.MultiSpawnerType;
+            MultiSpawnerType multiSpawnerType = cornercutter.MultiSpawnerType;
             List<EntitySpawner> spawners = __instance.subSpawners;
             int[] spawnerWeights = __instance.subSpawnerWeights;
 

@@ -17,7 +17,6 @@ namespace cornercutter.ModLoader
             
             text.font = __instance.dungeonName.font;
             text.fontSize = 18f;
-            text.text = "Cutting corners...";
 
             int width = Screen.width;
             int height = Screen.height;
@@ -38,11 +37,12 @@ namespace cornercutter.ModLoader
 
         static void Postfix(ref string __result, string id)
         {
-            if (!CutterConfig.Instance.CornercutterIsEnabled()) return;
+            CutterConfig cornercutter = CutterConfig.Instance;
+            if (!cornercutter.CornercutterIsEnabled()) return;
 
             if (endgameStrings.Contains(id))
             {
-                __result += " Corners were cut.";
+                __result += cornercutter.HasCurrentMod ? " Corners were cut." : " No corners cut!";
             }
         }
     }
