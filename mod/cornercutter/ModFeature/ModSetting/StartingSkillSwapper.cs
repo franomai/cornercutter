@@ -15,7 +15,7 @@ namespace cornercutter.ModFeature.ModSetting
             if (!(cornercutter.CornercutterIsEnabled() && cornercutter.HasCurrentMod)) return;
 
             int currentFloor = __instance.currentFloor + 1;
-            WeightedSkill[] startingSkills = CutterConfig.Instance.StartingSkills;
+            WeightedSkill[] startingSkills = cornercutter.StartingSkills;
             if (startingSkills.Length == 0) return;
 
             ConfigOptions options = cornercutter.ConfigOptions;

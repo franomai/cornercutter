@@ -62,7 +62,7 @@ namespace cornercutter.ModLoader
             string settingsLocation = Path.GetFullPath(Path.Combine(cornercutterFolder, "settings.json"));
             GlobalInfoDTO settings = Reader.ReadGlobalInfo(settingsLocation);
             GlobalOptions = settings.GlobalOptions;
-            HasCurrentMod = (settings.CurrentModFilename != null);
+            HasCurrentMod = settings.CurrentModFilename != null;
             ModFileLocation = Path.GetFullPath(Path.Combine(cornercutterFolder, @"mods\" + settings.CurrentModFilename));
             UpdateIndicatorVisibility();
             UpdateDebugVisibility();
