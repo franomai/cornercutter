@@ -62,7 +62,7 @@ export function asCssVar(colour: Colours): string {
     return `var(--chakra-colors-${colour.replace('.', '-')})`;
 }
 
-export function createVariants(main: string): ColourVariants {
+export function createVariants(main: Colours): ColourVariants {
     return {
         main,
         light: lighten(main),

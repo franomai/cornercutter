@@ -3,6 +3,7 @@ import modSlice from './slices/mod';
 import skillsSlice from './slices/skills';
 import cornercutterSlice from './slices/cornercutter';
 import savingSlice from './slices/saving';
+import themeSlice from './slices/theme';
 
 const store = configureStore({
     reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
         skills: skillsSlice,
         cornercutter: cornercutterSlice,
         saving: savingSlice,
+        theme: themeSlice,
     },
 });
 

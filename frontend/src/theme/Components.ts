@@ -1,5 +1,5 @@
 import { ComponentStyleConfig } from '@chakra-ui/react';
-import { asCssVar, darken, ThemeColours } from './ThemeUtils';
+import { asCssVar, ThemeColours } from './ThemeUtils';
 
 export type ComponentStyleBuilder = (theme: ThemeColours) => ComponentStyleConfig;
 
