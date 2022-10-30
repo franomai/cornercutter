@@ -12,11 +12,11 @@ const ContentContainer = ({ children, ...stackProps }: { children?: ReactNode } 
             maxH="full"
             minH="full"
             h="full"
-            px="72px"
+            px={{ base: '24px', '2xl': '72px' }}
             mb={2}
             pb="56px"
             mt={8}
-            pt={8}
+            pt={{ base: 0, '2xl': 8 }}
             spacing={8}
             style={{ scrollbarGutter: 'stable' }}
             {...stackProps}

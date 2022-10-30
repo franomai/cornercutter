@@ -20,13 +20,13 @@ const LabelledRadioGroup = ({
     return (
         <Stack spacing={3}>
             <Stack direction="row" spacing={3} alignItems="center">
-                <Text fontSize="xl" fontWeight="semibold">
+                <Text fontSize={{ base: 'lg', '2xl': 'xl' }} fontWeight="semibold">
                     {title}
                 </Text>
                 <HelpIcon tooltip={tooltip} />
             </Stack>
             <RadioGroup onChange={onChange} value={value}>
-                <Stack direction={direction} spacing={6}>
+                <Stack direction={direction} spacing={{ base: 4, '2xl': 6 }}>
                     {children}
                 </Stack>
             </RadioGroup>

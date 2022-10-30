@@ -46,7 +46,7 @@ const LabelledDropzone = ({
             );
         return (
             <Flex direction="row" gap={2} alignItems="center">
-                {!tooltip || <HelpIcon tooltip={tooltip} size="sm" />}
+                {!tooltip || <HelpIcon tooltip={tooltip} />}
                 <Box fontSize="2xl" fontWeight="bold">
                     {label}
                 </Box>

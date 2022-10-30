@@ -53,7 +53,7 @@ const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
                 }}
             >
                 <Tooltip hasArrow label={tooltip} aria-label="More info" placement="top" openDelay={700}>
-                    {label}
+                    <Text fontSize={{ base: 'sm', '2xl': 'md' }}>{label}</Text>
                 </Tooltip>
             </Checkbox>
         );
@@ -133,6 +133,34 @@ const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
                     </TooltipRadio>
                 </LabelledRadioGroup>
                 <LabelledRadioGroup
+                    title="Multispawner Types"
+                    tooltip="Selects what spawners that have some randomness actually can spawn - for example, in the curse room."
+                    value={selectedMod.general.multiSpawners}
+                    onChange={(newValue) => {
+                        dispatch(setMultiSpawners(newValue as MultiSpawnerType));
+                        dispatch(saveSelectedMod());
+                    }}
+                >
+                    <TooltipRadio
+                        tooltip="Don't change anything, use the game's original distribution."
+                        value="Randomly"
+                    >
+                        Randomly
+                    </TooltipRadio>
+                    <TooltipRadio
+                        tooltip="Always spawn a skill if it is an option - for example, Tappi kiosks or pedestals."
+                        value="AlwaysSkillIfAble"
+                    >
+                        Only skills
+                    </TooltipRadio>
+                    <TooltipRadio
+                        tooltip="Never spawn a skill if it is an option and there are other options available."
+                        value="Never"
+                    >
+                        Never
+                    </TooltipRadio>
+                </LabelledRadioGroup>
+                <LabelledRadioGroup
                     title="Pedestal Spawns"
                     tooltip="Selects when a pedestal room should spawn."
                     value={selectedMod.general.pedestalSpawns}
@@ -161,34 +189,6 @@ const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
                     </TooltipRadio>
                     <TooltipRadio
                         tooltip="Never create a pedestal room, even if it should be guaranteed."
-                        value="Never"
-                    >
-                        Never
-                    </TooltipRadio>
-                </LabelledRadioGroup>
-                <LabelledRadioGroup
-                    title="Multispawner Types"
-                    tooltip="Selects what spawners that have some randomness actually can spawn - for example, in the curse room."
-                    value={selectedMod.general.multiSpawners}
-                    onChange={(newValue) => {
-                        dispatch(setMultiSpawners(newValue as MultiSpawnerType));
-                        dispatch(saveSelectedMod());
-                    }}
-                >
-                    <TooltipRadio
-                        tooltip="Don't change anything, use the game's original distribution."
-                        value="Randomly"
-                    >
-                        Randomly
-                    </TooltipRadio>
-                    <TooltipRadio
-                        tooltip="Always spawn a skill if it is an option - for example, Tappi kiosks or pedestals."
-                        value="AlwaysSkillIfAble"
-                    >
-                        Only skills
-                    </TooltipRadio>
-                    <TooltipRadio
-                        tooltip="Never spawn a skill if it is an option and there are other options available."
                         value="Never"
                     >
                         Never
