@@ -10,7 +10,7 @@ export const config: ThemeConfig = {
 export const styles = (theme: ThemeColours): Styles => ({
     global: {
         body: {
-            bg: theme.bg,
+            bg: theme.bg.main,
         },
     },
 });

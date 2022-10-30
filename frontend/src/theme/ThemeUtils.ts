@@ -7,7 +7,7 @@ export interface ColourVariants {
 }
 
 export interface ThemeColours {
-    bg: string;
+    bg: ColourVariants;
     primary: ColourVariants;
 }
 
@@ -23,7 +23,7 @@ type Colours = ThemeTypings['colors'];
 function extractColourData(colour: string): [string, number] {
     const splitColour = colour.split('.', 2);
     if (splitColour.length == 2) {
-        return [splitColour[0], Number.parseInt(splitColour[2])];
+        return [splitColour[0], Number.parseInt(splitColour[1])];
     }
     return [colour, 100];
 }
@@ -37,7 +37,7 @@ function extractColourData(colour: string): [string, number] {
  */
 export function darken(colour: Colours): string {
     const [name, shade] = extractColourData(colour);
-    return `${name}.${Math.max(shade + 100, 900)}`;
+    return `${name}.${Math.min(shade + 100, 900)}`;
 }
 
 /**
@@ -49,7 +49,7 @@ export function darken(colour: Colours): string {
  */
 export function lighten(colour: Colours): string {
     const [name, shade] = extractColourData(colour);
-    return `${name}.${Math.min(shade - 100, 50)}`;
+    return `${name}.${Math.max(shade - 100, 50)}`;
 }
 
 /**

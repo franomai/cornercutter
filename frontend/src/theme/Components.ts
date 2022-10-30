@@ -1,5 +1,5 @@
 import { ComponentStyleConfig } from '@chakra-ui/react';
-import { asCssVar, ThemeColours } from './ThemeUtils';
+import { asCssVar, darken, ThemeColours } from './ThemeUtils';
 
 export type ComponentStyleBuilder = (theme: ThemeColours) => ComponentStyleConfig;
 
@@ -12,7 +12,7 @@ export const Checkbox: ComponentStyleBuilder = (theme) => ({
             _checked: {
                 bg: theme.primary.main,
                 borderColor: theme.primary.main,
-
+                color: theme.bg.main,
                 _hover: {
                     bg: theme.primary.dark,
                     borderColor: theme.primary.dark,
@@ -31,7 +31,7 @@ export const Radio: ComponentStyleBuilder = (theme) => ({
             _checked: {
                 bg: theme.primary.main,
                 borderColor: theme.primary.main,
-
+                color: theme.bg.main,
                 _hover: {
                     bg: theme.primary.dark,
                     borderColor: theme.primary.dark,
