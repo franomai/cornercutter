@@ -7,6 +7,7 @@ import { getSavingState } from '../../redux/slices/saving';
 import { getRelativeTimeSince } from '../../utility/Utils';
 
 const flexProps: FlexProps = {
+    userSelect: 'none',
     h: 'full',
     w: 'full',
     bg: 'blackAlpha.200',
