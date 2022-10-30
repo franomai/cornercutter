@@ -1,6 +1,16 @@
+/**
+ * Given a colour of the form [name].[shade] or [name], it splits it into a
+ * tuple [name, shade] or [name, 100] respectively.
+ *
+ * @param colour The Chakra-UI colour in the form [name].[shade]
+ * @returns The parsed name and shade
+ */
 function extractColourData(colour: string): [string, number] {
-    colour.split;
-    return ['grey', 800];
+    const splitColour = colour.split('.', 2);
+    if (splitColour.length == 2) {
+        return [splitColour[0], Number.parseInt(splitColour[2])];
+    }
+    return [colour, 100];
 }
 
 /**

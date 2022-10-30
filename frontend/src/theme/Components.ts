@@ -1,57 +1,66 @@
 import { ComponentStyleConfig } from '@chakra-ui/react';
-import { ThemeState } from '../redux/slices/theme';
+import { asCssVar } from './Utils';
 
-export type ComponentStyleBuilder = (theme: ThemeState) => ComponentStyleConfig;
+export interface ThemeColourings {
+    bg: string;
+    primary: {
+        main: string;
+        light: string;
+        dark: string;
+    };
+}
+
+export type ComponentStyleBuilder = (theme: ThemeColourings) => ComponentStyleConfig;
 
 export const Checkbox: ComponentStyleBuilder = (theme) => ({
     baseStyle: {
         control: {
             _focusVisible: {
-                boxShadow: '0 0 0 3px var(--chakra-colors-green-200)',
+                boxShadow: `0 0 0 3px ${asCssVar(theme.primary.light)}`,
             },
             _checked: {
-                bg: 'green.300',
-                borderColor: 'green.300',
+                bg: theme.primary.main,
+                borderColor: theme.primary.main,
 
                 _hover: {
-                    bg: 'green.400',
-                    borderColor: 'green.400',
+                    bg: theme.primary.dark,
+                    borderColor: theme.primary.dark,
                 },
             },
         },
     },
 });
 
-export const Radio: ComponentStyleConfig = {
+export const Radio: ComponentStyleBuilder = (theme) => ({
     baseStyle: {
         control: {
             _focusVisible: {
-                boxShadow: '0 0 0 3px var(--chakra-colors-green-300)',
+                boxShadow: `0 0 0 3px ${asCssVar(theme.primary.main)}`,
             },
             _checked: {
-                bg: 'green.300',
-                borderColor: 'green.300',
+                bg: theme.primary.main,
+                borderColor: theme.primary.main,
 
                 _hover: {
-                    bg: 'green.400',
-                    borderColor: 'green.400',
+                    bg: theme.primary.dark,
+                    borderColor: theme.primary.dark,
                 },
             },
         },
     },
-};
+});
 
-export const Tabs: ComponentStyleConfig = {
+export const Tabs: ComponentStyleBuilder = (theme) => ({
     variants: {
         line: {
             tab: {
                 _selected: {
-                    color: 'green.300',
+                    color: theme.primary.main,
                 },
             },
         },
     },
-};
+});
 
 export const Input: ComponentStyleConfig = {
     variants: {
