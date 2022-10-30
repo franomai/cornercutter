@@ -1,9 +1,9 @@
 export interface ThemeState {
-    backgroundColour: string;
-    primaryColour: string;
+    bg: string;
+    primary: string;
 }
 
 export const initialState: ThemeState = {
-    backgroundColour: '',
-    primaryColour: '',
+    bg: 'gray.800',
+    primary: '',
 };

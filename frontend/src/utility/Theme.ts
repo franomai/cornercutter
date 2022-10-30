@@ -1,8 +1,17 @@
 import { ComponentStyleConfig, extendTheme, ThemeConfig } from '@chakra-ui/react';
+import { Styles } from '@chakra-ui/theme-tools';
 
 const config: ThemeConfig = {
     initialColorMode: 'dark',
     useSystemColorMode: false,
+};
+
+const styles: Styles = {
+    global: {
+        body: {
+            bg: 'gray.800',
+        },
+    },
 };
 
 const Checkbox: ComponentStyleConfig = {
@@ -68,6 +77,7 @@ const Input: ComponentStyleConfig = {
 };
 
 const theme = extendTheme({
+    styles,
     config,
     components: {
         Checkbox,
