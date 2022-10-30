@@ -1,16 +1,7 @@
 import { ComponentStyleConfig } from '@chakra-ui/react';
-import { asCssVar } from './Utils';
+import { asCssVar, ThemeColours } from './ThemeUtils';
 
-export interface ThemeColourings {
-    bg: string;
-    primary: {
-        main: string;
-        light: string;
-        dark: string;
-    };
-}
-
-export type ComponentStyleBuilder = (theme: ThemeColourings) => ComponentStyleConfig;
+export type ComponentStyleBuilder = (theme: ThemeColours) => ComponentStyleConfig;
 
 export const Checkbox: ComponentStyleBuilder = (theme) => ({
     baseStyle: {
