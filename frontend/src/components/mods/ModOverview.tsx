@@ -1,12 +1,15 @@
 import { Checkbox, Stack, Text } from '@chakra-ui/react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateEnabledMod, setSelectedMod } from '../../redux/slices/mod';
+import { getColours } from '../../redux/slices/theme';
 import { AppDispatch } from '../../redux/store';
+import { asCssVar } from '../../theme/ThemeUtils';
 
 import ModConfig from '../../types/Configuration';
 
 const ModOverview = ({ mod, isEnabled, isSelected }: { mod: ModConfig; isEnabled: boolean; isSelected: boolean }) => {
     const dispatch = useDispatch<AppDispatch>();
+    const colours = useSelector(getColours);
 
     const handleEnable = () => {
         dispatch(updateEnabledMod(isEnabled ? null : mod.id));
@@ -21,14 +24,14 @@ const ModOverview = ({ mod, isEnabled, isSelected }: { mod: ModConfig; isEnabled
             direction="row"
             px={4}
             py={2}
-            background="gray.800"
+            background={colours.bg.main}
             borderRadius={6}
             justifyContent="space-between"
             alignItems="center"
             gap={2}
             onClick={handleSelect}
-            boxShadow={isSelected ? `0 0 0 2px var(--chakra-colors-green-300)` : undefined}
-            _hover={{ boxShadow: isSelected ? undefined : `0 0 0 2px var(--chakra-colors-green-200)` }}
+            boxShadow={isSelected ? `0 0 0 2px ${asCssVar(colours.primary.main)}` : undefined}
+            _hover={{ boxShadow: isSelected ? undefined : `0 0 0 2px ${asCssVar(colours.primary.light)}` }}
         >
             <Text
                 sx={{
@@ -38,7 +41,7 @@ const ModOverview = ({ mod, isEnabled, isSelected }: { mod: ModConfig; isEnabled
                 }}
                 fontSize="md"
                 fontWeight="semibold"
-                color={isEnabled ? 'green.300' : 'white'}
+                color={isEnabled ? colours.primary.main : 'white'}
             >
                 {mod.info.name}
             </Text>

@@ -12,7 +12,7 @@ const createTheme = (theme: ThemeColours): Dict =>
             Checkbox: Checkbox(theme),
             Radio: Radio(theme),
             Tabs: Tabs(theme),
-            Input,
+            Input: Input(theme),
         },
     });
 

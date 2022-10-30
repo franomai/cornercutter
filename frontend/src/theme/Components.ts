@@ -53,14 +53,19 @@ export const Tabs: ComponentStyleBuilder = (theme) => ({
     },
 });
 
-export const Input: ComponentStyleConfig = {
+export const Input: ComponentStyleBuilder = (theme) => ({
     variants: {
         filled: {
             field: {
+                background: theme.bg.main,
                 _focusVisible: {
+                    background: theme.bg.light,
                     borderColor: 'none',
+                },
+                _hover: {
+                    background: theme.bg.light,
                 },
             },
         },
     },
-};
+});

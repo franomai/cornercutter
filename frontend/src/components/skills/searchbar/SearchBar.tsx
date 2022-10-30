@@ -2,6 +2,8 @@ import { CloseButton, Input, InputGroup, InputLeftElement, InputRightElement } f
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { getColours } from '../../../redux/slices/theme';
 
 const SearchBar = ({
     handleSearch,
@@ -33,7 +35,7 @@ const SearchBar = ({
     };
 
     return (
-        <InputGroup color={search.length === 0 ? 'gray.600' : 'white'} background="gray.800" w="full" size="sm">
+        <InputGroup color={search.length === 0 ? 'gray.600' : 'white'} w="full" size="sm">
             <InputLeftElement>
                 <FontAwesomeIcon icon={faSearch} />
             </InputLeftElement>

@@ -2,22 +2,19 @@ import ModdingConfig from './components/pages/ModdingConfig';
 import createTheme from './theme';
 
 import { useEffect, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from './redux/store';
 import { loadSavedData } from './redux/slices/saving';
 import { ChakraProvider } from '@chakra-ui/react';
-import { createVariants, ThemeColours } from './theme/ThemeUtils';
+import { getColours } from './redux/slices/theme';
 
 import './App.css';
 
-const themeColours: ThemeColours = {
-    bg: createVariants('red.300'),
-    primary: createVariants('orange.200'),
-};
-
 function App() {
     const dispatch = useDispatch<AppDispatch>();
-    const theme = useMemo(() => createTheme(themeColours), []);
+    const colours = useSelector(getColours);
+
+    const theme = useMemo(() => createTheme(colours), [colours]);
 
     useEffect(() => {
         dispatch(loadSavedData());

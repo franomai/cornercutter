@@ -2,14 +2,19 @@ import { createSlice } from '@reduxjs/toolkit';
 import { createVariants, ThemeColours } from '../../../theme/ThemeUtils';
 import { StoreState } from '../../store';
 
-export const initialState: ThemeColours = {
+export const defaultState: ThemeColours = {
     bg: createVariants('gray.800'),
-    primary: createVariants('green.200'),
+    primary: createVariants('green.300'),
+};
+
+const themeColours: ThemeColours = {
+    bg: createVariants('red.300'),
+    primary: createVariants('orange.200'),
 };
 
 const themeSlice = createSlice({
     name: 'theme',
-    initialState,
+    initialState: themeColours,
     reducers: {
         setBg(state, action: { payload: string }) {
             state.bg = createVariants(action.payload);
