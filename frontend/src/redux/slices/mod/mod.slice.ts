@@ -16,7 +16,7 @@ import { WeightedSkill } from '../../../types/Skill';
 import { invoke } from '@tauri-apps/api';
 import { saveSelectedMod } from '../saving';
 
-export interface State {
+export interface ModState {
     mods: Record<string, ModConfig>;
     selectedMod: string | null;
     enabledMod: string | null;
@@ -24,13 +24,13 @@ export interface State {
 
 export type FloorRoom = { floor: Floor; room: Room };
 
-export const initialState: State = {
+export const initialState: ModState = {
     mods: {},
     selectedMod: null,
     enabledMod: null,
 };
 
-function ifModSelected(state: State, callback: (selectedMod: ModConfig) => void) {
+function ifModSelected(state: ModState, callback: (selectedMod: ModConfig) => void) {
     if (state.selectedMod !== null) {
         callback(state.mods[state.selectedMod]);
     }

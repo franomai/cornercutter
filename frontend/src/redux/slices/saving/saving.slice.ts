@@ -7,14 +7,14 @@ import { StoreState } from '../../store';
 import { setCornercutterConfig, setGlobalOptions } from '../cornercutter';
 import { addMods, setEnabledMod } from '../mod';
 
-export interface State {
+export interface SavingState {
     status: 'idle' | 'pending';
     currentRequestId?: string;
     lastSaved: number;
     error: SerializedError | null;
 }
 
-export const initialState: State = {
+export const initialState: SavingState = {
     status: 'idle',
     lastSaved: Date.now(),
     error: null,

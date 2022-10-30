@@ -3,12 +3,12 @@ import { GlobalOptions } from '../../../types/Configuration';
 import { CornerCutterConfig } from '../../../types/CornerCutterConfig';
 import { StoreState } from '../../store';
 
-export interface State {
+export interface CornercutterState {
     config: CornerCutterConfig | null;
     globalOptions: GlobalOptions;
 }
 
-export const initialState: State = {
+export const initialState: CornercutterState = {
     config: null,
     globalOptions: GlobalOptions.NoneSelected,
 };
