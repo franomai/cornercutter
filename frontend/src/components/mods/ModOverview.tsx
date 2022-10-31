@@ -24,7 +24,7 @@ const ModOverview = ({ mod, isEnabled, isSelected }: { mod: ModConfig; isEnabled
             direction="row"
             px={4}
             py={2}
-            background={colours.bg.main}
+            background="bg.main"
             borderRadius={6}
             justifyContent="space-between"
             alignItems="center"
@@ -41,7 +41,7 @@ const ModOverview = ({ mod, isEnabled, isSelected }: { mod: ModConfig; isEnabled
                 }}
                 fontSize="md"
                 fontWeight="semibold"
-                color={isEnabled ? colours.primary.main : 'white'}
+                color={isEnabled ? 'primary.main' : 'white'}
             >
                 {mod.info.name}
             </Text>

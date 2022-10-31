@@ -10,12 +10,12 @@ export const Checkbox: ComponentStyleBuilder = (theme) => ({
                 boxShadow: `0 0 0 3px ${asCssVar(theme.primary.light)}`,
             },
             _checked: {
-                bg: theme.primary.main,
-                borderColor: theme.primary.main,
-                color: theme.bg.main,
+                bg: 'primary.main',
+                borderColor: 'primary.main',
+                color: 'bg.main',
                 _hover: {
-                    bg: theme.primary.dark,
-                    borderColor: theme.primary.dark,
+                    bg: 'primary.dark',
+                    borderColor: 'primary.dark',
                 },
             },
         },
@@ -29,43 +29,43 @@ export const Radio: ComponentStyleBuilder = (theme) => ({
                 boxShadow: `0 0 0 3px ${asCssVar(theme.primary.main)}`,
             },
             _checked: {
-                bg: theme.primary.main,
-                borderColor: theme.primary.main,
-                color: theme.bg.main,
+                bg: 'primary.main',
+                borderColor: 'primary.main',
+                color: 'bg.main',
                 _hover: {
-                    bg: theme.primary.dark,
-                    borderColor: theme.primary.dark,
+                    bg: 'primary.dark',
+                    borderColor: 'primary.dark',
                 },
             },
         },
     },
 });
 
-export const Tabs: ComponentStyleBuilder = (theme) => ({
+export const Tabs: ComponentStyleConfig = {
     variants: {
         line: {
             tab: {
                 _selected: {
-                    color: theme.primary.main,
+                    color: 'primary.main',
                 },
             },
         },
     },
-});
+};
 
-export const Input: ComponentStyleBuilder = (theme) => ({
+export const Input: ComponentStyleConfig = {
     variants: {
         filled: {
             field: {
-                background: theme.bg.main,
+                background: 'bg.main',
                 _focusVisible: {
-                    background: theme.bg.light,
+                    background: 'bg.light',
                     borderColor: 'none',
                 },
                 _hover: {
-                    background: theme.bg.light,
+                    background: 'bg.light',
                 },
             },
         },
     },
-});
+};

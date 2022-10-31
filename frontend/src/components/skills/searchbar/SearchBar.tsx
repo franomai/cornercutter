@@ -2,8 +2,6 @@ import { CloseButton, Input, InputGroup, InputLeftElement, InputRightElement } f
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { getColours } from '../../../redux/slices/theme';
 
 const SearchBar = ({
     handleSearch,

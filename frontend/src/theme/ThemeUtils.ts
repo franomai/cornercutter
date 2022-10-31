@@ -1,4 +1,4 @@
-import { ColorProps, ResponsiveValue, ThemeTypings } from '@chakra-ui/react';
+import { BaseThemeTypings, ThemeTypings } from '@chakra-ui/react';
 
 export interface ColourVariants {
     main: string;

@@ -16,8 +16,6 @@ import {
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ReactNode, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { getColours } from '../../redux/slices/theme';
 
 import Skill from '../../types/Skill';
 import HelpIcon from '../forms/HelpIcon';
@@ -35,7 +33,6 @@ export interface SkillCardProps {
 
 const SkillCard = forwardRef<SkillCardProps, 'div'>(
     ({ skill, isWeighted, weighting, infoIcon, deleteIcon, handleDelete, handleUpdateWeight, ...flexProps }, ref) => {
-        const colours = useSelector(getColours);
         const [isHovering, setIsHovering] = useState(false);
         const [newWeight, setNewWeight] = useState(weighting ?? 10);
 
@@ -108,9 +105,9 @@ const SkillCard = forwardRef<SkillCardProps, 'div'>(
                 position="relative"
                 direction="column"
                 gap="2px"
-                bg={colours.bg.main}
+                bg="bg.main"
                 rounded="md"
-                _hover={{ bg: colours.bg.light }}
+                _hover={{ bg: 'bg.light' }}
                 p={2}
                 alignItems="center"
                 justifyContent="center"
