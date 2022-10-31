@@ -1,7 +1,7 @@
 import { extendTheme } from '@chakra-ui/react';
 import { asCssVar, ThemeColours } from './ThemeUtils';
 import { styles, config } from './Styles';
-import { Checkbox, Radio, Tabs, Input } from './Components';
+import { Checkbox, Radio, Tabs, Input, Modal } from './Components';
 import { Dict } from '@chakra-ui/utils';
 
 const createTheme = (theme: ThemeColours): Dict =>
@@ -25,6 +25,7 @@ const createTheme = (theme: ThemeColours): Dict =>
             Radio: Radio(theme),
             Tabs,
             Input,
+            Modal,
         },
     });
 

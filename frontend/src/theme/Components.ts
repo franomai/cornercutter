@@ -69,3 +69,11 @@ export const Input: ComponentStyleConfig = {
         },
     },
 };
+
+export const Modal: ComponentStyleConfig = {
+    baseStyle: {
+        dialog: {
+            bg: 'bg.main',
+        },
+    },
+};
