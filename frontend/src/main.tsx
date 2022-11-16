@@ -3,11 +3,15 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Provider } from 'react-redux';
 
+import ReactGA from 'react-ga4';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import store from './redux/store';
 import theme from './utility/Theme';
 import './index.css';
+
+ReactGA.initialize(import.meta.env.VITE_MEASUREMENT_ID);
+ReactGA.send('pageview');
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
