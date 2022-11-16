@@ -1,29 +1,8 @@
-import {
-    Box,
-    Button,
-    Flex,
-    FormControl,
-    FormHelperText,
-    FormLabel,
-    Input,
-    Modal,
-    ModalBody,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    ModalOverlay,
-    Stack,
-    Tab,
-    TabList,
-    TabPanel,
-    TabPanels,
-    Tabs,
-    Text,
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { invoke } from '@tauri-apps/api/tauri';
-import { ReactNode, useCallback, useEffect, useState } from 'react';
+import { ReactNode, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCornercutterConfig, setCornercutterConfig, setGlobalOptions } from '../../redux/slices/cornercutter';
+import { getCornercutterConfig, setGlobalOptions } from '../../redux/slices/cornercutter';
 import { addMod, getAllMods, getSelectedMod, setSelectedMod } from '../../redux/slices/mod';
 import ModConfig, { Floor, ModOptions, GlobalOptions } from '../../types/Configuration';
 import TabData from '../../types/TabData';
@@ -38,6 +17,30 @@ import ImportMod from '../modals/ImportMod';
 import { SkillSearchColumn } from '../skills/searchbar';
 import Savingstatus from '../savingstatus';
 import Settings from '../modals/Settings';
+
+interface FloorData {
+    name: string;
+    floor: Floor;
+}
+
+const SpecificFloorsData: FloorData[] = [
+    {
+        name: 'Floor 1',
+        floor: Floor.FirstFloor,
+    },
+    {
+        name: 'Floor 2',
+        floor: Floor.SecondFloor,
+    },
+    {
+        name: 'Floor 3',
+        floor: Floor.ThirdFloor,
+    },
+    {
+        name: 'Boss Floor',
+        floor: Floor.Boss,
+    },
+];
 
 const ModdingConfig = () => {
     const dispatch = useDispatch();
@@ -79,22 +82,10 @@ const ModdingConfig = () => {
 
         if (hasOptionSet(selectedMod.general.options, ModOptions.ConfigPerFloor)) {
             tabs.push(
-                {
-                    name: 'Floor 1',
-                    tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.FirstFloor} />,
-                },
-                {
-                    name: 'Floor 2',
-                    tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.SecondFloor} />,
-                },
-                {
-                    name: 'Floor 3',
-                    tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.ThirdFloor} />,
-                },
-                {
-                    name: 'Boss Floor',
-                    tab: <FloorConfigTab selectedMod={selectedMod} floor={Floor.Boss} />,
-                },
+                ...SpecificFloorsData.map((floorData) => ({
+                    name: floorData.name,
+                    tab: <FloorConfigTab selectedMod={selectedMod} floor={floorData.floor} />,
+                })),
             );
         } else {
             tabs.push({
@@ -121,7 +112,13 @@ const ModdingConfig = () => {
                 >
                     <TabList background="blackAlpha.200" w="full">
                         {tabs.map((tab) => (
-                            <Tab key={tab.name} fontWeight="semibold" pt={5} pb={3}>
+                            <Tab
+                                key={tab.name}
+                                fontWeight="semibold"
+                                pt={5}
+                                pb={3}
+                                onClick={() => console.log(tab.name)}
+                            >
                                 {tab.name}
                             </Tab>
                         ))}
