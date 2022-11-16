@@ -13,6 +13,7 @@ import './index.css';
 ReactGA.initialize(import.meta.env.VITE_MEASUREMENT_ID);
 ReactGA.send('pageview');
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
         <ChakraProvider theme={theme}>

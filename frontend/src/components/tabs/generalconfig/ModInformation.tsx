@@ -79,7 +79,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
         } catch (err) {
             console.error(err);
         }
-    }, [selectedMod, navigator.clipboard]);
+    }, [selectedMod]);
 
     const handleDeleteMod = useCallback(() => {
         invoke('delete_mod', { modId: selectedMod.id })
