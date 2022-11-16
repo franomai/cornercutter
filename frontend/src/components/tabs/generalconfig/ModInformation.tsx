@@ -21,6 +21,7 @@ import { deleteMod, setModInfo } from '../../../redux/slices/mod';
 import { saveSelectedMod } from '../../../redux/slices/saving';
 import { AppDispatch } from '../../../redux/store';
 import ModConfig from '../../../types/Configuration';
+import ReactGA from 'react-ga4';
 
 const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const dispatch = useDispatch<AppDispatch>();
@@ -76,6 +77,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
         try {
             const code = await invoke<string>('get_config_code', { modConfig: selectedMod });
             navigator.clipboard.writeText(code).then(() => setShowConfigCodePopup(true));
+            ReactGA.event({ category: 'mods', action: 'export mod' });
         } catch (err) {
             console.error(err);
         }
@@ -83,9 +85,12 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
 
     const handleDeleteMod = useCallback(() => {
         invoke('delete_mod', { modId: selectedMod.id })
-            .then(() => dispatch(deleteMod(selectedMod.id)))
+            .then(() => {
+                ReactGA.event({ category: 'mods', action: 'delete mod' });
+                dispatch(deleteMod(selectedMod.id));
+            })
             .catch(console.error);
-    }, [selectedMod.id]);
+    }, [selectedMod.id, dispatch]);
 
     const renderEditableControls = useCallback(
         (canSave: boolean): ReactNode => {

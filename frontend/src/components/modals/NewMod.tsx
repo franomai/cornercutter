@@ -16,6 +16,7 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import ModConfig, { DEFAULT_CONFIG } from '../../types/Configuration';
 import { generateEmptyFloorSkills } from '../../utility/ConfigHelpers';
+import ReactGA from 'react-ga4';
 
 const NewMod = ({
     id,
@@ -32,7 +33,7 @@ const NewMod = ({
 
     useEffect(() => {
         onOpen();
-    }, [id]);
+    }, [id, onOpen]);
 
     const canSave = name.trim().length !== 0;
 
@@ -43,6 +44,7 @@ const NewMod = ({
             general: DEFAULT_CONFIG,
             floorSkills: generateEmptyFloorSkills(),
         });
+        ReactGA.event({ category: 'mods', action: 'create mod' });
     }, [id, handleCreate, name, description]);
 
     const handleDiscardMod = useCallback(() => {

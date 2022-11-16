@@ -16,6 +16,7 @@ import {
 import { invoke } from '@tauri-apps/api/tauri';
 import React, { useCallback, useEffect, useState } from 'react';
 import ModConfig from '../../types/Configuration';
+import ReactGA from 'react-ga4';
 
 const ModCodeRegex = /^(#[^\r\n]*\r?\n)?(#[^\r\n]*\r?\n)?([\w\d+/]+={0,2})$/;
 
@@ -46,11 +47,14 @@ const ImportMod = ({
         } else {
             onClose();
         }
-    }, [isShown]);
+    }, [isShown, onClose, onOpen]);
 
     const handleImportMod = useCallback(() => {
         invoke<ModConfig>('import_mod', { configString: modCode })
-            .then(handleCreate)
+            .then((mod) => {
+                ReactGA.event({ category: 'mods', action: 'import mod' });
+                handleCreate(mod);
+            })
             .catch((err: string) => {
                 console.error(err);
                 setError(err);
