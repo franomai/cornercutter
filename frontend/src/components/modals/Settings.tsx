@@ -1,9 +1,6 @@
 import {
     Button,
     Checkbox,
-    FormControl,
-    FormLabel,
-    Input,
     Modal,
     ModalBody,
     ModalContent,
@@ -11,16 +8,15 @@ import {
     ModalHeader,
     ModalOverlay,
     Stack,
-    Textarea,
     Tooltip,
     useDisclosure,
 } from '@chakra-ui/react';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { setOptionFlag, hasOptionSet } from '../../utility/ConfigHelpers';
-import ModConfig, { DEFAULT_CONFIG, GlobalOptions } from '../../types/Configuration';
-import { generateEmptyFloorSkills } from '../../utility/ConfigHelpers';
+import { GlobalOptions } from '../../types/Configuration';
 import { useSelector } from 'react-redux';
 import { getGlobalOptions } from '../../redux/slices/cornercutter';
+import ReactGA from 'react-ga4';
 
 const optionLabels: Record<GlobalOptions, string> = {
     [GlobalOptions.DisableCornercutter]: 'Disable Cornercutter',
@@ -52,9 +48,6 @@ const Settings = ({
     handleSaveChanges(settings: GlobalOptions): void;
 }) => {
     const globalOptions = useSelector(getGlobalOptions);
-
-    console.log(globalOptions);
-
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [updatedSettings, setUpdatedSettings] = useState(globalOptions);
 
@@ -65,25 +58,36 @@ const Settings = ({
         } else {
             onClose();
         }
-    }, [globalOptions, handleSaveChanges, handleDiscardChanges]);
+    }, [globalOptions, isShown, onClose, onOpen]);
 
     const handleSave = useCallback(() => {
+        const hasSetDisableCornercutter = hasOptionSet(updatedSettings, GlobalOptions.DisableCornercutter);
+        const updatedDisableCornercutter =
+            hasSetDisableCornercutter !== hasOptionSet(globalOptions, GlobalOptions.DisableCornercutter);
+
+        if (updatedDisableCornercutter) {
+            const action = hasSetDisableCornercutter ? 'Disable Cornercutter' : 'Enable Cornercutter';
+            ReactGA.event({ category: 'Settings', action });
+        }
+
         handleSaveChanges(updatedSettings);
-    }, [handleSaveChanges, updatedSettings]);
+    }, [handleSaveChanges, updatedSettings, globalOptions]);
 
     const handleDiscard = useCallback(() => {
         handleDiscardChanges();
         onClose();
     }, [handleDiscardChanges, onClose]);
 
+    function setFlag(flag: GlobalOptions, isChecked: boolean) {
+        setUpdatedSettings(setOptionFlag(updatedSettings, flag, isChecked) as GlobalOptions);
+    }
+
     function renderOptionCheckbox(flag: GlobalOptions, label: string, tooltip: string): ReactNode {
         return (
             <Checkbox
                 key={flag}
                 isChecked={hasOptionSet(updatedSettings, flag)}
-                onChange={(e) => {
-                    setUpdatedSettings(setOptionFlag(updatedSettings, flag, e.target.checked) as GlobalOptions); // :^)
-                }}
+                onChange={(e) => setFlag(flag, e.target.checked)}
             >
                 <Tooltip hasArrow label={tooltip} aria-label="More info" placement="top" openDelay={700}>
                     {label}

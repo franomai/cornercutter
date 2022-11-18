@@ -1,4 +1,4 @@
-export function allValues<T extends {}>(anEnum: T): T[keyof T][] {
+export function allValues<T extends Record<string, unknown>>(anEnum: T): T[keyof T][] {
     return Object.values(anEnum) as unknown as T[keyof T][];
 }
 
