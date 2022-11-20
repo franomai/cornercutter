@@ -5,8 +5,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getIsUserMetricsEnabled, setIsUserMetricsEnabled } from '../redux/slices/cornercutter';
 
 type EventHandler = (optionsOrName: string | UaEventOptions) => void;
+type SendHandler = (fieldObject: string | { hitType: string; page: string }) => void;
 
 export interface GoogleAnalytics {
+    send: SendHandler;
     event: EventHandler;
     toggleUserMetrics: VoidFunction;
 }
@@ -31,6 +33,18 @@ export default function useGoogleAnalytics(): GoogleAnalytics {
             : EmptyFunction;
     }, [isUserMetricsEnabled]);
 
+    const send: SendHandler = useMemo(() => {
+        return isUserMetricsEnabled
+            ? (fieldObject) => {
+                  try {
+                      ReactGA.send(fieldObject);
+                  } catch (e) {
+                      // Ignore errors - This will likely be that the user is not connected to the internet
+                  }
+              }
+            : EmptyFunction;
+    }, [isUserMetricsEnabled]);
+
     function toggleUserMetrics() {
         const newIsUserMetricsEnabled = !isUserMetricsEnabled;
         const action = newIsUserMetricsEnabled ? 'Enable User Metrics' : 'Disable User Metrics';
@@ -40,5 +54,5 @@ export default function useGoogleAnalytics(): GoogleAnalytics {
         dispatch(setIsUserMetricsEnabled(newIsUserMetricsEnabled));
     }
 
-    return { event, toggleUserMetrics };
+    return { send, event, toggleUserMetrics };
 }
