@@ -17,7 +17,7 @@ import ImportMod from '../modals/ImportMod';
 import { SkillSearchColumn } from '../skills/searchbar';
 import Savingstatus from '../savingstatus';
 import Settings from '../modals/Settings';
-import ReactGA from 'react-ga4';
+import useGoogleAnalytics from '../../hooks/useGoogleAnalytics';
 
 interface FloorData {
     name: string;
@@ -48,6 +48,7 @@ const ModdingConfig = () => {
     const mods = useSelector(getAllMods);
     const config = useSelector(getCornercutterConfig);
     const selectedMod = useSelector(getSelectedMod);
+    const GA = useGoogleAnalytics();
 
     const [newModId, setNewModId] = useState<string | null>(null);
     const [showImportMod, setShowImportMod] = useState(false);
@@ -73,7 +74,7 @@ const ModdingConfig = () => {
         [setShowSettings, dispatch],
     );
 
-    const getTabs = (selectedMod: ModConfig): TabData[] => {
+    const getTabs = useCallback((selectedMod: ModConfig): TabData[] => {
         const tabs: TabData[] = [
             {
                 name: 'General Config',
@@ -96,41 +97,54 @@ const ModdingConfig = () => {
         }
 
         return tabs;
-    };
-
-    const trackSwitchTab = (tab: string) => {
-        ReactGA.send({ hitType: 'pageview', page: tab });
-    };
-
-    const renderTabs = useCallback((selectedMod: ModConfig): ReactNode => {
-        const tabs = getTabs(selectedMod);
-
-        return (
-            <Tabs h="full" w="full" maxW="full" display="flex" style={{ flexDirection: 'column' }} overflow="hidden">
-                <TabList background="blackAlpha.200" w="full">
-                    {tabs.map((tab) => (
-                        <Tab
-                            key={tab.name}
-                            fontWeight="semibold"
-                            pt={5}
-                            pb={3}
-                            onClick={() => trackSwitchTab(tab.name)}
-                        >
-                            {tab.name}
-                        </Tab>
-                    ))}
-                </TabList>
-                {/* Height subtracted is the height of the TabList */}
-                <TabPanels minH="calc(100% - 58px)" maxH="calc(100% - 58px)">
-                    {tabs.map((tab) => (
-                        <TabPanel key={tab.name} h="full" p={0}>
-                            {tab.tab}
-                        </TabPanel>
-                    ))}
-                </TabPanels>
-            </Tabs>
-        );
     }, []);
+
+    const trackSwitchTab = useCallback(
+        (tab: string) => {
+            GA.send({ hitType: 'pageview', page: tab });
+        },
+        [GA],
+    );
+
+    const renderTabs = useCallback(
+        (selectedMod: ModConfig): ReactNode => {
+            const tabs = getTabs(selectedMod);
+
+            return (
+                <Tabs
+                    h="full"
+                    w="full"
+                    maxW="full"
+                    display="flex"
+                    style={{ flexDirection: 'column' }}
+                    overflow="hidden"
+                >
+                    <TabList background="blackAlpha.200" w="full">
+                        {tabs.map((tab) => (
+                            <Tab
+                                key={tab.name}
+                                fontWeight="semibold"
+                                pt={5}
+                                pb={3}
+                                onClick={() => trackSwitchTab(tab.name)}
+                            >
+                                {tab.name}
+                            </Tab>
+                        ))}
+                    </TabList>
+                    {/* Height subtracted is the height of the TabList */}
+                    <TabPanels minH="calc(100% - 58px)" maxH="calc(100% - 58px)">
+                        {tabs.map((tab) => (
+                            <TabPanel key={tab.name} h="full" p={0}>
+                                {tab.tab}
+                            </TabPanel>
+                        ))}
+                    </TabPanels>
+                </Tabs>
+            );
+        },
+        [trackSwitchTab, getTabs],
+    );
 
     const renderLayout = useCallback((): ReactNode => {
         if (!selectedMod) {

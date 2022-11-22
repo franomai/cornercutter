@@ -1,4 +1,3 @@
-import ReactGA from 'react-ga4';
 import ModdingConfig from './components/pages/ModdingConfig';
 
 import { useEffect } from 'react';
@@ -12,23 +11,29 @@ import useGoogleAnalytics from './hooks/useGoogleAnalytics';
 
 export const startTime = Date.now();
 
-listen(TauriEvent.WINDOW_CLOSE_REQUESTED, () => {
-    const runningTime = Date.now() - startTime;
-    ReactGA.event({ category: 'Application', action: 'Close Cornercutter', value: runningTime });
-});
-
 function App() {
     const dispatch = useDispatch<AppDispatch>();
-    const ga = useGoogleAnalytics();
+    const GA = useGoogleAnalytics();
 
     useEffect(() => {
         dispatch(loadSavedData());
     }, [dispatch]);
 
     useEffect(() => {
-        ga.send('pageview');
+        GA.send('pageview');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        const promise = listen(TauriEvent.WINDOW_CLOSE_REQUESTED, () => {
+            const runningTime = Date.now() - startTime;
+            GA.event({ category: 'Application', action: 'Close Cornercutter', value: runningTime });
+        });
+
+        return () => {
+            promise.then((unlisten) => unlisten());
+        };
+    }, [GA]);
 
     return <ModdingConfig />;
 }

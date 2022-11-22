@@ -16,7 +16,7 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import ModConfig, { DEFAULT_CONFIG } from '../../types/Configuration';
 import { generateEmptyFloorSkills } from '../../utility/ConfigHelpers';
-import ReactGA from 'react-ga4';
+import useGoogleAnalytics from '../../hooks/useGoogleAnalytics';
 
 const NewMod = ({
     id,
@@ -30,6 +30,7 @@ const NewMod = ({
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const GA = useGoogleAnalytics();
 
     useEffect(() => {
         onOpen();
@@ -44,8 +45,8 @@ const NewMod = ({
             general: DEFAULT_CONFIG,
             floorSkills: generateEmptyFloorSkills(),
         });
-        ReactGA.event({ category: 'mods', action: 'create mod' });
-    }, [id, handleCreate, name, description]);
+        GA.event({ category: 'mods', action: 'create mod' });
+    }, [id, handleCreate, name, description, GA]);
 
     const handleDiscardMod = useCallback(() => {
         handleDiscard();

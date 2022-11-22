@@ -16,7 +16,7 @@ import {
 import { invoke } from '@tauri-apps/api/tauri';
 import React, { useCallback, useEffect, useState } from 'react';
 import ModConfig from '../../types/Configuration';
-import ReactGA from 'react-ga4';
+import useGoogleAnalytics from '../../hooks/useGoogleAnalytics';
 
 const ModCodeRegex = /^(#[^\r\n]*\r?\n)?(#[^\r\n]*\r?\n)?([\w\d+/]+={0,2})$/;
 
@@ -32,6 +32,7 @@ const ImportMod = ({
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [modCode, setModCode] = useState('');
     const [error, setError] = useState('');
+    const GA = useGoogleAnalytics();
 
     useEffect(() => {
         if (isShown) {
@@ -52,14 +53,14 @@ const ImportMod = ({
     const handleImportMod = useCallback(() => {
         invoke<ModConfig>('import_mod', { configString: modCode })
             .then((mod) => {
-                ReactGA.event({ category: 'mods', action: 'import mod' });
+                GA.event({ category: 'mods', action: 'import mod' });
                 handleCreate(mod);
             })
             .catch((err: string) => {
                 console.error(err);
                 setError(err);
             });
-    }, [handleCreate, modCode]);
+    }, [handleCreate, modCode, GA]);
 
     const handleDiscardMod = useCallback(() => {
         handleDiscard();

@@ -17,15 +17,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { invoke } from '@tauri-apps/api/tauri';
 import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import useGoogleAnalytics from '../../../hooks/useGoogleAnalytics';
 import { deleteMod, setModInfo } from '../../../redux/slices/mod';
 import { saveSelectedMod } from '../../../redux/slices/saving';
 import { AppDispatch } from '../../../redux/store';
 import ModConfig from '../../../types/Configuration';
-import ReactGA from 'react-ga4';
 
 const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const dispatch = useDispatch<AppDispatch>();
     const editableRef = useRef<HTMLDivElement>(null);
+    const GA = useGoogleAnalytics();
 
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState(selectedMod.info.name);
@@ -77,20 +78,20 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
         try {
             const code = await invoke<string>('get_config_code', { modConfig: selectedMod });
             navigator.clipboard.writeText(code).then(() => setShowConfigCodePopup(true));
-            ReactGA.event({ category: 'mods', action: 'export mod' });
+            GA.event({ category: 'mods', action: 'export mod' });
         } catch (err) {
             console.error(err);
         }
-    }, [selectedMod]);
+    }, [selectedMod, GA]);
 
     const handleDeleteMod = useCallback(() => {
         invoke('delete_mod', { modId: selectedMod.id })
             .then(() => {
-                ReactGA.event({ category: 'mods', action: 'delete mod' });
+                GA.event({ category: 'mods', action: 'delete mod' });
                 dispatch(deleteMod(selectedMod.id));
             })
             .catch(console.error);
-    }, [selectedMod.id, dispatch]);
+    }, [selectedMod.id, dispatch, GA]);
 
     const renderEditableControls = useCallback(
         (canSave: boolean): ReactNode => {
