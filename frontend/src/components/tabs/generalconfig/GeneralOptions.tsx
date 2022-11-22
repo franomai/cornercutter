@@ -14,35 +14,48 @@ import ModConfig, {
 import { hasOptionSet } from '../../../utility/ConfigHelpers';
 import LabelledRadioGroup from '../../forms/LabelledRadioGroup';
 import TooltipRadio from '../../forms/TooltipRadio';
+import { OptionDetails } from '../../modals/Settings';
 
-const optionLabels: Record<ModOptions, string> = {
-    [ModOptions.ConfigPerFloor]: 'Configure spawns per floor',
-    [ModOptions.ConfigPerRoom]: 'Configure spawns per room',
-    [ModOptions.AwardSkillsPerFloor]: 'Award starting skills per floor',
-    [ModOptions.SelectRandomItemOnEmpty]: 'Grant random item when out of mod items',
-    [ModOptions.DisableMentorAbilities]: 'Disable mentor abilities',
-    [ModOptions.DisableGiftOfIntern]: 'Disable gift of the intern',
-    [ModOptions.DisablePinned]: 'Disable pinned skills',
-};
-
-const optionTooltips: Record<ModOptions, string> = {
-    [ModOptions.ConfigPerFloor]: 'Set skills up on a floor by floor basis.',
-    [ModOptions.ConfigPerRoom]:
-        'Set skills up based on room type / function. Non-applicable types will be ignored (for example, finale for boss floors).',
-    [ModOptions.AwardSkillsPerFloor]:
-        'Enabling this will grant starting skills at the start of every floor. Otherwise, they will only be granted on dungeon start.',
-    [ModOptions.SelectRandomItemOnEmpty]:
-        'If a spawn pool runs out, or a pool has no skills added, enabling this will fallback to the usual spawner logic for that room. Otherwise, gift of the intern will spawn.',
-    [ModOptions.DisableMentorAbilities]: 'When enabled, any mentor abilities will be deactivated.',
-    [ModOptions.DisableGiftOfIntern]:
-        'Gift of the intern is a fallback skill that spawns when nothing else can, granting a small bonus (cash, an app, health, etc.) - enabling this will spawn nothing instead.',
-    [ModOptions.DisablePinned]: 'When enabled, the pinned skill will not be granted at the start of the dungeon,',
+const optionDetails: Record<ModOptions, OptionDetails> = {
+    [ModOptions.ConfigPerFloor]: {
+        label: 'Configure spawns per floor',
+        tooltip: 'Set skills up on a floor by floor basis.',
+    },
+    [ModOptions.ConfigPerRoom]: {
+        label: 'Configure spawns per room',
+        tooltip:
+            'Set skills up based on room type / function. Non-applicable types will be ignored (for example, finale for boss floors).',
+    },
+    [ModOptions.AwardSkillsPerFloor]: {
+        label: 'Award starting skills per floor',
+        tooltip:
+            'Enabling this will grant starting skills at the start of every floor. Otherwise, they will only be granted on dungeon start.',
+    },
+    [ModOptions.SelectRandomItemOnEmpty]: {
+        label: 'Grant random item when out of mod items',
+        tooltip:
+            'If a spawn pool runs out, or a pool has no skills added, enabling this will fallback to the usual spawner logic for that room. Otherwise, gift of the intern will spawn.',
+    },
+    [ModOptions.DisableMentorAbilities]: {
+        label: 'Disable mentor abilities',
+        tooltip: 'When enabled, any mentor abilities will be deactivated.',
+    },
+    [ModOptions.DisableGiftOfIntern]: {
+        label: 'Disable gift of the intern',
+        tooltip:
+            'Gift of the intern is a fallback skill that spawns when nothing else can, granting a small bonus (cash, an app, health, etc.) - enabling this will spawn nothing instead.',
+    },
+    [ModOptions.DisablePinned]: {
+        label: 'Disable pinned skills',
+        tooltip: 'When enabled, the pinned skill will not be granted at the start of the dungeon.',
+    },
 };
 
 const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const dispatch = useDispatch<AppDispatch>();
 
-    function renderOptionCheckbox(flag: ModOptions, label: string, tooltip: string): ReactNode {
+    function renderOptionCheckbox(flag: ModOptions): ReactNode {
+        const optionDetail = optionDetails[flag];
         return (
             <Checkbox
                 key={flag}
@@ -52,19 +65,15 @@ const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
                     dispatch(saveSelectedMod());
                 }}
             >
-                <Tooltip hasArrow label={tooltip} aria-label="More info" placement="top" openDelay={700}>
-                    {label}
+                <Tooltip hasArrow label={optionDetail.tooltip} aria-label="More info" placement="top" openDelay={700}>
+                    <span tabIndex={-1}>{optionDetail.label}</span>
                 </Tooltip>
             </Checkbox>
         );
     }
 
     function renderOptionCheckboxes(flags: ModOptions[]): ReactNode {
-        return (
-            <Stack spacing={2}>
-                {flags.map((flag) => renderOptionCheckbox(flag, optionLabels[flag], optionTooltips[flag]))}
-            </Stack>
-        );
+        return <Stack spacing={2}>{flags.map((flag) => renderOptionCheckbox(flag))}</Stack>;
     }
 
     return (

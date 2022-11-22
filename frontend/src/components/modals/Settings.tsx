@@ -16,11 +16,9 @@ import { setOptionFlag, hasOptionSet } from '../../utility/ConfigHelpers';
 import { GlobalOptions } from '../../types/Configuration';
 import { useSelector } from 'react-redux';
 import { getGlobalOptions } from '../../redux/slices/cornercutter';
-import ReactGA from 'react-ga4';
-import { allValues } from '../../utility/Utils';
 import useGoogleAnalytics from '../../hooks/useGoogleAnalytics';
 
-interface OptionDetails {
+export interface OptionDetails {
     label: string;
     tooltip: string;
 }
@@ -136,17 +134,11 @@ const Settings = ({
             const details = optionDetails[flag];
             return (
                 <Checkbox
+                    key={flag}
                     isChecked={hasOptionSet(updatedSettings, flag)}
                     onChange={(e) => setFlag(flag, e.target.checked)}
                 >
-                    <Tooltip
-                        key={flag}
-                        hasArrow
-                        label={details.label}
-                        aria-label="More info"
-                        placement="top"
-                        openDelay={700}
-                    >
+                    <Tooltip hasArrow label={details.label} aria-label="More info" placement="top" openDelay={700}>
                         <span tabIndex={-1}>{details.label}</span>
                     </Tooltip>
                 </Checkbox>
