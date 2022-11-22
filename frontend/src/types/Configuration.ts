@@ -85,7 +85,8 @@ export enum GlobalOptions {
     DisableSteamAchievements = 1 << 2,
     RespectUnlocks = 1 << 3,
     EnableDebugMenu = 1 << 4,
-    EnableExtraLogging = 1 << 5
+    EnableExtraLogging = 1 << 5,
+    EnableUserMetrics = 1 << 6,
 }
 
 export const DEFAULT_CONFIG: GeneralConfig = {

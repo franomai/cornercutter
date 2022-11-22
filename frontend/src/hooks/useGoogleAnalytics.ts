@@ -2,7 +2,11 @@ import { useMemo } from 'react';
 import ReactGA from 'react-ga4';
 import { UaEventOptions } from 'react-ga4/types/ga4';
 import { useDispatch, useSelector } from 'react-redux';
-import { getIsUserMetricsEnabled, setIsUserMetricsEnabled } from '../redux/slices/cornercutter';
+import { getGlobalOptions } from '../redux/slices/cornercutter';
+import { GlobalOptions } from '../types/Configuration';
+import { hasOptionSet } from '../utility/ConfigHelpers';
+
+ReactGA.initialize(import.meta.env.VITE_MEASUREMENT_ID);
 
 type EventHandler = (optionsOrName: string | UaEventOptions) => void;
 type SendHandler = (fieldObject: string | { hitType: string; page: string }) => void;
@@ -10,7 +14,6 @@ type SendHandler = (fieldObject: string | { hitType: string; page: string }) => 
 export interface GoogleAnalytics {
     send: SendHandler;
     event: EventHandler;
-    toggleUserMetrics: VoidFunction;
 }
 
 // Used to ignore track requests when user metrics have been disabled.
@@ -19,10 +22,12 @@ const EmptyFunction = () => {};
 
 export default function useGoogleAnalytics(): GoogleAnalytics {
     const dispatch = useDispatch();
-    const isUserMetricsEnabled = useSelector(getIsUserMetricsEnabled);
+    const globalOptions = useSelector(getGlobalOptions);
+
+    const enableUserMetrics = hasOptionSet(globalOptions, GlobalOptions.EnableUserMetrics);
 
     const event: EventHandler = useMemo(() => {
-        return isUserMetricsEnabled
+        return enableUserMetrics
             ? (optionsOrName) => {
                   try {
                       ReactGA.event(optionsOrName);
@@ -31,10 +36,10 @@ export default function useGoogleAnalytics(): GoogleAnalytics {
                   }
               }
             : EmptyFunction;
-    }, [isUserMetricsEnabled]);
+    }, [enableUserMetrics]);
 
     const send: SendHandler = useMemo(() => {
-        return isUserMetricsEnabled
+        return enableUserMetrics
             ? (fieldObject) => {
                   try {
                       ReactGA.send(fieldObject);
@@ -43,16 +48,16 @@ export default function useGoogleAnalytics(): GoogleAnalytics {
                   }
               }
             : EmptyFunction;
-    }, [isUserMetricsEnabled]);
+    }, [enableUserMetrics]);
 
-    function toggleUserMetrics() {
-        const newIsUserMetricsEnabled = !isUserMetricsEnabled;
-        const action = newIsUserMetricsEnabled ? 'Enable User Metrics' : 'Disable User Metrics';
-        // One final analytic to see how many users have disabled user metrics.
-        event({ category: 'User Metrics', action });
+    // function toggleUserMetrics() {
+    //     const newEnableUserMetrics = !enableUserMetrics;
+    //     const action = newEnableUserMetrics ? 'Enable User Metrics' : 'Disable User Metrics';
+    //     // One final analytic to see how many users have disabled user metrics.
+    //     event({ category: 'User Metrics', action });
 
-        dispatch(setIsUserMetricsEnabled(newIsUserMetricsEnabled));
-    }
+    //     dispatch(setIsUserMetricsEnabled(newEnableUserMetrics));
+    // }
 
-    return { send, event, toggleUserMetrics };
+    return { send, event };
 }

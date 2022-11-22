@@ -17,25 +17,48 @@ import { GlobalOptions } from '../../types/Configuration';
 import { useSelector } from 'react-redux';
 import { getGlobalOptions } from '../../redux/slices/cornercutter';
 import ReactGA from 'react-ga4';
+import { allValues } from '../../utility/Utils';
 
-const optionLabels: Record<GlobalOptions, string> = {
-    [GlobalOptions.DisableCornercutter]: 'Disable Cornercutter',
-    [GlobalOptions.DisableHighscores]: 'Disable highscores',
-    [GlobalOptions.DisableSteamAchievements]: 'Disable Steam achievements',
-    [GlobalOptions.RespectUnlocks]: 'Only spawn unlocked skills',
-    [GlobalOptions.EnableDebugMenu]: 'Enable debug menu',
-    [GlobalOptions.EnableExtraLogging]: 'Enable additional Cornercutter logging',
-};
+interface OptionDetails {
+    label: string;
+    tooltip: string;
+}
 
-const optionTooltips: Record<GlobalOptions, string> = {
-    [GlobalOptions.DisableCornercutter]: 'Turns cornercutter off for the next run. No indicator will show in-game.',
-    [GlobalOptions.DisableHighscores]:
-        'New best times with Cornercutter enabled will not be saved, unless it is the fist clear for that dungeon.',
-    [GlobalOptions.DisableSteamAchievements]: 'Turns off steam achievements for progression and unlocks.',
-    [GlobalOptions.RespectUnlocks]:
-        'While enabled, mods will not spawn items not unlocked in gain - effectively, the pool will be reduced.',
-    [GlobalOptions.EnableDebugMenu]: 'Activates the debug menu in the pause screen.',
-    [GlobalOptions.EnableExtraLogging]: 'Adds some extra logging to Cornercutter to help diagnose spawning issues.',
+const optionDetails: Record<GlobalOptions, OptionDetails> = {
+    [GlobalOptions.DisableCornercutter]: {
+        label: 'Disable Cornercutter',
+        tooltip: 'Turns cornercutter off for the next run. No indicator will show in-game.',
+    },
+    [GlobalOptions.DisableHighscores]: {
+        label: 'Disable highscores',
+        tooltip:
+            'New best times with Cornercutter enabled will not be saved, unless it is the fist clear for that dungeon.',
+    },
+
+    [GlobalOptions.DisableSteamAchievements]: {
+        label: 'Disable Steam achievements',
+        tooltip: 'Turns off steam achievements for progression and unlocks.',
+    },
+
+    [GlobalOptions.RespectUnlocks]: {
+        label: 'Only spawn unlocked skills',
+        tooltip:
+            'While enabled, mods will not spawn items not unlocked in gain - effectively, the pool will be reduced.',
+    },
+    [GlobalOptions.EnableDebugMenu]: {
+        label: 'Enable debug menu',
+        tooltip: 'Activates the debug menu in the pause screen.',
+    },
+
+    [GlobalOptions.EnableExtraLogging]: {
+        label: 'Enable additional Cornercutter logging',
+        tooltip: 'Adds some extra logging to Cornercutter to help diagnose spawning issues.',
+    },
+
+    [GlobalOptions.EnableUserMetrics]: {
+        label: 'Enable user metrics',
+        tooltip: 'Allow us to see how you use Cornercutter.',
+    },
 };
 
 const Settings = ({
@@ -61,12 +84,12 @@ const Settings = ({
     }, [globalOptions, isShown, onClose, onOpen]);
 
     const handleSave = useCallback(() => {
-        const hasSetDisableCornercutter = hasOptionSet(updatedSettings, GlobalOptions.DisableCornercutter);
-        const updatedDisableCornercutter =
-            hasSetDisableCornercutter !== hasOptionSet(globalOptions, GlobalOptions.DisableCornercutter);
+        const hasDisabledCornercutter = hasOptionSet(updatedSettings, GlobalOptions.DisableCornercutter);
+        const hasUpdatedDisableCornercutter =
+            hasDisabledCornercutter !== hasOptionSet(globalOptions, GlobalOptions.DisableCornercutter);
 
-        if (updatedDisableCornercutter) {
-            const action = hasSetDisableCornercutter ? 'Disable Cornercutter' : 'Enable Cornercutter';
+        if (hasUpdatedDisableCornercutter) {
+            const action = hasDisabledCornercutter ? 'Disable Cornercutter' : 'Enable Cornercutter';
             ReactGA.event({ category: 'Settings', action });
         }
 
@@ -79,29 +102,35 @@ const Settings = ({
     }, [handleDiscardChanges, onClose]);
 
     function setFlag(flag: GlobalOptions, isChecked: boolean) {
+        console.log(updatedSettings);
         setUpdatedSettings(setOptionFlag(updatedSettings, flag, isChecked) as GlobalOptions);
     }
 
-    function renderOptionCheckbox(flag: GlobalOptions, label: string, tooltip: string): ReactNode {
+    function renderOptionCheckbox(flag: GlobalOptions): ReactNode {
+        const details = optionDetails[flag];
         return (
             <Checkbox
                 key={flag}
                 isChecked={hasOptionSet(updatedSettings, flag)}
                 onChange={(e) => setFlag(flag, e.target.checked)}
             >
-                <Tooltip hasArrow label={tooltip} aria-label="More info" placement="top" openDelay={700}>
-                    {label}
+                <Tooltip hasArrow label={details.label} aria-label="More info" placement="top" openDelay={700}>
+                    {details.label}
                 </Tooltip>
             </Checkbox>
         );
     }
 
-    function renderOptionCheckboxes(flags: GlobalOptions[]): ReactNode {
-        return (
-            <Stack spacing={2}>
-                {flags.map((flag) => renderOptionCheckbox(flag, optionLabels[flag], optionTooltips[flag]))}
-            </Stack>
-        );
+    function getOptions(): GlobalOptions[] {
+        return [
+            GlobalOptions.DisableCornercutter,
+            GlobalOptions.DisableHighscores,
+            GlobalOptions.DisableSteamAchievements,
+            GlobalOptions.RespectUnlocks,
+            GlobalOptions.EnableDebugMenu,
+            GlobalOptions.EnableExtraLogging,
+            GlobalOptions.EnableUserMetrics,
+        ];
     }
 
     return (
@@ -116,14 +145,7 @@ const Settings = ({
             <ModalContent>
                 <ModalHeader>Global Option</ModalHeader>
                 <ModalBody>
-                    {renderOptionCheckboxes([
-                        GlobalOptions.DisableCornercutter,
-                        GlobalOptions.DisableHighscores,
-                        GlobalOptions.DisableSteamAchievements,
-                        GlobalOptions.RespectUnlocks,
-                        GlobalOptions.EnableDebugMenu,
-                        GlobalOptions.EnableExtraLogging,
-                    ])}
+                    <Stack spacing={2}>{getOptions().map((flag) => renderOptionCheckbox(flag))}</Stack>
                 </ModalBody>
                 <ModalFooter gap={2}>
                     <Button onClick={handleSave} variant="outline">
