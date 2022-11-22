@@ -48,5 +48,6 @@ bitflags! {
         const RESPECT_UNLOCKS = 1 << 3;
         const ENABLE_DEBUG_MENU = 1 << 4;
         const ENABLE_EXTRA_LOGGING = 1 << 5;
+        const ENABLE_USER_METRICS = 1 << 6;
     }
 }

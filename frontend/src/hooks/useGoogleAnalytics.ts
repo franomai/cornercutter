@@ -1,7 +1,8 @@
-import { useMemo } from 'react';
 import ReactGA from 'react-ga4';
+
+import { useMemo } from 'react';
 import { UaEventOptions } from 'react-ga4/types/ga4';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getGlobalOptions } from '../redux/slices/cornercutter';
 import { GlobalOptions } from '../types/Configuration';
 import { hasOptionSet } from '../utility/ConfigHelpers';
@@ -21,9 +22,7 @@ export interface GoogleAnalytics {
 const EmptyFunction = () => {};
 
 export default function useGoogleAnalytics(): GoogleAnalytics {
-    const dispatch = useDispatch();
     const globalOptions = useSelector(getGlobalOptions);
-
     const enableUserMetrics = hasOptionSet(globalOptions, GlobalOptions.EnableUserMetrics);
 
     const event: EventHandler = useMemo(() => {
