@@ -29,17 +29,21 @@ const optionLabels: Record<GlobalOptions, string> = {
     [GlobalOptions.RespectUnlocks]: 'Only spawn unlocked skills',
     [GlobalOptions.EnableDebugMenu]: 'Enable debug menu',
     [GlobalOptions.EnableExtraLogging]: 'Enable additional Cornercutter logging',
+    [GlobalOptions.EnsureAlwaysFiveCubitShopOptions]: 'Ensure the Cubit shop always has five skills',
+    [GlobalOptions.EnableFreeCubitShop]: 'Make the Cubit shop free',
 };
 
 const optionTooltips: Record<GlobalOptions, string> = {
-    [GlobalOptions.DisableCornercutter]: 'Turns cornercutter off for the next run. No indicator will show in-game.',
+    [GlobalOptions.DisableCornercutter]: 'Turns Cornercutter off for the next run. No indicator will show in-game.',
     [GlobalOptions.DisableHighscores]:
-        'New best times with Cornercutter enabled will not be saved, unless it is the fist clear for that dungeon.',
-    [GlobalOptions.DisableSteamAchievements]: 'Turns off steam achievements for progression and unlocks.',
+        'New best times with Cornercutter enabled will not be saved, unless it is the first clear for that dungeon.',
+    [GlobalOptions.DisableSteamAchievements]: 'Turns off Steam achievements for progression and unlocks.',
     [GlobalOptions.RespectUnlocks]:
-        'While enabled, mods will not spawn items not unlocked in gain - effectively, the pool will be reduced.',
+        'While enabled, mods will not spawn items not unlocked in-game - effectively, the pool will be reduced.',
     [GlobalOptions.EnableDebugMenu]: 'Activates the debug menu in the pause screen.',
     [GlobalOptions.EnableExtraLogging]: 'Adds some extra logging to Cornercutter to help diagnose spawning issues.',
+    [GlobalOptions.EnsureAlwaysFiveCubitShopOptions]: 'The Cubit shop in Fizzle will always have five spots, rerolling skills if purchased',
+    [GlobalOptions.EnableFreeCubitShop]: 'Skills in the Cubit shop in Fizzle cost 0 cubits.',
 };
 
 const Settings = ({
@@ -110,13 +114,15 @@ const Settings = ({
         >
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Global Option</ModalHeader>
+                <ModalHeader>Global Settings</ModalHeader>
                 <ModalBody>
                     {renderOptionCheckboxes([
                         GlobalOptions.DisableCornercutter,
                         GlobalOptions.DisableHighscores,
                         GlobalOptions.DisableSteamAchievements,
                         GlobalOptions.RespectUnlocks,
+                        GlobalOptions.EnsureAlwaysFiveCubitShopOptions,
+                        GlobalOptions.EnableFreeCubitShop,
                         GlobalOptions.EnableDebugMenu,
                         GlobalOptions.EnableExtraLogging,
                     ])}

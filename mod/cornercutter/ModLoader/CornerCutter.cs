@@ -31,6 +31,29 @@ namespace cornercutter.ModLoader
         }
     }
 
+    [HarmonyPatch(typeof(GUIManager), nameof(GUIManager.LoadFizzle))]
+    class FizzleReloader
+    {
+        static void Postfix()
+        {
+            CutterConfig cornercutter = CutterConfig.Instance;
+            cornercutter.LogInfo("Reloaded Fizzle, reloading base cornercutter config ...");
+            try
+            {
+                CutterConfig.Instance.Setup();
+                cornercutter.LogInfo("Cornercutter is loaded!");
+            }
+            catch (Exception e)
+            {
+                cornercutter.LogError("Couldn't reload cornercutter info:");
+                cornercutter.LogError(e);
+
+                cornercutter.LogError("Putting cornercutter to sleep ...");
+                CutterConfig.Instance.ShutdownCornercutter();
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(DungeonManager), nameof(DungeonManager.Awake))]
     class ConfigLoader
     {
@@ -45,7 +68,7 @@ namespace cornercutter.ModLoader
                 cornercutter.LoadCurrentConfig();
                 if (cornercutter.CornercutterIsEnabled())
                 {
-                    if (cornercutter.HasCurrentMod)
+                    if (cornercutter.ModIsActive())
                     {
                         cornercutter.LogInfo("Config loaded, let's rumble!");
                     }

@@ -7,9 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using TMPro;
-using UnityEngine;
 
 namespace cornercutter.ModLoader
 {
@@ -39,9 +37,20 @@ namespace cornercutter.ModLoader
         {
         }
 
-        public void Setup(ManualLogSource logger)
+        public void Setup(ManualLogSource logger = null)
         {
-            Logger = logger;
+            if (logger == null)
+            {
+                if (Logger == null)
+                {
+                    throw new Exception("First cornercutter setup should set a logger.");
+                }
+                // Don't unset the logger via this call
+            }
+            else
+            {
+                Logger = logger;
+            }
             ClearConfig();
             LoadGlobalSettings();
         }
@@ -160,7 +169,20 @@ namespace cornercutter.ModLoader
         public void UpdateIndicatorVisibility()
         {
             if (VisualIndicator == null) return;
-            VisualIndicator.text = HasCurrentMod ? "Cutting corners..." : "Not cutting corners!";
+
+            if (HasCurrentMod)
+            {
+                VisualIndicator.text = Singleton<DungeonManager>.instance == null
+                    ? "Ready to cut some corners!"
+                    : "Cutting corners...";
+            }
+            else
+            {
+                VisualIndicator.text = Singleton<DungeonManager>.instance == null
+                    ? "Thinking about cutting corners..."
+                    : "Not cutting corners!";
+            }
+
             VisualIndicator.enabled = CornercutterIsEnabled();
         }
 
@@ -184,6 +206,12 @@ namespace cornercutter.ModLoader
         public bool CornercutterIsEnabled()
         {
             return !GlobalOptions.HasFlag(GlobalOptions.DisableCornercutter);
+        }
+
+        public bool ModIsActive()
+        {
+            // If there's no DungeonManager, we are in Fizzle
+            return HasCurrentMod && Singleton<DungeonManager>.instance != null;
         }
     }
 }

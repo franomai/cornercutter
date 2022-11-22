@@ -12,7 +12,7 @@ namespace cornercutter.ModFeature.ModSetting
         static void Postfix(ref DungeonManager __instance)
         {
             CutterConfig cornercutter = CutterConfig.Instance;
-            if (!(cornercutter.CornercutterIsEnabled() && cornercutter.HasCurrentMod)) return;
+            if (!(cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive())) return;
 
             int currentFloor = __instance.currentFloor + 1;
             WeightedSkill[] startingSkills = cornercutter.StartingSkills;

@@ -13,7 +13,7 @@ namespace cornercutter.ModFeature.ModSetting
         static void Postfix(ref DungeonManager __instance, ref bool __result)
         {
             CutterConfig cornercutter = CutterConfig.Instance;
-            if (!(cornercutter.CornercutterIsEnabled() && cornercutter.HasCurrentMod)) return;
+            if (!(cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive())) return;
 
             int currentFloor = __instance.currentFloor + 1;
             PedestalSpawnType pedestalSpawnType = cornercutter.PedestalSpawnType;

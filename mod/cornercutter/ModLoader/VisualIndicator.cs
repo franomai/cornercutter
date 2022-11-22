@@ -12,6 +12,7 @@ namespace cornercutter.ModLoader
     {
         static void Prefix(ref GUIManager __instance)
         {
+            // FYR the GUIManager actually does have a static instance we could go through instead
             GameObject canvas = __instance.hudCanvas.gameObject;
             TextMeshProUGUI text = canvas.AddComponent<TextMeshProUGUI>();
             
@@ -42,7 +43,7 @@ namespace cornercutter.ModLoader
 
             if (endgameStrings.Contains(id))
             {
-                __result += cornercutter.HasCurrentMod ? " Corners were cut." : " No corners cut!";
+                __result += cornercutter.ModIsActive() ? " Corners were cut." : " No corners cut!";
             }
         }
     }
