@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import { getGlobalOptions } from '../../redux/slices/cornercutter';
 import ReactGA from 'react-ga4';
 import { allValues } from '../../utility/Utils';
+import useGoogleAnalytics from '../../hooks/useGoogleAnalytics';
 
 interface OptionDetails {
     label: string;
@@ -61,6 +62,16 @@ const optionDetails: Record<GlobalOptions, OptionDetails> = {
     },
 };
 
+const AllOptions = [
+    GlobalOptions.DisableCornercutter,
+    GlobalOptions.DisableHighscores,
+    GlobalOptions.DisableSteamAchievements,
+    GlobalOptions.RespectUnlocks,
+    GlobalOptions.EnableDebugMenu,
+    GlobalOptions.EnableExtraLogging,
+    GlobalOptions.EnableUserMetrics,
+];
+
 const Settings = ({
     isShown,
     handleSaveChanges,
@@ -73,6 +84,7 @@ const Settings = ({
     const globalOptions = useSelector(getGlobalOptions);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [updatedSettings, setUpdatedSettings] = useState(globalOptions);
+    const GA = useGoogleAnalytics();
 
     useEffect(() => {
         if (isShown) {
@@ -83,55 +95,65 @@ const Settings = ({
         }
     }, [globalOptions, isShown, onClose, onOpen]);
 
-    const handleSave = useCallback(() => {
-        const hasDisabledCornercutter = hasOptionSet(updatedSettings, GlobalOptions.DisableCornercutter);
-        const hasUpdatedDisableCornercutter =
-            hasDisabledCornercutter !== hasOptionSet(globalOptions, GlobalOptions.DisableCornercutter);
+    const ifChanged = useCallback(
+        (flag: GlobalOptions, callback: (isSet: boolean) => void) => {
+            const newValue = hasOptionSet(updatedSettings, flag);
+            const hasChanged = newValue !== hasOptionSet(globalOptions, flag);
+            if (hasChanged) {
+                callback(newValue);
+            }
+        },
+        [updatedSettings, globalOptions],
+    );
 
-        if (hasUpdatedDisableCornercutter) {
-            const action = hasDisabledCornercutter ? 'Disable Cornercutter' : 'Enable Cornercutter';
-            ReactGA.event({ category: 'Settings', action });
-        }
+    const handleSave = useCallback(() => {
+        ifChanged(GlobalOptions.DisableCornercutter, (isSet) => {
+            const action = isSet ? 'Disable Cornercutter' : 'Enable Cornercutter';
+            GA.event({ category: 'Settings', action });
+        });
+        ifChanged(GlobalOptions.EnableUserMetrics, (isSet) => {
+            const action = isSet ? 'Enable User Metrics' : 'Disable User Metrics';
+            GA.event({ category: 'User Metrics', action });
+        });
 
         handleSaveChanges(updatedSettings);
-    }, [handleSaveChanges, updatedSettings, globalOptions]);
+    }, [handleSaveChanges, updatedSettings, GA, ifChanged]);
 
     const handleDiscard = useCallback(() => {
         handleDiscardChanges();
         onClose();
     }, [handleDiscardChanges, onClose]);
 
-    function setFlag(flag: GlobalOptions, isChecked: boolean) {
-        console.log(updatedSettings);
-        setUpdatedSettings(setOptionFlag(updatedSettings, flag, isChecked) as GlobalOptions);
-    }
+    const setFlag = useCallback(
+        (flag: GlobalOptions, isChecked: boolean) => {
+            setUpdatedSettings(setOptionFlag(updatedSettings, flag, isChecked) as GlobalOptions);
+        },
+        [updatedSettings],
+    );
 
-    function renderOptionCheckbox(flag: GlobalOptions): ReactNode {
-        const details = optionDetails[flag];
-        return (
-            <Checkbox
-                key={flag}
-                isChecked={hasOptionSet(updatedSettings, flag)}
-                onChange={(e) => setFlag(flag, e.target.checked)}
-            >
-                <Tooltip hasArrow label={details.label} aria-label="More info" placement="top" openDelay={700}>
-                    {details.label}
-                </Tooltip>
-            </Checkbox>
-        );
-    }
-
-    function getOptions(): GlobalOptions[] {
-        return [
-            GlobalOptions.DisableCornercutter,
-            GlobalOptions.DisableHighscores,
-            GlobalOptions.DisableSteamAchievements,
-            GlobalOptions.RespectUnlocks,
-            GlobalOptions.EnableDebugMenu,
-            GlobalOptions.EnableExtraLogging,
-            GlobalOptions.EnableUserMetrics,
-        ];
-    }
+    const renderOptionCheckbox = useCallback(
+        (flag: GlobalOptions): ReactNode => {
+            const details = optionDetails[flag];
+            return (
+                <Checkbox
+                    isChecked={hasOptionSet(updatedSettings, flag)}
+                    onChange={(e) => setFlag(flag, e.target.checked)}
+                >
+                    <Tooltip
+                        key={flag}
+                        hasArrow
+                        label={details.label}
+                        aria-label="More info"
+                        placement="top"
+                        openDelay={700}
+                    >
+                        <span tabIndex={-1}>{details.label}</span>
+                    </Tooltip>
+                </Checkbox>
+            );
+        },
+        [setFlag, updatedSettings],
+    );
 
     return (
         <Modal
@@ -145,7 +167,7 @@ const Settings = ({
             <ModalContent>
                 <ModalHeader>Global Option</ModalHeader>
                 <ModalBody>
-                    <Stack spacing={2}>{getOptions().map((flag) => renderOptionCheckbox(flag))}</Stack>
+                    <Stack spacing={2}>{AllOptions.map((flag) => renderOptionCheckbox(flag))}</Stack>
                 </ModalBody>
                 <ModalFooter gap={2}>
                     <Button onClick={handleSave} variant="outline">

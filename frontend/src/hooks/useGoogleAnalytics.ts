@@ -50,14 +50,5 @@ export default function useGoogleAnalytics(): GoogleAnalytics {
             : EmptyFunction;
     }, [enableUserMetrics]);
 
-    // function toggleUserMetrics() {
-    //     const newEnableUserMetrics = !enableUserMetrics;
-    //     const action = newEnableUserMetrics ? 'Enable User Metrics' : 'Disable User Metrics';
-    //     // One final analytic to see how many users have disabled user metrics.
-    //     event({ category: 'User Metrics', action });
-
-    //     dispatch(setIsUserMetricsEnabled(newEnableUserMetrics));
-    // }
-
     return { send, event };
 }
