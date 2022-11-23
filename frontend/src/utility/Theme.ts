@@ -15,7 +15,7 @@ const Button: ComponentStyleConfig = {
             _disabled: {
                 _hover: {
                     // For some reason there's a default style that's a higher priority
-                    // than this hence the !important is needed.
+                    // than this hence the !important is needed to override it.
                     bg: 'green.300 !important',
                 },
             },

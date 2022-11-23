@@ -1,10 +1,10 @@
 import { Box, Button, Flex, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { invoke } from '@tauri-apps/api/tauri';
-import { ReactNode, useCallback, useState } from 'react';
+import { ReactNode, useCallback, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCornercutterConfig, setGlobalOptions } from '../../redux/slices/cornercutter';
+import { getCornercutterConfig } from '../../redux/slices/cornercutter';
 import { addMod, getAllMods, getSelectedMod, setSelectedMod } from '../../redux/slices/mod';
-import ModConfig, { Floor, ModOptions, GlobalOptions } from '../../types/Configuration';
+import ModConfig, { Floor, ModOptions } from '../../types/Configuration';
 import TabData from '../../types/TabData';
 import { hasOptionSet } from '../../utility/ConfigHelpers';
 import BlankTextLayout from '../layout/BlankTextLayout';
@@ -45,14 +45,14 @@ const SpecificFloorsData: FloorData[] = [
 
 const ModdingConfig = () => {
     const dispatch = useDispatch();
-    const mods = useSelector(getAllMods);
-    const config = useSelector(getCornercutterConfig);
-    const selectedMod = useSelector(getSelectedMod);
     const GA = useGoogleAnalytics();
+    const mods = useSelector(getAllMods);
+    const selectedMod = useSelector(getSelectedMod);
+    const config = useSelector(getCornercutterConfig);
+    const openSettingsRef = useRef<HTMLButtonElement>(null);
 
-    const [newModId, setNewModId] = useState<string | null>(null);
     const [showImportMod, setShowImportMod] = useState(false);
-    const [showSettings, setShowSettings] = useState(false);
+    const [newModId, setNewModId] = useState<string | null>(null);
 
     const handleNewMod = useCallback(() => {
         invoke<string>('get_new_mod_id')
@@ -63,16 +63,6 @@ const ModdingConfig = () => {
     const handleImportMod = useCallback(() => {
         setShowImportMod(true);
     }, [setShowImportMod]);
-
-    const handleSaveSettings = useCallback(
-        (globalOptions: GlobalOptions) => {
-            setShowSettings(false);
-            invoke('set_global_options', { options: globalOptions }).then(() => {
-                dispatch(setGlobalOptions(globalOptions));
-            });
-        },
-        [setShowSettings, dispatch],
-    );
 
     const getTabs = useCallback((selectedMod: ModConfig): TabData[] => {
         const tabs: TabData[] = [
@@ -182,19 +172,14 @@ const ModdingConfig = () => {
                 <Button variant="outline" w="full" onClick={handleImportMod}>
                     Import Mod
                 </Button>
-                <Button variant="outline" w="full" onClick={() => setShowSettings(true)}>
+                <Button variant="outline" w="full" ref={openSettingsRef}>
                     Global Settings
                 </Button>
             </ModList>
             {renderLayout()}
             {config && <FindGoingUnder config={config} />}
-            {showSettings && (
-                <Settings
-                    isShown={showSettings}
-                    handleSaveChanges={handleSaveSettings}
-                    handleDiscardChanges={() => setShowSettings(false)}
-                />
-            )}
+            <Settings openRef={openSettingsRef} />
+
             {newModId && (
                 <NewMod
                     id={newModId}

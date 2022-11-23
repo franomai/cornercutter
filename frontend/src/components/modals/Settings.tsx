@@ -24,10 +24,10 @@ import {
     setEnableUserMetrics,
     setGlobalOptions,
 } from '../../redux/slices/cornercutter';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { setOptionFlag, hasOptionSet } from '../../utility/ConfigHelpers';
-import OptionCheckboxes from '../forms/OptionCheckboxes';
 import { invoke } from '@tauri-apps/api';
+import OptionCheckboxes from '../forms/OptionCheckboxes';
+import { setOptionFlag, hasOptionSet } from '../../utility/ConfigHelpers';
+import { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
 
 const optionDetails: Record<GlobalOptions, OptionDetails> = {
     [GlobalOptions.DisableCornercutter]: {
@@ -58,15 +58,7 @@ const optionDetails: Record<GlobalOptions, OptionDetails> = {
     },
 };
 
-const Settings = ({
-    isShown,
-    handleSaveChanges,
-    handleDiscardChanges,
-}: {
-    isShown: boolean;
-    handleDiscardChanges(): void;
-    handleSaveChanges(settings: GlobalOptions): void;
-}) => {
+const Settings = ({ openRef }: { openRef: RefObject<HTMLButtonElement> }) => {
     const dispatch = useDispatch();
     const GA = useGoogleAnalytics();
     const globalOptions = useSelector(getGlobalOptions);
@@ -87,14 +79,12 @@ const Settings = ({
     );
 
     useEffect(() => {
-        if (isShown) {
-            onOpen();
-            setUpdatedOptions(globalOptions);
-            setUpdatedEnableUserMetrics(enableUserMetrics);
-        } else {
-            onClose();
-        }
-    }, [globalOptions, enableUserMetrics, isShown, onClose, onOpen]);
+        const handler = () => onOpen();
+        const current = openRef.current;
+        current?.addEventListener('click', handler);
+
+        return () => current?.removeEventListener('click', handler);
+    }, [openRef, onOpen]);
 
     const ifChanged = useCallback(
         (flag: GlobalOptions, callback: (isSet: boolean) => void) => {
@@ -108,22 +98,22 @@ const Settings = ({
     );
 
     const handleSave = useCallback(() => {
-        if (!hasChangedSettings) return;
+        if (hasChangedSettings) {
+            ifChanged(GlobalOptions.DisableCornercutter, (isSet) => {
+                const action = isSet ? 'Disable Cornercutter' : 'Enable Cornercutter';
+                GA.event({ category: 'Settings', action });
+            });
+            if (hasChangedEnableUserMetrics) {
+                const action = updatedEnableUserMetrics ? 'Enable User Metrics' : 'Disable User Metrics';
+                GA.event({ category: 'User Metrics', action });
+            }
 
-        ifChanged(GlobalOptions.DisableCornercutter, (isSet) => {
-            const action = isSet ? 'Disable Cornercutter' : 'Enable Cornercutter';
-            GA.event({ category: 'Settings', action });
-        });
-        if (hasChangedEnableUserMetrics) {
-            const action = updatedEnableUserMetrics ? 'Enable User Metrics' : 'Disable User Metrics';
-            GA.event({ category: 'User Metrics', action });
+            invoke('set_global_options', { options: updatedOptions }).then(() => {
+                dispatch(setGlobalOptions(updatedOptions));
+                dispatch(setEnableUserMetrics(updatedEnableUserMetrics));
+            });
         }
-
-        invoke('set_global_options', { options: updatedOptions }).then(() => {
-            dispatch(setGlobalOptions(updatedOptions));
-            dispatch(setEnableUserMetrics(updatedEnableUserMetrics));
-        });
-        handleSaveChanges(updatedOptions);
+        onClose();
     }, [
         GA,
         updatedOptions,
@@ -132,13 +122,14 @@ const Settings = ({
         hasChangedEnableUserMetrics,
         dispatch,
         ifChanged,
-        handleSaveChanges,
+        onClose,
     ]);
 
     const handleDiscard = useCallback(() => {
-        handleDiscardChanges();
+        setUpdatedOptions(globalOptions);
+        setUpdatedEnableUserMetrics(enableUserMetrics);
         onClose();
-    }, [handleDiscardChanges, onClose]);
+    }, [globalOptions, enableUserMetrics, onClose]);
 
     const setFlag = useCallback(
         (flag: GlobalOptions, isChecked: boolean) => {
@@ -148,17 +139,11 @@ const Settings = ({
     );
 
     return (
-        <Modal
-            isOpen={isOpen}
-            onClose={() => {
-                handleDiscardChanges();
-                onClose();
-            }}
-        >
+        <Modal isOpen={isOpen} onClose={handleSave}>
             <ModalOverlay />
-            <ModalCloseButton onClick={handleSave} />
             <ModalContent>
                 <ModalHeader>Global Option</ModalHeader>
+                <ModalCloseButton onClick={handleSave} title="Save changes" />
                 <ModalBody>
                     <OptionCheckboxes<GlobalOptions>
                         flags={[
