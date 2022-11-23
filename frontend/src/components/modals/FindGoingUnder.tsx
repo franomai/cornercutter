@@ -18,7 +18,7 @@ import {
 import { invoke } from '@tauri-apps/api/tauri';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setCornercutterConfig } from '../../redux/slices/cornercutter';
+import { setCornercutterDir } from '../../redux/slices/cornercutter';
 import { CornerCutterConfig } from '../../types/CornerCutterConfig';
 
 const FindGoingUnder = ({ config }: { config: CornerCutterConfig }) => {
@@ -39,7 +39,7 @@ const FindGoingUnder = ({ config }: { config: CornerCutterConfig }) => {
             setIsValid(isValid);
             if (isValid) {
                 onClose();
-                dispatch(setCornercutterConfig({ setDirectory: true, goingUnderDir: dir }));
+                dispatch(setCornercutterDir(dir));
             }
         });
     }, [dir, onClose, dispatch]);

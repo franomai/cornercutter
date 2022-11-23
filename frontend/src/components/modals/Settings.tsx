@@ -16,12 +16,18 @@ import {
     Text,
     useDisclosure,
 } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { GlobalOptions } from '../../types/Configuration';
-import { getGlobalOptions } from '../../redux/slices/cornercutter';
+import {
+    getEnableUserMetrics,
+    getGlobalOptions,
+    setEnableUserMetrics,
+    setGlobalOptions,
+} from '../../redux/slices/cornercutter';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { setOptionFlag, hasOptionSet } from '../../utility/ConfigHelpers';
 import OptionCheckboxes from '../forms/OptionCheckboxes';
+import { invoke } from '@tauri-apps/api';
 
 const optionDetails: Record<GlobalOptions, OptionDetails> = {
     [GlobalOptions.DisableCornercutter]: {
@@ -61,21 +67,34 @@ const Settings = ({
     handleDiscardChanges(): void;
     handleSaveChanges(settings: GlobalOptions): void;
 }) => {
-    const globalOptions = useSelector(getGlobalOptions);
+    const dispatch = useDispatch();
     const GA = useGoogleAnalytics();
+    const globalOptions = useSelector(getGlobalOptions);
+    const enableUserMetrics = useSelector(getEnableUserMetrics);
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [updatedOptions, setUpdatedOptions] = useState(globalOptions);
-    const hasChangedSettings = updatedOptions !== globalOptions;
+    const [updatedEnableUserMetrics, setUpdatedEnableUserMetrics] = useState(enableUserMetrics);
+
+    const hasChangedEnableUserMetrics = useMemo(
+        () => updatedEnableUserMetrics !== enableUserMetrics,
+        [updatedEnableUserMetrics, enableUserMetrics],
+    );
+
+    const hasChangedSettings = useMemo(
+        () => updatedOptions !== globalOptions || hasChangedEnableUserMetrics,
+        [updatedOptions, globalOptions, hasChangedEnableUserMetrics],
+    );
 
     useEffect(() => {
         if (isShown) {
             onOpen();
             setUpdatedOptions(globalOptions);
+            setUpdatedEnableUserMetrics(enableUserMetrics);
         } else {
             onClose();
         }
-    }, [globalOptions, isShown, onClose, onOpen]);
+    }, [globalOptions, enableUserMetrics, isShown, onClose, onOpen]);
 
     const ifChanged = useCallback(
         (flag: GlobalOptions, callback: (isSet: boolean) => void) => {
@@ -89,17 +108,32 @@ const Settings = ({
     );
 
     const handleSave = useCallback(() => {
+        if (!hasChangedSettings) return;
+
         ifChanged(GlobalOptions.DisableCornercutter, (isSet) => {
             const action = isSet ? 'Disable Cornercutter' : 'Enable Cornercutter';
             GA.event({ category: 'Settings', action });
         });
-        ifChanged(GlobalOptions.EnableUserMetrics, (isSet) => {
-            const action = isSet ? 'Enable User Metrics' : 'Disable User Metrics';
+        if (hasChangedEnableUserMetrics) {
+            const action = updatedEnableUserMetrics ? 'Enable User Metrics' : 'Disable User Metrics';
             GA.event({ category: 'User Metrics', action });
-        });
+        }
 
+        invoke('set_global_options', { options: updatedOptions }).then(() => {
+            dispatch(setGlobalOptions(updatedOptions));
+            dispatch(setEnableUserMetrics(updatedEnableUserMetrics));
+        });
         handleSaveChanges(updatedOptions);
-    }, [handleSaveChanges, updatedOptions, GA, ifChanged]);
+    }, [
+        GA,
+        updatedOptions,
+        hasChangedSettings,
+        updatedEnableUserMetrics,
+        hasChangedEnableUserMetrics,
+        dispatch,
+        ifChanged,
+        handleSaveChanges,
+    ]);
 
     const handleDiscard = useCallback(() => {
         handleDiscardChanges();
@@ -122,6 +156,7 @@ const Settings = ({
             }}
         >
             <ModalOverlay />
+            <ModalCloseButton onClick={handleSave} />
             <ModalContent>
                 <ModalHeader>Global Option</ModalHeader>
                 <ModalBody>
@@ -145,7 +180,8 @@ const Settings = ({
                         <TooltipCheckbox
                             label="Enable User Metrics"
                             tooltip="Allow us to see how you use Cornercutter."
-                            isChecked={true}
+                            isChecked={updatedEnableUserMetrics}
+                            onChange={(e) => setUpdatedEnableUserMetrics(e.target.checked)}
                         />
                         <Text fontSize="sm">
                             Allow us to see how you are using Cornercutter. None of the metrics we collect can be linked
@@ -163,7 +199,7 @@ const Settings = ({
                 </ModalBody>
                 <ModalFooter>
                     <ButtonGroup variant="outline">
-                        <Button onClick={handleSave} colorScheme={hasChangedSettings ? 'green' : undefined}>
+                        <Button onClick={handleSave} variant="solid" disabled={!hasChangedSettings}>
                             Save Changes
                         </Button>
                         <Button onClick={handleDiscard}>Discard Changes</Button>

@@ -55,7 +55,7 @@ const Dropzone = ({ skills, singleRow, handleSetSkills }: DropzoneProps) => {
         if (debouncedSkills !== skills) {
             handleSetSkills(debouncedSkills);
         }
-    }, [debouncedSkills]);
+    }, [debouncedSkills, skills, handleSetSkills]);
 
     const handleDeleteSkill = useCallback(
         (skillIndex: number) => {

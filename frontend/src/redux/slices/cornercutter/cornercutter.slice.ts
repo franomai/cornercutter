@@ -20,16 +20,30 @@ const cornercutterSlice = createSlice({
         setCornercutterConfig(state, action: { payload: CornerCutterConfig }) {
             state.config = action.payload;
         },
+        setCornercutterDir(state, action: { payload: string }) {
+            if (state.config) {
+                state.config.goingUnderDir = action.payload;
+                state.config.setDirectory = true;
+            }
+        },
+        setEnableUserMetrics(state, action: { payload: boolean }) {
+            if (state.config) {
+                state.config.enableUserMetrics = action.payload;
+            }
+        },
         setGlobalOptions(state, action: { payload: GlobalOptions }) {
             state.globalOptions = action.payload;
         },
     },
 });
 
-export const { setCornercutterConfig, setGlobalOptions } = cornercutterSlice.actions;
+export const { setCornercutterConfig, setCornercutterDir, setEnableUserMetrics, setGlobalOptions } =
+    cornercutterSlice.actions;
 
 export const getCornercutterConfig = (state: StoreState) => state.cornercutter.config;
 
 export const getGlobalOptions = (state: StoreState) => state.cornercutter.globalOptions;
+
+export const getEnableUserMetrics = (state: StoreState) => state.cornercutter.config?.enableUserMetrics ?? false;
 
 export default cornercutterSlice.reducer;
