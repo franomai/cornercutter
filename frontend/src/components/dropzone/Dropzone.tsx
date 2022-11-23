@@ -1,15 +1,16 @@
-import { Box, Flex, FlexProps, SimpleGrid, SimpleGridProps, Stack, Text } from '@chakra-ui/react';
-import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
-import { useDrop } from 'react-dnd';
-import { useSelector } from 'react-redux';
 import useDebounce from '../../hooks/UseDebounce';
-import { getSelectedMod } from '../../redux/slices/mod';
-import { getAllSkills } from '../../redux/slices/skills';
-import { SpawnType } from '../../types/Configuration';
-import { ItemType } from '../../types/ItemTypes';
-import { WeightedSkill } from '../../types/Skill';
 import BlankTextLayout from '../layout/BlankTextLayout';
 import SkillCard from '../skills/SkillCard';
+
+import { useDrop } from 'react-dnd';
+import { useSelector } from 'react-redux';
+import { WeightedSkill } from '../../types/Skill';
+import { SpawnType } from '../../types/Configuration';
+import { ItemType } from '../../types/enums/SkillEnums';
+import { getSelectedMod } from '../../redux/slices/mod';
+import { getAllSkills } from '../../redux/slices/skills';
+import { Box, Flex, FlexProps, Stack, Text } from '@chakra-ui/react';
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 
 export interface DropzoneProps {
     skills: WeightedSkill[];

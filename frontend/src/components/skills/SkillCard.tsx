@@ -1,3 +1,6 @@
+import Skill from '../../types/Skill';
+import HelpIcon from '../forms/HelpIcon';
+
 import {
     Box,
     Flex,
@@ -13,11 +16,9 @@ import {
     Stack,
     Text,
 } from '@chakra-ui/react';
+import { ReactNode, useEffect, useState } from 'react';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ReactNode, useEffect, useState } from 'react';
-import Skill from '../../types/Skill';
-import HelpIcon from '../forms/HelpIcon';
 
 export interface SkillCardProps {
     skill: Skill;
@@ -39,14 +40,12 @@ const SkillCard = forwardRef<SkillCardProps, 'div'>(
             if (weighting !== newWeight) {
                 // Don't call the update function until they stop editing it for a while
                 const timeout = setTimeout(() => {
-                    if (handleUpdateWeight) {
-                        handleUpdateWeight(newWeight);
-                    }
+                    handleUpdateWeight?.(newWeight);
                 }, 500);
 
                 return () => clearTimeout(timeout);
             }
-        }, [weighting, newWeight]);
+        }, [weighting, newWeight, handleUpdateWeight]);
 
         function renderIcons(): ReactNode {
             return (

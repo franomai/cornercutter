@@ -1,6 +1,7 @@
-import { useDrag } from 'react-dnd';
-import { ItemType } from '../../types/ItemTypes';
 import SkillCard, { SkillCardProps } from './SkillCard';
+
+import { useDrag } from 'react-dnd';
+import { ItemType } from '../../types/enums/SkillEnums';
 
 const DraggableSkillCard = ({ skill, ...skillCardProps }: SkillCardProps) => {
     const [, dragRef] = useDrag(() => ({

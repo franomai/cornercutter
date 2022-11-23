@@ -1,9 +1,7 @@
-import { Checkbox, Tooltip, SimpleGrid, Stack, Text } from '@chakra-ui/react';
-import { ReactNode } from 'react';
-import { useDispatch } from 'react-redux';
-import { setCurseSpawns, setMultiSpawners, setOption, setPedestalSpawns, setSpawns } from '../../../redux/slices/mod';
-import { saveSelectedMod } from '../../../redux/slices/saving';
-import { AppDispatch } from '../../../redux/store';
+import TooltipRadio from '../../forms/TooltipRadio';
+import OptionCheckboxes from '../../forms/OptionCheckboxes';
+import LabelledRadioGroup from '../../forms/LabelledRadioGroup';
+
 import ModConfig, {
     CurseSpawnType,
     ModOptions,
@@ -11,10 +9,13 @@ import ModConfig, {
     PedestalSpawnType,
     MultiSpawnerType,
 } from '../../../types/Configuration';
-import { hasOptionSet } from '../../../utility/ConfigHelpers';
-import LabelledRadioGroup from '../../forms/LabelledRadioGroup';
-import TooltipRadio from '../../forms/TooltipRadio';
-import { OptionDetails } from '../../modals/Settings';
+import { ReactNode, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../../redux/store';
+import { SimpleGrid, Stack, Text } from '@chakra-ui/react';
+import { OptionDetails } from '../../forms/TooltipCheckbox';
+import { saveSelectedMod } from '../../../redux/slices/saving';
+import { setCurseSpawns, setMultiSpawners, setOption, setPedestalSpawns, setSpawns } from '../../../redux/slices/mod';
 
 const optionDetails: Record<ModOptions, OptionDetails> = {
     [ModOptions.ConfigPerFloor]: {
@@ -54,27 +55,22 @@ const optionDetails: Record<ModOptions, OptionDetails> = {
 const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
     const dispatch = useDispatch<AppDispatch>();
 
-    function renderOptionCheckbox(flag: ModOptions): ReactNode {
-        const optionDetail = optionDetails[flag];
-        return (
-            <Checkbox
-                key={flag}
-                isChecked={hasOptionSet(selectedMod.general.options, flag)}
-                onChange={(e) => {
-                    dispatch(setOption({ flag, isEnabled: e.target.checked }));
-                    dispatch(saveSelectedMod());
-                }}
-            >
-                <Tooltip hasArrow label={optionDetail.tooltip} aria-label="More info" placement="top" openDelay={700}>
-                    <span tabIndex={-1}>{optionDetail.label}</span>
-                </Tooltip>
-            </Checkbox>
-        );
-    }
-
-    function renderOptionCheckboxes(flags: ModOptions[]): ReactNode {
-        return <Stack spacing={2}>{flags.map((flag) => renderOptionCheckbox(flag))}</Stack>;
-    }
+    const renderOptionCheckboxes = useCallback(
+        (flags: ModOptions[]): ReactNode => {
+            return (
+                <OptionCheckboxes<ModOptions>
+                    flags={flags}
+                    optionDetails={optionDetails}
+                    options={selectedMod.general.options}
+                    handleChange={(flag, isEnabled) => {
+                        dispatch(setOption({ flag, isEnabled }));
+                        dispatch(saveSelectedMod());
+                    }}
+                />
+            );
+        },
+        [dispatch, selectedMod.general.options],
+    );
 
     return (
         <Stack spacing={6}>
