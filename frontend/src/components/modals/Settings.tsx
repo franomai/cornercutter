@@ -2,6 +2,12 @@ import useGoogleAnalytics from '../../hooks/useGoogleAnalytics';
 import TooltipCheckbox, { OptionDetails } from '../forms/TooltipCheckbox';
 
 import {
+    getEnableUserMetrics,
+    getGlobalOptions,
+    setEnableUserMetrics,
+    setGlobalOptions,
+} from '../../redux/slices/cornercutter';
+import {
     Button,
     ButtonGroup,
     Link,
@@ -16,16 +22,10 @@ import {
     Text,
     useDisclosure,
 } from '@chakra-ui/react';
-import { useDispatch, useSelector } from 'react-redux';
-import { GlobalOptions } from '../../types/Configuration';
-import {
-    getEnableUserMetrics,
-    getGlobalOptions,
-    setEnableUserMetrics,
-    setGlobalOptions,
-} from '../../redux/slices/cornercutter';
 import { invoke } from '@tauri-apps/api';
+import { useDispatch, useSelector } from 'react-redux';
 import OptionCheckboxes from '../forms/OptionCheckboxes';
+import { GlobalOptions } from '../../types/Configuration';
 import { setOptionFlag, hasOptionSet } from '../../utility/ConfigHelpers';
 import { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
 

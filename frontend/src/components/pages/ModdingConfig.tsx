@@ -49,16 +49,11 @@ const ModdingConfig = () => {
     const mods = useSelector(getAllMods);
     const selectedMod = useSelector(getSelectedMod);
     const config = useSelector(getCornercutterConfig);
+    const openNewModRef = useRef<HTMLButtonElement>(null);
     const openSettingsRef = useRef<HTMLButtonElement>(null);
 
     const [showImportMod, setShowImportMod] = useState(false);
     const [newModId, setNewModId] = useState<string | null>(null);
-
-    const handleNewMod = useCallback(() => {
-        invoke<string>('get_new_mod_id')
-            .then((id) => setNewModId(id))
-            .catch(console.error);
-    }, [setNewModId]);
 
     const handleImportMod = useCallback(() => {
         setShowImportMod(true);
@@ -166,7 +161,7 @@ const ModdingConfig = () => {
     return (
         <Box display="flex" flexDirection="row" h="full" maxW="full" w="full" overflowX="hidden">
             <ModList>
-                <Button variant="outline" w="full" onClick={handleNewMod}>
+                <Button variant="outline" w="full" ref={openNewModRef}>
                     New Mod
                 </Button>
                 <Button variant="outline" w="full" onClick={handleImportMod}>
@@ -179,18 +174,7 @@ const ModdingConfig = () => {
             {renderLayout()}
             {config && <FindGoingUnder config={config} />}
             <Settings openRef={openSettingsRef} />
-
-            {newModId && (
-                <NewMod
-                    id={newModId}
-                    handleCreate={(mod) => {
-                        setNewModId(null);
-                        dispatch(addMod(mod));
-                        dispatch(setSelectedMod(mod.id));
-                    }}
-                    handleDiscard={() => setNewModId(null)}
-                />
-            )}
+            <NewMod openRef={openNewModRef} />
             <ImportMod
                 isShown={showImportMod}
                 handleCreate={(mod) => {
