@@ -11,10 +11,10 @@ namespace cornercutter.ModLoader
         public string ClassName { get; }
         public string MethodName { get; }
 
-        public CallerInfo (string ClassName, string MethodName)
+        public CallerInfo (string className, string methodName)
         {
-            this.ClassName = ClassName;
-            this.MethodName = MethodName;
+            ClassName = className;
+            MethodName = methodName;
         }
 
         public override bool Equals(object obj)
