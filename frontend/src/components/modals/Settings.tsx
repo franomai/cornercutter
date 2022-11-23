@@ -199,7 +199,7 @@ const Settings = ({
                 </ModalBody>
                 <ModalFooter>
                     <ButtonGroup variant="outline">
-                        <Button onClick={handleSave} variant="solid" disabled={!hasChangedSettings}>
+                        <Button onClick={handleSave} variant="primary" disabled={!hasChangedSettings}>
                             Save Changes
                         </Button>
                         <Button onClick={handleDiscard}>Discard Changes</Button>
