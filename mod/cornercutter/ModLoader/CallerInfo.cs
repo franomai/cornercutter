@@ -8,22 +8,28 @@ namespace cornercutter.ModLoader
 {
     class CallerInfo
     {
-        public string MethodName { get; set; }
-        public string ClassName { get; set; }
+        public string ClassName { get; }
+        public string MethodName { get; }
+
+        public CallerInfo (string ClassName, string MethodName)
+        {
+            this.ClassName = ClassName;
+            this.MethodName = MethodName;
+        }
 
         public override bool Equals(object obj)
         {
             return obj is CallerInfo info &&
-                   MethodName == info.MethodName &&
-                   ClassName == info.ClassName;
+                   ClassName == info.ClassName &&
+                   MethodName == info.MethodName;
         }
 
         // This code is auto-generated - EqualityComparer used to here to avoid a NPE on the two fields
         public override int GetHashCode()
         {
             var hashCode = 540619687;
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(MethodName);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ClassName);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(MethodName);
             return hashCode;
         }
 
@@ -32,13 +38,10 @@ namespace cornercutter.ModLoader
             if (stack == null || frameNumber <= 0 || frameNumber > stack.FrameCount) return null;
 
             MethodBase sourceMethod = stack.GetFrame(frameNumber - 1).GetMethod();
+
             if (sourceMethod == null) return null;
 
-            return new CallerInfo
-            {
-                MethodName = sourceMethod.Name,
-                ClassName = sourceMethod.ReflectedType.Name
-            };
+            return new CallerInfo(sourceMethod.ReflectedType.Name, sourceMethod.Name);
         }
 
         // This is because the stack is usually
@@ -80,7 +83,7 @@ namespace cornercutter.ModLoader
             caller = GetCallerInfoFromStack(new StackTrace(), CALLER_FRAME_NUMBER + extraCalls);
             if (caller == null) return false;
 
-            cornercutter.LogDebug("Caller calculated as " + caller.MethodName + " in " + caller.ClassName);
+            cornercutter.LogDebug("Caller calculated as " + caller.ClassName + " from method " + caller.MethodName);
 
             return allowedSources.Contains(caller);
         }

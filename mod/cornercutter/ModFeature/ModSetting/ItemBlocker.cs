@@ -11,8 +11,8 @@ namespace cornercutter.ModFeature.ModSetting
     {
         static readonly List<CallerInfo> SkillsGrantingItems = new List<CallerInfo>()
         {
-            new CallerInfo { MethodName = "MoveNext", ClassName = "<StartWithBento>d__8" },
-            new CallerInfo { MethodName = "MoveNext", ClassName = "<SpawnBomb>d__5" }
+            new CallerInfo("<StartWithBento>d__8", "MoveNext"),
+            new CallerInfo("<SpawnBomb>d__5", "MoveNext")
         };
 
         static bool Prefix(Entity item, ref bool __result)
@@ -41,8 +41,8 @@ namespace cornercutter.ModFeature.ModSetting
                     if (caller != null)
                     {
                         // If this was called from a shop purchase, nuke the item (otherwise it will float in the air)
-                        if ((caller.MethodName == "OnGrabbed" && caller.ClassName == "ShopEntity") ||
-                        (caller.MethodName == "OnApplied" && caller.ClassName == "BackupSkill"))
+                        if ((caller.ClassName == "ShopEntity" && caller.MethodName == "OnGrabbed") ||
+                        (caller.ClassName == "BackupSkill" && caller.MethodName == "OnApplied"))
                         {
                             UnityEngine.Object.Destroy(item.gameObject);
                             // If this sound is found to be too hilarious, can be replaced with App_CantUse
@@ -51,7 +51,7 @@ namespace cornercutter.ModFeature.ModSetting
                         } else
                         {
                             caller = CallerInfo.GetCallerInfoFromStack(stack, CallerInfo.CALLER_FRAME_NUMBER + 1);
-                            bool isRollPickup = (caller != null && caller.MethodName == "TryDodgeRollGrab" && caller.ClassName == "Player");
+                            bool isRollPickup = (caller != null && caller.ClassName == "Player" && caller.MethodName == "TryDodgeRollGrab");
 
                             // Don't make the noise if the grab came from a roll (it will fire multiple times and although funny it would get pretty annoying)
                             if (!isRollPickup) {

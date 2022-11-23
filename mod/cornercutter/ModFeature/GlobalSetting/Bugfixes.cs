@@ -9,6 +9,13 @@ namespace cornercutter.ModFeature.GlobalSetting
     [HarmonyPatch(typeof(BridgeBurner), "OnApplied")]
     class MakeBridgeBurnerPinnable
     {
+        // This code is identical to the OG BridgeBurner.OnApplied, except for the null pointer catch
+        // This works because the Bridge Burner reskin is actually sitting inside AmbientLightController.SetAesthetic
+        // implemented as a check of Player.singlePlayer.bridgeBurner - if the value is more than 1,
+        // Bridge Burner is considered active. Of course, .GetRoom() fails when the dungeon is
+        // loading (hence the need for this fix), but thankfully a call to SetAesthetic is made when the load is finished
+        // meaning we can safely skip it here for that case
+
         static bool Prefix(ref BridgeBurner __instance)
         {
             Player.singlePlayer.bridgeBurner *= __instance.value;
@@ -42,8 +49,7 @@ namespace cornercutter.ModFeature.GlobalSetting
             }
         }
     }
-
-    [HarmonyPatch(typeof(Chungus), "IncreaseEnemyHealth")]
+    
     class OneHPEnemies
     {
         public static void SetHPToOne(Enemy enemy)
@@ -53,7 +59,13 @@ namespace cornercutter.ModFeature.GlobalSetting
                 enemy.health = 1f;
             }
         }
+    }
 
+    // Elite enemies in Going Under are internally called Chunguses
+    // ):
+    [HarmonyPatch(typeof(Chungus), "IncreaseEnemyHealth")]
+    class EliteEnemiesReset
+    {
         static bool Prefix()
         {
             return !DebugSettings.settings.enemy1hp;
@@ -63,6 +75,10 @@ namespace cornercutter.ModFeature.GlobalSetting
     [HarmonyPatch(typeof(ManHand), nameof(ManHand.Revive))]
     class HoverHandsFaintReset
     {
+        // This code is to handle the case in the Hover Hands fight where the ManHands 'faint'
+        // and then 'revive' after some time. This revive includes a set to max health which happens to
+        // go around the 1hp enemy debug setting. This patch sets them back to one 
+        // in that case (checking the debug flag is turned on inside OneHPEnemies.SetHPToOne)
         static void Postfix(ref ManHand __instance)
         {
             OneHPEnemies.SetHPToOne(__instance);

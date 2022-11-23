@@ -10,20 +10,20 @@ namespace cornercutter.ModFeature.ModSetting
     {
         public static readonly List<CallerInfo> HealthGain = new List<CallerInfo>()
         {
-            new CallerInfo { MethodName = "HandleKillEvent", ClassName = "HealFromRetaliation" },
-            new CallerInfo { MethodName = "OnKill", ClassName = "LowChanceToHealOnKill" },
+            new CallerInfo("HealFromRetaliation", "HandleKillEvent"),
+            new CallerInfo("LowChanceToHealOnKill", "OnKill"),
             // Not sure what actually triggers this in-game - a skill that heals you when you pick up money? Cut content?
-            new CallerInfo { MethodName = "HandleEvent", ClassName = "PayToLive" }
+            new CallerInfo("PayToLive", "HandleEvent")
         };
 
         public static readonly List<CallerInfo> ArmourGain = new List<CallerInfo>()
         {
-            new CallerInfo { MethodName = "OnApplied", ClassName = "BreakingArmorFreezesEveryone" },
-            new CallerInfo { MethodName = "HandleArmorBroken", ClassName = "BreakingEnemyArmorGrantsArmor" },
-            new CallerInfo { MethodName = "HandleEntBought", ClassName = "BuyingEarnsArmor" },
-            new CallerInfo { MethodName = "HandleItemGrabbed", ClassName = "EatingPhonesGainsArmor" },
-            new CallerInfo { MethodName = "HandleHeal", ClassName = "OverhealingGrantsArmor" },
-            new CallerInfo { MethodName = "GrantArmor", ClassName = "TurnHeartIntoArmor" }
+            new CallerInfo("BreakingArmorFreezesEveryone", "OnApplied"),
+            new CallerInfo("BreakingEnemyArmorGrantsArmor", "HandleArmorBroken"),
+            new CallerInfo("BuyingEarnsArmor", "HandleEntBought"),
+            new CallerInfo("EatingPhonesGainsArmor", "HandleItemGrabbed"),
+            new CallerInfo("OverhealingGrantsArmor", "HandleHeal"),
+            new CallerInfo("TurnHeartIntoArmor", "GrantArmor")
         };
     }
 
@@ -34,7 +34,7 @@ namespace cornercutter.ModFeature.ModSetting
         {
             if (!(__instance is Player)) return true;
 
-            bool isAllowed = CallerInfo.IsAllowed(ConfigOptions.DisableHealing, AllowedSources.HealthGain);
+            bool isAllowed = CallerInfo.IsAllowed(ConfigOptions.DisableHealing, AllowedSources.HealthGain, 1);
             if (!isAllowed) __result = false; // Calling methods won't register a heal
             return isAllowed;
         }
@@ -46,7 +46,7 @@ namespace cornercutter.ModFeature.ModSetting
         static bool Prefix(ref Entity __instance)
         {
             if (!(__instance is Player)) return true;
-            return CallerInfo.IsAllowed(ConfigOptions.DisableHealing, AllowedSources.HealthGain);
+            return CallerInfo.IsAllowed(ConfigOptions.DisableHealing, AllowedSources.HealthGain, 1);
         }
     }
 
@@ -55,7 +55,7 @@ namespace cornercutter.ModFeature.ModSetting
     {
         static bool Prefix()
         {
-            return CallerInfo.IsAllowed(ConfigOptions.DisableHealing, AllowedSources.ArmourGain);
+            return CallerInfo.IsAllowed(ConfigOptions.DisableHealing, AllowedSources.ArmourGain, 1);
         }
     }
 
@@ -68,7 +68,7 @@ namespace cornercutter.ModFeature.ModSetting
             ConfigOptions options = cornercutter.ConfigOptions;
 
             bool modEnabled = cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive();
-            // if (!(modEnabled && options.HasFlag(ConfigOptions.DisableHealing))) return true;
+            if (!(modEnabled && options.HasFlag(ConfigOptions.DisableHealing))) return;
             cornercutter.LogDebug("Sound path registering as " + path);
 
             if (path == "Consume_Food" || path == "Consume_Drink")

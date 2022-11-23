@@ -65,7 +65,7 @@ namespace cornercutter.ModLoader
             cornercutter.LogInfo("Loading current cornercutter config ...");
             try
             {
-                cornercutter.LoadCurrentConfig();
+                cornercutter.LoadDungeonConfig();
                 if (cornercutter.CornercutterIsEnabled())
                 {
                     if (cornercutter.ModIsActive())

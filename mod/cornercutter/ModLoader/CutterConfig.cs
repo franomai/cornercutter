@@ -28,6 +28,7 @@ namespace cornercutter.ModLoader
         public WeightedSkill[] StartingSkills { get; private set; }
         private Dictionary<Floor, FloorConfig> floorConfigs;
 
+        private bool InDungeon = false;
         private ManualLogSource Logger = null;
         private TextMeshProUGUI VisualIndicator = null;
         private PauseTabButton DebugMenu = null;
@@ -77,9 +78,10 @@ namespace cornercutter.ModLoader
             UpdateDebugVisibility();
         }
 
-        public void LoadCurrentConfig()
+        public void LoadDungeonConfig()
         {
             ClearConfig();
+            InDungeon = true;
             LoadGlobalSettings();
             if (!HasCurrentMod) return;
             ModConfigDTO config = Reader.ReadMod(ModFileLocation);
@@ -143,7 +145,7 @@ namespace cornercutter.ModLoader
             ModFileLocation = null;
             GlobalOptions = GlobalOptions.NoneSelected;
             HasCurrentMod = false;
-
+            InDungeon = false;
             SpawnCollectionType = SpawnCollectionType.NoneSelected;
             CurseSpawnType = CurseSpawnType.NoneSelected;
             ConfigOptions = ConfigOptions.NoneSelected;
@@ -172,15 +174,15 @@ namespace cornercutter.ModLoader
 
             if (HasCurrentMod)
             {
-                VisualIndicator.text = Singleton<DungeonManager>.instance == null
-                    ? "Ready to cut some corners!"
-                    : "Cutting corners...";
+                VisualIndicator.text = InDungeon
+                    ? "Cutting corners..."
+                    : "Ready to cut some corners!";
             }
             else
             {
-                VisualIndicator.text = Singleton<DungeonManager>.instance == null
-                    ? "Thinking about cutting corners..."
-                    : "Not cutting corners!";
+                VisualIndicator.text = InDungeon
+                    ? "Not cutting corners!"
+                    : "Thinking about cutting corners...";
             }
 
             VisualIndicator.enabled = CornercutterIsEnabled();
@@ -210,8 +212,9 @@ namespace cornercutter.ModLoader
 
         public bool ModIsActive()
         {
-            // If there's no DungeonManager, we are in Fizzle
-            return HasCurrentMod && Singleton<DungeonManager>.instance != null;
+            // DungeonManager.GetCurrentDungeonCompany doesn't reset on Fizzle enter and has a NPE
+            // so it is more accurate for us to track it
+            return HasCurrentMod && InDungeon;
         }
     }
 }

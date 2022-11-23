@@ -14,8 +14,7 @@ namespace cornercutter.ModFeature.GlobalSetting
         {
             CutterConfig cornercutter = CutterConfig.Instance;
             GlobalOptions globals = cornercutter.GlobalOptions;
-            if (!cornercutter.CornercutterIsEnabled()) return;
-            if (!globals.HasFlag(GlobalOptions.DisableHighscores)) return;
+            if (!(cornercutter.CornercutterIsEnabled() && globals.HasFlag(GlobalOptions.DisableHighscores))) return;
 
             // Because other parts of the run end routine are using this runData reference, we have to
             // make a copy with the invalid time and overwrite the run that's there, rather than
@@ -48,8 +47,7 @@ namespace cornercutter.ModFeature.GlobalSetting
         {
             CutterConfig cornercutter = CutterConfig.Instance;
             GlobalOptions globals = cornercutter.GlobalOptions;
-            if (!cornercutter.CornercutterIsEnabled()) return true;
-            if (!globals.HasFlag(GlobalOptions.DisableHighscores)) return true;
+            if (!(cornercutter.CornercutterIsEnabled() && globals.HasFlag(GlobalOptions.DisableHighscores))) return true;
 
             // If highscores are disabled, don't check if this run is best, just display nothing
             __result = false;
