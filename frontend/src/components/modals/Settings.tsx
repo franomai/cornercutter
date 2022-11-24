@@ -1,3 +1,4 @@
+import OptionCheckboxes from '../forms/OptionCheckboxes';
 import useGoogleAnalytics from '../../hooks/useGoogleAnalytics';
 import TooltipCheckbox, { OptionDetails } from '../forms/TooltipCheckbox';
 
@@ -24,10 +25,10 @@ import {
 } from '@chakra-ui/react';
 import { invoke } from '@tauri-apps/api';
 import { useDispatch, useSelector } from 'react-redux';
-import OptionCheckboxes from '../forms/OptionCheckboxes';
 import { GlobalOptions } from '../../types/Configuration';
 import { setOptionFlag, hasOptionSet } from '../../utility/ConfigHelpers';
 import { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
+import EnableUserMetricsSection from './sections/EnableUserMetricsSection';
 
 const optionDetails: Record<GlobalOptions, OptionDetails> = {
     [GlobalOptions.DisableCornercutter]: {
@@ -158,29 +159,10 @@ const Settings = ({ openRef }: { openRef: RefObject<HTMLButtonElement> }) => {
                         options={updatedOptions}
                         handleChange={setFlag}
                     />
-                    <Text fontSize="xl" py={4}>
-                        User Metrics
-                    </Text>
-                    <Stack>
-                        <TooltipCheckbox
-                            label="Enable User Metrics"
-                            tooltip="Allow us to see how you use Cornercutter."
-                            isChecked={updatedEnableUserMetrics}
-                            onChange={(e) => setUpdatedEnableUserMetrics(e.target.checked)}
-                        />
-                        <Text fontSize="sm">
-                            Allow us to see how you are using Cornercutter. None of the metrics we collect can be linked
-                            back to you. You can view our privacy policy{' '}
-                            <Link
-                                isExternal
-                                color="green.300"
-                                href="https://github.com/franomai/cornercutter/blob/main/PRIVACY_POLICY.md"
-                            >
-                                here
-                            </Link>
-                            .
-                        </Text>
-                    </Stack>
+                    <EnableUserMetricsSection
+                        isEnabled={updatedEnableUserMetrics}
+                        setIsEnabled={setUpdatedEnableUserMetrics}
+                    />
                 </ModalBody>
                 <ModalFooter>
                     <ButtonGroup variant="outline">
