@@ -58,6 +58,9 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\..\..\SteamLibrary\steamapps\common\Going Under\Going Under_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>..\..\..\SteamLibrary\steamapps\common\Going Under\Going Under_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>..\..\..\SteamLibrary\steamapps\common\Going Under\Going Under_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>

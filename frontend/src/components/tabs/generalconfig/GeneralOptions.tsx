@@ -23,6 +23,8 @@ const optionLabels: Record<ModOptions, string> = {
     [ModOptions.DisableMentorAbilities]: 'Disable mentor abilities',
     [ModOptions.DisableGiftOfIntern]: 'Disable gift of the intern',
     [ModOptions.DisablePinned]: 'Disable pinned skills',
+    [ModOptions.DisableHealing]: 'Disable healing and armour from non-skills',
+    [ModOptions.DisableItemPickup]: 'Disable item pickups from non-skills',
 };
 
 const optionTooltips: Record<ModOptions, string> = {
@@ -37,6 +39,8 @@ const optionTooltips: Record<ModOptions, string> = {
     [ModOptions.DisableGiftOfIntern]:
         'Gift of the intern is a fallback skill that spawns when nothing else can, granting a small bonus (cash, an app, health, etc.) - enabling this will spawn nothing instead.',
     [ModOptions.DisablePinned]: 'When enabled, the pinned skill will not be granted at the start of the dungeon,',
+    [ModOptions.DisableHealing]: 'When enabled, anything that grants armour or health will do nothing instead, except for skills.',
+    [ModOptions.DisableItemPickup]: 'When enabled, trying to pick up or otherwise gain items or weapons will do nothing instead.',
 };
 
 const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
@@ -198,12 +202,14 @@ const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
                     ModOptions.ConfigPerFloor,
                     ModOptions.ConfigPerRoom,
                     ModOptions.AwardSkillsPerFloor,
+                    ModOptions.DisableHealing,
                     ModOptions.SelectRandomItemOnEmpty,
                 ])}
                 {renderOptionCheckboxes([
                     ModOptions.DisableMentorAbilities,
                     ModOptions.DisableGiftOfIntern,
                     ModOptions.DisablePinned,
+                    ModOptions.DisableItemPickup,
                 ])}
             </SimpleGrid>
         </Stack>

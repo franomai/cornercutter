@@ -18,7 +18,7 @@ namespace cornercutter.ModFeature.SpawnOverride
         static bool Prefix(ref EntitySpawner __instance, ref GameObject __result)
         {
             CutterConfig cornercutter = CutterConfig.Instance;
-            if (!(cornercutter.CornercutterIsEnabled() && cornercutter.HasCurrentMod)) return true;
+            if (!(cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive())) return true;
 
             // Fetch this spawners parent, and their parent also
             GameObject parent = __instance.transform.parent?.gameObject;

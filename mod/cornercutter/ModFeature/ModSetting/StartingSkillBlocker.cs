@@ -16,7 +16,7 @@ namespace cornercutter.ModFeature.ModSetting
         static void Prefix(ref SkillStorage __state)
         {
             CutterConfig cornercutter = CutterConfig.Instance;
-            if (!(cornercutter.CornercutterIsEnabled() && cornercutter.HasCurrentMod)) return;
+            if (!(cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive())) return;
 
             __state = new SkillStorage()
             {
