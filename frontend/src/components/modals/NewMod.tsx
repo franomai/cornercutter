@@ -16,11 +16,11 @@ import {
     Textarea,
     useDisclosure,
 } from '@chakra-ui/react';
-import { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
 import { invoke } from '@tauri-apps/api';
 import { useDispatch } from 'react-redux';
 import { addMod, setSelectedMod } from '../../redux/slices/mod';
 import { generateEmptyFloorSkills } from '../../utility/ConfigHelpers';
+import { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
 
 const NewMod = ({ openRef }: { openRef: RefObject<HTMLButtonElement> }) => {
     const dispatch = useDispatch();

@@ -1,5 +1,4 @@
 import { Box, Button, Flex, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
-import { invoke } from '@tauri-apps/api/tauri';
 import { ReactNode, useCallback, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCornercutterConfig } from '../../redux/slices/cornercutter';
@@ -51,13 +50,7 @@ const ModdingConfig = () => {
     const config = useSelector(getCornercutterConfig);
     const openNewModRef = useRef<HTMLButtonElement>(null);
     const openSettingsRef = useRef<HTMLButtonElement>(null);
-
-    const [showImportMod, setShowImportMod] = useState(false);
-    const [newModId, setNewModId] = useState<string | null>(null);
-
-    const handleImportMod = useCallback(() => {
-        setShowImportMod(true);
-    }, [setShowImportMod]);
+    const openImportModRef = useRef<HTMLButtonElement>(null);
 
     const getTabs = useCallback((selectedMod: ModConfig): TabData[] => {
         const tabs: TabData[] = [
@@ -164,7 +157,7 @@ const ModdingConfig = () => {
                 <Button variant="outline" w="full" ref={openNewModRef}>
                     New Mod
                 </Button>
-                <Button variant="outline" w="full" onClick={handleImportMod}>
+                <Button variant="outline" w="full" ref={openImportModRef}>
                     Import Mod
                 </Button>
                 <Button variant="outline" w="full" ref={openSettingsRef}>
@@ -175,15 +168,7 @@ const ModdingConfig = () => {
             {config && <FindGoingUnder config={config} />}
             <Settings openRef={openSettingsRef} />
             <NewMod openRef={openNewModRef} />
-            <ImportMod
-                isShown={showImportMod}
-                handleCreate={(mod) => {
-                    setShowImportMod(false);
-                    dispatch(addMod(mod));
-                    dispatch(setSelectedMod(mod.id));
-                }}
-                handleDiscard={() => setShowImportMod(false)}
-            />
+            <ImportMod openRef={openImportModRef} />
         </Box>
     );
 };

@@ -1,6 +1,6 @@
 import OptionCheckboxes from '../forms/OptionCheckboxes';
 import useGoogleAnalytics from '../../hooks/useGoogleAnalytics';
-import TooltipCheckbox, { OptionDetails } from '../forms/TooltipCheckbox';
+import EnableUserMetricsSection from './sections/EnableUserMetricsSection';
 
 import {
     getEnableUserMetrics,
@@ -11,7 +11,6 @@ import {
 import {
     Button,
     ButtonGroup,
-    Link,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -19,16 +18,14 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
-    Stack,
-    Text,
     useDisclosure,
 } from '@chakra-ui/react';
 import { invoke } from '@tauri-apps/api';
 import { useDispatch, useSelector } from 'react-redux';
+import { OptionDetails } from '../forms/TooltipCheckbox';
 import { GlobalOptions } from '../../types/Configuration';
 import { setOptionFlag, hasOptionSet } from '../../utility/ConfigHelpers';
 import { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
-import EnableUserMetricsSection from './sections/EnableUserMetricsSection';
 
 const optionDetails: Record<GlobalOptions, OptionDetails> = {
     [GlobalOptions.DisableCornercutter]: {
