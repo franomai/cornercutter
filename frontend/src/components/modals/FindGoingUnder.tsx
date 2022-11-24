@@ -17,15 +17,18 @@ import {
 } from '@chakra-ui/react';
 import { invoke } from '@tauri-apps/api/tauri';
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { setCornercutterDir } from '../../redux/slices/cornercutter';
+import { useDispatch, useSelector } from 'react-redux';
+import { getEnableUserMetrics, setCornercutterDir, setEnableUserMetrics } from '../../redux/slices/cornercutter';
 import { CornerCutterConfig } from '../../types/CornerCutterConfig';
+import EnableUserMetricsSection from './sections/EnableUserMetricsSection';
 
 const FindGoingUnder = ({ config }: { config: CornerCutterConfig }) => {
     const dispatch = useDispatch();
+    const enableUserMetrics = useSelector(getEnableUserMetrics);
+
+    const [isValid, setIsValid] = useState(true);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [dir, setDir] = useState(config.goingUnderDir ?? '');
-    const [isValid, setIsValid] = useState(true);
 
     useEffect(() => {
         if (!config.setDirectory) {
@@ -44,7 +47,6 @@ const FindGoingUnder = ({ config }: { config: CornerCutterConfig }) => {
         });
     }, [dir, onClose, dispatch]);
 
-    if (!isOpen) return null;
     return (
         <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
             <ModalOverlay />
@@ -68,9 +70,13 @@ const FindGoingUnder = ({ config }: { config: CornerCutterConfig }) => {
                         </Link>
                         .
                     </Text>
+                    <EnableUserMetricsSection
+                        isEnabled={enableUserMetrics}
+                        setIsEnabled={(isEnabled) => dispatch(setEnableUserMetrics(isEnabled))}
+                    />
                 </ModalBody>
                 <ModalFooter>
-                    <Button onClick={() => handleSaveGoingUnderDir()}>Save</Button>
+                    <Button onClick={handleSaveGoingUnderDir}>Save</Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>

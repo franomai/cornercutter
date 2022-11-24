@@ -1,8 +1,8 @@
 import { Box, Button, Flex, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
-import { ReactNode, useCallback, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { ReactNode, useCallback, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import { getCornercutterConfig } from '../../redux/slices/cornercutter';
-import { addMod, getAllMods, getSelectedMod, setSelectedMod } from '../../redux/slices/mod';
+import { getAllMods, getSelectedMod } from '../../redux/slices/mod';
 import ModConfig, { Floor, ModOptions } from '../../types/Configuration';
 import TabData from '../../types/TabData';
 import { hasOptionSet } from '../../utility/ConfigHelpers';
@@ -43,7 +43,6 @@ const SpecificFloorsData: FloorData[] = [
 ];
 
 const ModdingConfig = () => {
-    const dispatch = useDispatch();
     const GA = useGoogleAnalytics();
     const mods = useSelector(getAllMods);
     const selectedMod = useSelector(getSelectedMod);
