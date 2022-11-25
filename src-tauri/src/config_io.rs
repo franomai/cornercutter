@@ -16,6 +16,7 @@ const CC_MODS_DIR: &str = "cornercutter/mods";
 const CC_GLOBAL_SETTINGS_DIR: &str = "cornercutter/settings.json";
 
 pub struct CornercutterCache {
+    pub going_under_dir: String,
     pub settings: Mutex<CornercutterGlobalSettings>,
     pub config: Mutex<CornercutterConfig>,
     pub mods: Mutex<HashMap<String, ModConfig>>,
@@ -32,19 +33,10 @@ pub struct CornercutterConfig {
 
 impl CornercutterConfig {
     pub fn new() -> Self {
-        // The r prefix specifies that this is a raw string and ignores escape characters.
-        // When you install a steam app it creates a file in the windows registry which includes some metadata about it.
-        // We're leveraging this metadata to determine the installation location of Going Under automatically. We can be 
-        // assured that this will always be present otherwise the Cornercutter installation would have failed.
-        let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
-        let going_under = hklm.open_subkey(r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 1154810").unwrap();
-
-        let going_under_dir: String = going_under.get_value("InstallLocation").unwrap();
-
         CornercutterConfig { 
-            going_under_dir,
+            going_under_dir: get_going_under_dir(),
             set_directory: false,
-            first_startup: false,
+            first_startup: true,
             enable_user_metrics: true,
         }
     }
@@ -68,6 +60,17 @@ impl CornercutterGlobalSettings {
     }
 }
 
+pub fn get_going_under_dir() -> String {
+    // The r prefix specifies that this is a raw string and ignores escape characters.
+    // When you install a steam app it creates a file in the windows registry which includes some metadata about it.
+    // We're leveraging this metadata to determine the installation location of Going Under automatically. We can be 
+    // assured that this will always be present otherwise the Cornercutter installation would have failed.
+    let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
+    let going_under = hklm.open_subkey(r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 1154810").unwrap();
+
+    return going_under.get_value("InstallLocation").unwrap();
+}
+
 pub fn file_exists<P>(path: P) -> bool where P: AsRef<Path> {
     return File::open(path).is_ok();
 }
@@ -76,8 +79,8 @@ pub fn has_extension(path: &Path, extension: &str) -> bool {
     return path.extension().map_or(false, |e| e.eq_ignore_ascii_case(extension));
 }
 
-pub fn get_relative_dir(config: &CornercutterConfig, dir: &str) -> PathBuf {
-    let path_buf = Path::new(config.going_under_dir.as_str()).join(dir);
+pub fn get_relative_dir(going_under_dir: &str, dir: &str) -> PathBuf {
+    let path_buf = Path::new(going_under_dir).join(dir);
     return path_buf;
 }
 
@@ -91,25 +94,19 @@ pub fn get_mod_filename(id: String) -> String {
     return str;
 }
 
-pub fn try_find_going_under_dir() -> Option<String> {
-    for dir in ["C:\\Program Files (x86)\\Steam\\steamapps\\common\\Going Under", "D:\\Steam\\steamapps\\common\\Going Under"] {
-        if is_valid_going_under_dir(dir) {
-            return Some(String::from(dir));
-        }
-    }
-    return None;
-}
-
-pub fn is_valid_going_under_dir(dir: &str) -> bool {
-    return file_exists(Path::new(dir).join("Going Under.exe").as_path());
-}
-
 pub fn load_cornercutter_cache() -> CornercutterCache {
+    // Cache the going under directory to prevent unnecessary reading of the registry.
+    let going_under_dir = get_going_under_dir(); 
     let config = load_cornercutter_config();
-    let settings = load_global_settings(&config);
-    let mods = load_mods(&config);
+    let settings = load_global_settings(going_under_dir.as_str());
+    let mods = load_mods(&going_under_dir.as_str());
+
+    if config.first_startup {
+        create_cornercutter_folders(going_under_dir.as_str());
+    }
 
     return CornercutterCache {
+        going_under_dir,
         config: Mutex::new(config),
         settings: Mutex::new(settings),
         mods: Mutex::new(mods),
@@ -120,13 +117,13 @@ pub fn load_cornercutter_config() -> CornercutterConfig {
     return deserialize_cornercutter_config().unwrap_or_else(|_err| CornercutterConfig::new());
 }
 
-pub fn load_global_settings(config: &CornercutterConfig) -> CornercutterGlobalSettings {
-    return deserialize_settings_config(config).unwrap_or_else(|_err| CornercutterGlobalSettings::new());
+pub fn load_global_settings(going_under_dir: &str) -> CornercutterGlobalSettings {
+    return deserialize_settings_config(going_under_dir).unwrap_or_else(|_err| CornercutterGlobalSettings::new());
 }
 
-pub fn load_mods(config: &CornercutterConfig) -> HashMap<String, ModConfig> {
+pub fn load_mods(going_under_dir: &str) -> HashMap<String, ModConfig> {
     let mut mods: HashMap<String, ModConfig> = HashMap::new();
-    let files = read_dir(get_relative_dir(config, CC_MODS_DIR));
+    let files = read_dir(get_relative_dir(going_under_dir, CC_MODS_DIR));
     if files.is_ok() {
         for file in files.unwrap() {
             if file.is_err() {
@@ -147,9 +144,9 @@ pub fn load_mods(config: &CornercutterConfig) -> HashMap<String, ModConfig> {
     return mods;
 }
 
-pub fn serialize_mod(config: &CornercutterConfig, mod_config: &ModConfig) -> Result<(), String> {
+pub fn serialize_mod(going_under_dir: &str, mod_config: &ModConfig) -> Result<(), String> {
     let filename = get_mod_filename(mod_config.id.clone());
-    let path = get_relative_dir(config, CC_MODS_DIR).join(filename.as_str());
+    let path = get_relative_dir(going_under_dir, CC_MODS_DIR).join(filename.as_str());
     let file_result = File::create(path);
     if file_result.is_err() {
         return Err("There was an error creating the mod file".to_string());
@@ -162,9 +159,9 @@ pub fn serialize_mod(config: &CornercutterConfig, mod_config: &ModConfig) -> Res
     Ok(())
 }
 
-pub fn delete_mod_file(config: &CornercutterConfig, mod_config: &ModConfig) -> io::Result<()> {
+pub fn delete_mod_file(going_under_dir: &str, mod_config: &ModConfig) -> io::Result<()> {
     let filename = get_mod_filename(mod_config.id.clone());
-    let path = get_relative_dir(config, CC_MODS_DIR).join(filename.as_str());
+    let path = get_relative_dir(going_under_dir, CC_MODS_DIR).join(filename.as_str());
     return remove_file(path);
 }
 
@@ -217,8 +214,8 @@ pub fn deserialize_cornercutter_config() -> Result<CornercutterConfig, io::Error
     }
 }
 
-pub fn serialize_settings_config(config: &CornercutterConfig, settings: &CornercutterGlobalSettings) {
-    let config_file_path = get_relative_dir(config, CC_GLOBAL_SETTINGS_DIR);
+pub fn serialize_settings_config(going_under_dir: &str, settings: &CornercutterGlobalSettings) {
+    let config_file_path = get_relative_dir(going_under_dir, CC_GLOBAL_SETTINGS_DIR);
     // Open a file in write-only mode
     let file_result = File::create(config_file_path);
     if file_result.is_err() {
@@ -232,8 +229,8 @@ pub fn serialize_settings_config(config: &CornercutterConfig, settings: &Cornerc
     }
 }
 
-pub fn deserialize_settings_config(config: &CornercutterConfig) -> Result<CornercutterGlobalSettings, io::Error> {
-    let config_file_path = get_relative_dir(config, CC_GLOBAL_SETTINGS_DIR);
+pub fn deserialize_settings_config(going_under_dir: &str) -> Result<CornercutterGlobalSettings, io::Error> {
+    let config_file_path = get_relative_dir(going_under_dir, CC_GLOBAL_SETTINGS_DIR);
     let file = File::open(&config_file_path);
 
     if file.is_ok() {
@@ -247,11 +244,10 @@ pub fn deserialize_settings_config(config: &CornercutterConfig) -> Result<Corner
         }
     } else {
         let settings = CornercutterGlobalSettings::new();
-        serialize_settings_config(&config, &settings);
+        serialize_settings_config(going_under_dir, &settings);
         return Ok(settings);
     }
 }
-
 
 // https://stackoverflow.com/a/65192210, no out of the box solution
 pub fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<()> {
@@ -268,8 +264,8 @@ pub fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<
     Ok(())
 }
 
-pub fn create_cornercutter_folders(config: &CornercutterConfig) {
-    match create_dir_all(get_relative_dir(config, CC_MODS_DIR)) {
+pub fn create_cornercutter_folders(going_under_dir: &str) {
+    match create_dir_all(get_relative_dir(going_under_dir, CC_MODS_DIR)) {
         Err(why) => {
             println!("Error creating mods directory {}: {}", CC_MODS_DIR, why);
             return;
@@ -279,7 +275,7 @@ pub fn create_cornercutter_folders(config: &CornercutterConfig) {
 
     let mod_dir = current_dir().unwrap().join("built-mod");
     println!("Installing mod from {}", mod_dir.display());
-    let res = copy_dir_all(mod_dir, Path::new(config.going_under_dir.as_str()));
+    let res = copy_dir_all(mod_dir, Path::new(going_under_dir));
     if res.is_err() {
         println!("Error installing mod: {}", res.unwrap_err());
     }
@@ -288,5 +284,5 @@ pub fn create_cornercutter_folders(config: &CornercutterConfig) {
         current_mod: None,
         global_options: 0
     };
-    serialize_settings_config(config, &current_mod);
+    serialize_settings_config(going_under_dir, &current_mod);
 }
