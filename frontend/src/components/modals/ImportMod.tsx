@@ -42,8 +42,6 @@ const ImportMod = ({ openRef }: { openRef: RefObject<HTMLButtonElement> }) => {
     useEffect(() => {
         if (isOpen && document.hasFocus()) {
             navigator.clipboard.readText().then((clipboard) => {
-                console.log(clipboard);
-                console.log(ModCodeRegex.test(clipboard));
                 setModCode(ModCodeRegex.test(clipboard) ? clipboard : '');
             });
         }

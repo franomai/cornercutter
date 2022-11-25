@@ -59,7 +59,7 @@ fn set_going_under_dir(cache: State<CornercutterCache>, dir: String) -> bool {
     let mut config = cache.config.lock().unwrap();
 
     if is_valid_going_under_dir(dir.as_str()) {
-        config.going_under_dir = Some(dir);
+        //config.going_under_dir = Some(dir);
         config.set_directory = true;
         serialize_cornercutter_config(&config);
         create_cornercutter_folders(&config);
