@@ -41,10 +41,17 @@ fn get_cornercutter_config(cache: State<CornercutterCache>) -> CornercutterConfi
 }
 
 #[tauri::command]
-fn save_cornercutter_config(cache: State<CornercutterCache>, config: CornercutterConfig) {
-    let mut cached_config = cache.config.lock().unwrap();
+fn save_cornercutter_config(cache: State<CornercutterCache>, updated_config: CornercutterConfig) {
+    let mut config = cache.config.lock().unwrap();
+    *config = updated_config;
+        serialize_cornercutter_config(&config);
+}
+
+#[tauri::command]
+fn set_enable_user_metrics(cache: State<CornercutterCache>, enable_user_metrics: bool) {
+    let mut config = cache.config.lock().unwrap();
+    config.enable_user_metrics = enable_user_metrics;
     serialize_cornercutter_config(&config);
-    *cached_config = config;
 }
 
 
@@ -132,6 +139,7 @@ fn main() {
             get_config_code, 
             get_cornercutter_config, 
             save_cornercutter_config,
+            set_enable_user_metrics,
             get_settings,
             delete_mod,
             save_mod,

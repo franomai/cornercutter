@@ -36,7 +36,7 @@ const FindGoingUnder = ({ config }: { config: CornercutterConfig }) => {
 
         const updatedConfig: CornercutterConfig = { ...config, isFirstStartup: false };
 
-        invoke('save_cornercutter_config', { config: updatedConfig });
+        invoke('save_cornercutter_config', { updatedConfig });
         onClose();
     }, [config, onClose, dispatch]);
 
