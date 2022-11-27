@@ -7,7 +7,7 @@ import ModConfig, { Floor, ModOptions } from '../../types/Configuration';
 import TabData from '../../types/TabData';
 import { hasOptionSet } from '../../utility/ConfigHelpers';
 import BlankTextLayout from '../layout/BlankTextLayout';
-import FindGoingUnder from '../modals/FindGoingUnder';
+import FindGoingUnder from '../modals/FirstStartup';
 import ModList from '../mods/ModList';
 import FloorConfigTab from '../tabs/FloorConfigTab';
 import GeneralConfigTab from '../tabs/generalconfig';

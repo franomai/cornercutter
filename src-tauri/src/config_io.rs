@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::fs::{File, create_dir_all, read_dir, remove_file, copy};
+use std::fs::{File, create_dir_all, read_dir, remove_file, copy, metadata};
 use std::io::{self, ErrorKind};
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
@@ -27,16 +27,21 @@ pub struct CornercutterCache {
 pub struct CornercutterConfig {
     pub going_under_dir: String,
     pub set_directory: bool,
-    pub first_startup: bool,
+    pub is_first_startup: bool,
+    pub is_setup_successful: bool,
     pub enable_user_metrics: bool,
 }
 
 impl CornercutterConfig {
     pub fn new() -> Self {
+        let going_under_dir = get_going_under_dir();
+        let is_setup_successful = is_setup_successful(going_under_dir.as_str());
+
         CornercutterConfig { 
-            going_under_dir: get_going_under_dir(),
+            going_under_dir,
             set_directory: false,
-            first_startup: true,
+            is_first_startup: true,
+            is_setup_successful,
             enable_user_metrics: true,
         }
     }
@@ -71,8 +76,26 @@ pub fn get_going_under_dir() -> String {
     return going_under.get_value("InstallLocation").unwrap();
 }
 
+pub fn is_setup_successful(going_under_dir: &str) -> bool {
+    if !is_cornercutter_installed(going_under_dir) {
+        install_cornercutter(going_under_dir);
+        // Check if the mod was successfully installed. This might fail if we don't have permission to create files where they
+        // have Going Under installed.
+        return is_cornercutter_installed(going_under_dir);
+    }
+    return true;
+}
+
+pub fn is_cornercutter_installed(going_under_dir: &str) -> bool {
+    return folder_exists(get_relative_dir(going_under_dir, "BepInEx"));
+}
+
 pub fn file_exists<P>(path: P) -> bool where P: AsRef<Path> {
     return File::open(path).is_ok();
+}
+
+pub fn folder_exists<P>(path: P) -> bool where P: AsRef<Path> {
+    return metadata(path).map(|metadata| metadata.is_dir()).unwrap_or(false);
 }
 
 pub fn has_extension(path: &Path, extension: &str) -> bool {
@@ -101,7 +124,7 @@ pub fn load_cornercutter_cache() -> CornercutterCache {
     let settings = load_global_settings(going_under_dir.as_str());
     let mods = load_mods(&going_under_dir.as_str());
 
-    if config.first_startup {
+    if config.is_first_startup {
         create_cornercutter_folders(going_under_dir.as_str());
     }
 
@@ -193,7 +216,6 @@ pub fn deserialize_cornercutter_config() -> Result<CornercutterConfig, io::Error
     let appdata = env::var("APPDATA").unwrap();
     let appdata_path = Path::new(appdata.as_str()).join("cornercutter").join(CC_FILE);
 
-    
     println!("{}", appdata_path.to_str().unwrap());
 
     let file = File::open(&appdata_path);
@@ -285,4 +307,11 @@ pub fn create_cornercutter_folders(going_under_dir: &str) {
         global_options: 0
     };
     serialize_settings_config(going_under_dir, &current_mod);
+}
+
+pub fn install_cornercutter(going_under_dir: &str) -> bool {
+    let mod_dir = current_dir().unwrap().join("built-mod");
+    println!("Installing mod from {}", mod_dir.display());
+    let res = copy_dir_all(mod_dir, Path::new(going_under_dir));
+    return res.is_ok();
 }

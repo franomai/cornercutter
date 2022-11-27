@@ -1,7 +1,7 @@
+import { StoreState } from '../../store';
 import { createSlice } from '@reduxjs/toolkit';
 import { GlobalOptions } from '../../../types/Configuration';
 import { CornerCutterConfig } from '../../../types/CornerCutterConfig';
-import { StoreState } from '../../store';
 
 export interface State {
     config: CornerCutterConfig | null;
@@ -31,14 +31,24 @@ const cornercutterSlice = createSlice({
                 state.config.enableUserMetrics = action.payload;
             }
         },
+        setIsNotFirstStartup(state) {
+            if (state.config) {
+                state.config.isFirstStartup = false;
+            }
+        },
         setGlobalOptions(state, action: { payload: GlobalOptions }) {
             state.globalOptions = action.payload;
         },
     },
 });
 
-export const { setCornercutterConfig, setCornercutterDir, setEnableUserMetrics, setGlobalOptions } =
-    cornercutterSlice.actions;
+export const {
+    setCornercutterConfig,
+    setCornercutterDir,
+    setEnableUserMetrics,
+    setIsNotFirstStartup,
+    setGlobalOptions,
+} = cornercutterSlice.actions;
 
 export const getCornercutterConfig = (state: StoreState) => state.cornercutter.config;
 
