@@ -2,7 +2,7 @@ import ModConfig from '../../../types/Configuration';
 
 import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
 import { invoke } from '@tauri-apps/api/tauri';
-import { CornerCutterConfig, CornerCutterModSettings } from '../../../types/CornerCutterConfig';
+import { CornercutterConfig, CornercutterModSettings } from '../../../types/CornercutterConfig';
 import { StoreState } from '../../store';
 import { setCornercutterConfig, setGlobalOptions } from '../cornercutter';
 import { addMods, setEnabledMod } from '../mod';
@@ -70,8 +70,8 @@ export const loadSavedData = createAsyncThunk<void, undefined, { state: StoreSta
         try {
             console.log('Fetching saved data...');
             const [settings, cornercutterConfig, mods] = await Promise.all([
-                invoke<CornerCutterModSettings>('get_settings'),
-                invoke<CornerCutterConfig>('get_cornercutter_config'),
+                invoke<CornercutterModSettings>('get_settings'),
+                invoke<CornercutterConfig>('get_cornercutter_config'),
                 invoke<ModConfig[]>('get_mods'),
             ]);
 

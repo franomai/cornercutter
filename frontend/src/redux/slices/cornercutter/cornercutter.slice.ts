@@ -1,10 +1,10 @@
 import { StoreState } from '../../store';
 import { createSlice } from '@reduxjs/toolkit';
 import { GlobalOptions } from '../../../types/Configuration';
-import { CornerCutterConfig } from '../../../types/CornerCutterConfig';
+import { CornercutterConfig } from '../../../types/CornercutterConfig';
 
 export interface State {
-    config: CornerCutterConfig | null;
+    config: CornercutterConfig | null;
     globalOptions: GlobalOptions;
 }
 
@@ -17,14 +17,8 @@ const cornercutterSlice = createSlice({
     name: 'cornercutter',
     initialState,
     reducers: {
-        setCornercutterConfig(state, action: { payload: CornerCutterConfig }) {
+        setCornercutterConfig(state, action: { payload: CornercutterConfig }) {
             state.config = action.payload;
-        },
-        setCornercutterDir(state, action: { payload: string }) {
-            if (state.config) {
-                state.config.goingUnderDir = action.payload;
-                state.config.setDirectory = true;
-            }
         },
         setEnableUserMetrics(state, action: { payload: boolean }) {
             if (state.config) {
@@ -42,13 +36,8 @@ const cornercutterSlice = createSlice({
     },
 });
 
-export const {
-    setCornercutterConfig,
-    setCornercutterDir,
-    setEnableUserMetrics,
-    setIsNotFirstStartup,
-    setGlobalOptions,
-} = cornercutterSlice.actions;
+export const { setCornercutterConfig, setEnableUserMetrics, setIsNotFirstStartup, setGlobalOptions } =
+    cornercutterSlice.actions;
 
 export const getCornercutterConfig = (state: StoreState) => state.cornercutter.config;
 

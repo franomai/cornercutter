@@ -14,16 +14,16 @@ import {
     Text,
     useDisclosure,
 } from '@chakra-ui/react';
-import { useDispatch, useSelector } from 'react-redux';
+import { invoke } from '@tauri-apps/api';
+import { useDispatch } from 'react-redux';
 import { ReactNode, useCallback, useEffect } from 'react';
-import { CornerCutterConfig } from '../../types/CornerCutterConfig';
-import { getEnableUserMetrics, setEnableUserMetrics, setIsNotFirstStartup } from '../../redux/slices/cornercutter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { CornercutterConfig } from '../../types/CornercutterConfig';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { setEnableUserMetrics, setIsNotFirstStartup } from '../../redux/slices/cornercutter';
 
-const FindGoingUnder = ({ config }: { config: CornerCutterConfig }) => {
+const FindGoingUnder = ({ config }: { config: CornercutterConfig }) => {
     const dispatch = useDispatch();
-    const enableUserMetrics = useSelector(getEnableUserMetrics);
 
     const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -33,8 +33,12 @@ const FindGoingUnder = ({ config }: { config: CornerCutterConfig }) => {
 
     const handleNext = useCallback(() => {
         dispatch(setIsNotFirstStartup());
+
+        const updatedConfig: CornercutterConfig = { ...config, isFirstStartup: false };
+
+        invoke('save_cornercutter_config', { config: updatedConfig });
         onClose();
-    }, [onClose, dispatch]);
+    }, [config, onClose, dispatch]);
 
     const renderCornercutterDescription = useCallback((): ReactNode => {
         return (
@@ -76,7 +80,7 @@ const FindGoingUnder = ({ config }: { config: CornerCutterConfig }) => {
                 <ModalBody>
                     {renderCornercutterDescription()}
                     <EnableUserMetricsSection
-                        isEnabled={enableUserMetrics}
+                        isEnabled={config.enableUserMetrics}
                         setIsEnabled={(isEnabled) => dispatch(setEnableUserMetrics(isEnabled))}
                     />
                 </ModalBody>

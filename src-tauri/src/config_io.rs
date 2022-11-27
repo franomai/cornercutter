@@ -25,8 +25,6 @@ pub struct CornercutterCache {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all="camelCase")]
 pub struct CornercutterConfig {
-    pub going_under_dir: String,
-    pub set_directory: bool,
     pub is_first_startup: bool,
     pub is_setup_successful: bool,
     pub enable_user_metrics: bool,
@@ -35,13 +33,10 @@ pub struct CornercutterConfig {
 impl CornercutterConfig {
     pub fn new() -> Self {
         let going_under_dir = get_going_under_dir();
-        let is_setup_successful = is_setup_successful(going_under_dir.as_str());
 
-        CornercutterConfig { 
-            going_under_dir,
-            set_directory: false,
+        CornercutterConfig {
             is_first_startup: true,
-            is_setup_successful,
+            is_setup_successful: is_setup_successful(going_under_dir.as_str()),
             enable_user_metrics: true,
         }
     }

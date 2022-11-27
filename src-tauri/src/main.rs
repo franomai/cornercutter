@@ -14,7 +14,7 @@ use config_io::{
     serialize_mod,
     get_mod_filename,
     serialize_settings_config,
-    delete_mod_file
+    delete_mod_file, serialize_cornercutter_config
 };
 
 mod mod_handlers;
@@ -39,6 +39,14 @@ fn get_cornercutter_config(cache: State<CornercutterCache>) -> CornercutterConfi
     let config = cache.config.lock().unwrap();
     return config.clone();
 }
+
+#[tauri::command]
+fn save_cornercutter_config(cache: State<CornercutterCache>, config: CornercutterConfig) {
+    let mut cached_config = cache.config.lock().unwrap();
+    serialize_cornercutter_config(&config);
+    *cached_config = config;
+}
+
 
 #[tauri::command]
 fn get_mods(cache: State<CornercutterCache>) -> Vec<ModConfig> {
@@ -123,6 +131,7 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             get_config_code, 
             get_cornercutter_config, 
+            save_cornercutter_config,
             get_settings,
             delete_mod,
             save_mod,
