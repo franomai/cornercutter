@@ -28,17 +28,18 @@ const FindGoingUnder = ({ config }: { config: CornercutterConfig }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     useEffect(() => {
-        onOpen();
-    }, [onOpen]);
+        if (config.isFirstStartup) {
+            onOpen();
+        }
+    }, [config.isFirstStartup, onOpen]);
 
     const handleNext = useCallback(() => {
-        dispatch(setIsNotFirstStartup());
-
-        const updatedConfig: CornercutterConfig = { ...config, isFirstStartup: false };
-
-        invoke('save_cornercutter_config', { updatedConfig });
+        Promise.all([
+            invoke('set_is_not_first_startup'),
+            invoke('set_enable_user_metrics', { enableUserMetrics: config.enableUserMetrics }),
+        ]).then(() => dispatch(setIsNotFirstStartup()));
         onClose();
-    }, [config, onClose, dispatch]);
+    }, [config.enableUserMetrics, onClose, dispatch]);
 
     const renderCornercutterDescription = useCallback((): ReactNode => {
         return (

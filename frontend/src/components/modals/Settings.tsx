@@ -106,7 +106,10 @@ const Settings = ({ openRef }: { openRef: RefObject<HTMLButtonElement> }) => {
                 GA.event({ category: 'User Metrics', action });
             }
 
-            invoke('set_global_options', { options: updatedOptions }).then(() => {
+            Promise.all([
+                invoke('set_global_options', { options: updatedOptions }),
+                invoke('set_enable_user_metrics', { enableUserMetrics: updatedEnableUserMetrics }),
+            ]).then(() => {
                 dispatch(setGlobalOptions(updatedOptions));
                 dispatch(setEnableUserMetrics(updatedEnableUserMetrics));
             });

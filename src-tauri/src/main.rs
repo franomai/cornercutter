@@ -41,10 +41,10 @@ fn get_cornercutter_config(cache: State<CornercutterCache>) -> CornercutterConfi
 }
 
 #[tauri::command]
-fn save_cornercutter_config(cache: State<CornercutterCache>, updated_config: CornercutterConfig) {
+fn set_is_not_first_startup(cache: State<CornercutterCache>) {
     let mut config = cache.config.lock().unwrap();
-    *config = updated_config;
-        serialize_cornercutter_config(&config);
+    config.is_first_startup = false;
+    serialize_cornercutter_config(&config);
 }
 
 #[tauri::command]
@@ -138,7 +138,7 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             get_config_code, 
             get_cornercutter_config, 
-            save_cornercutter_config,
+            set_is_not_first_startup,
             set_enable_user_metrics,
             get_settings,
             delete_mod,
