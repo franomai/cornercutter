@@ -5,6 +5,12 @@ const config: ThemeConfig = {
     useSystemColorMode: false,
 };
 
+const Link: ComponentStyleConfig = {
+    baseStyle: {
+        color: 'green.300',
+    },
+};
+
 const Button: ComponentStyleConfig = {
     variants: {
         primary: {
@@ -93,6 +99,7 @@ const theme = extendTheme({
         Tabs,
         Input,
         Button,
+        Link,
     },
 });
 

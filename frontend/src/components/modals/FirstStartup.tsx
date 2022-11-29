@@ -58,11 +58,7 @@ const FindGoingUnder = ({ config }: { config: CornercutterConfig }) => {
                         <Text>
                             This is likely due to Going Under being installed in a location where we don't have
                             permission to create new files. Please report this to us{' '}
-                            <Link
-                                isExternal
-                                color="green.300"
-                                href="https://github.com/franomai/cornercutter/issues/new"
-                            >
+                            <Link isExternal href="https://github.com/franomai/cornercutter/issues/new">
                                 here
                             </Link>
                             .

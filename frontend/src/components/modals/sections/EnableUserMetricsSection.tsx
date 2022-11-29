@@ -23,7 +23,7 @@ export default function EnableUserMetricsSection({ isEnabled, setIsEnabled }: En
                 <Text fontSize="sm">
                     Allow us to see how Cornercutter is being used. We don't collect any personal information about you.
                     Find out more{' '}
-                    <Link isExternal color="green.300" href="https://github.com/franomai/cornercutter#user_metrics">
+                    <Link isExternal href="https://github.com/franomai/cornercutter#user_metrics">
                         here
                     </Link>
                     .
