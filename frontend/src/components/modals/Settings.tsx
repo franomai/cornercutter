@@ -76,6 +76,16 @@ const Settings = ({ openRef }: { openRef: RefObject<HTMLButtonElement> }) => {
         [updatedOptions, globalOptions, hasChangedEnableUserMetrics],
     );
 
+    // The following two useEffects are because initially, these options are populated with default values until the
+    // actual values are fetched from the backend.When this is retrieved, we need to use this for the updated options.
+    useEffect(() => {
+        setUpdatedOptions(globalOptions);
+    }, [globalOptions]);
+
+    useEffect(() => {
+        setUpdatedEnableUserMetrics(enableUserMetrics);
+    }, [enableUserMetrics]);
+
     useEffect(() => {
         const handler = () => onOpen();
         const current = openRef.current;

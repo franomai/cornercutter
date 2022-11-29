@@ -211,8 +211,6 @@ pub fn deserialize_cornercutter_config() -> Result<CornercutterConfig, io::Error
     let appdata = env::var("APPDATA").unwrap();
     let appdata_path = Path::new(appdata.as_str()).join("cornercutter").join(CC_FILE);
 
-    println!("{}", appdata_path.to_str().unwrap());
-
     let file = File::open(&appdata_path);
 
     if file.is_ok() {
@@ -252,12 +250,13 @@ pub fn deserialize_settings_config(going_under_dir: &str) -> Result<Cornercutter
 
     if file.is_ok() {
         let deserialized: Result<CornercutterGlobalSettings, serde_json::Error> = serde_json::from_reader(file.unwrap());
-        if deserialized.is_ok() {
+        if deserialized.is_ok() {        
             let settings = deserialized.unwrap();
             return Ok(settings);
         }
         else {
-            return Err(as_io_error(deserialized.unwrap_err()))
+            let err = deserialized.unwrap_err();
+            return Err(as_io_error(err))
         }
     } else {
         let settings = CornercutterGlobalSettings::new();

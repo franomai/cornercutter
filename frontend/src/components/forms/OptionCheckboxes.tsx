@@ -29,7 +29,7 @@ export default function OptionCheckboxes<T extends ModOptions | GlobalOptions>({
                 />
             );
         },
-        [handleChange, optionDetails, options],
+        [optionDetails, options, handleChange],
     );
 
     return <Stack spacing={2}>{flags.map((flag) => renderOptionCheckbox(flag))}</Stack>;
