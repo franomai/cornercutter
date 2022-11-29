@@ -23,7 +23,7 @@ import { RefObject, useCallback, useEffect, useState } from 'react';
 
 const ModCodeRegex = /^(#[^\r\n]*\r?\n)?(#[^\r\n]*\r?\n)?([\w\d+/]+={0,2})$/;
 
-const ImportMod = ({ openRef }: { openRef: RefObject<HTMLButtonElement> }) => {
+export default function ImportMod({ openRef }: { openRef: RefObject<HTMLButtonElement> }) {
     const dispatch = useDispatch();
     const GA = useGoogleAnalytics();
 
@@ -106,6 +106,4 @@ const ImportMod = ({ openRef }: { openRef: RefObject<HTMLButtonElement> }) => {
             </ModalContent>
         </Modal>
     );
-};
-
-export default ImportMod;
+}

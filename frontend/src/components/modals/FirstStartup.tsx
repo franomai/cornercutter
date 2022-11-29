@@ -22,7 +22,7 @@ import { CornercutterConfig } from '../../types/CornercutterConfig';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { setEnableUserMetrics, setIsNotFirstStartup } from '../../redux/slices/cornercutter';
 
-const FindGoingUnder = ({ config }: { config: CornercutterConfig }) => {
+export default function FirstStartup({ config }: { config: CornercutterConfig }) {
     const dispatch = useDispatch();
 
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -89,6 +89,4 @@ const FindGoingUnder = ({ config }: { config: CornercutterConfig }) => {
             </ModalContent>
         </Modal>
     );
-};
-
-export default FindGoingUnder;
+}

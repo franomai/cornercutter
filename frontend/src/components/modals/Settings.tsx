@@ -56,7 +56,7 @@ const optionDetails: Record<GlobalOptions, OptionDetails> = {
     },
 };
 
-const Settings = ({ openRef }: { openRef: RefObject<HTMLButtonElement> }) => {
+export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonElement> }) {
     const dispatch = useDispatch();
     const GA = useGoogleAnalytics();
     const globalOptions = useSelector(getGlobalOptions);
@@ -184,6 +184,4 @@ const Settings = ({ openRef }: { openRef: RefObject<HTMLButtonElement> }) => {
             </ModalContent>
         </Modal>
     );
-};
-
-export default Settings;
+}

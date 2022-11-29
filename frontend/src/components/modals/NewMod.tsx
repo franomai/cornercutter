@@ -22,7 +22,7 @@ import { addMod, setSelectedMod } from '../../redux/slices/mod';
 import { generateEmptyFloorSkills } from '../../utility/ConfigHelpers';
 import { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
 
-const NewMod = ({ openRef }: { openRef: RefObject<HTMLButtonElement> }) => {
+export default function NewMod({ openRef }: { openRef: RefObject<HTMLButtonElement> }) {
     const dispatch = useDispatch();
     const GA = useGoogleAnalytics();
 
@@ -118,6 +118,4 @@ const NewMod = ({ openRef }: { openRef: RefObject<HTMLButtonElement> }) => {
             </ModalContent>
         </Modal>
     );
-};
-
-export default NewMod;
+}

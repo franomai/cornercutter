@@ -7,7 +7,7 @@ import { AppDispatch } from '../../redux/store';
 import ModConfig, { Floor, ModOptions, Room } from '../../types/Configuration';
 import { hasOptionSet } from '../../utility/ConfigHelpers';
 import { capitalise } from '../../utility/Utils';
-import LabelledDropzone from '../dropzone';
+import LabelledDropzone from '../dropzone/LabelledDropzone';
 import HelpIcon from '../forms/HelpIcon';
 import ContentContainer from '../layout/ContentContainer';
 

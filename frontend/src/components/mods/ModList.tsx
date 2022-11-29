@@ -1,10 +1,11 @@
-import { Stack } from '@chakra-ui/react';
-import { ReactNode } from 'react';
-import { useSelector } from 'react-redux';
-import { getAllMods, getEnabledMod, getSelectedMod } from '../../redux/slices/mod';
 import ModOverview from './ModOverview';
 
-const ModList = ({ children }: { children?: ReactNode }) => {
+import { ReactNode } from 'react';
+import { Stack } from '@chakra-ui/react';
+import { useSelector } from 'react-redux';
+import { getAllMods, getEnabledMod, getSelectedMod } from '../../redux/slices/mod';
+
+export default function ModList({ children }: { children?: ReactNode }) {
     const mods = useSelector(getAllMods);
     const enabledMod = useSelector(getEnabledMod);
     const selectedMod = useSelector(getSelectedMod);
@@ -32,6 +33,4 @@ const ModList = ({ children }: { children?: ReactNode }) => {
             {children}
         </Stack>
     );
-};
-
-export default ModList;
+}

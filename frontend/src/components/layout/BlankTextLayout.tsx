@@ -1,6 +1,11 @@
 import { Stack, Text } from '@chakra-ui/react';
 
-const BlankTextLayout = ({ title, subtitle }: { title: string; subtitle: string }) => {
+interface BlankTextLayoutProps {
+    title: string;
+    subtitle: string;
+}
+
+export default function BlankTextLayout({ title, subtitle }: BlankTextLayoutProps) {
     return (
         <Stack
             w="full"
@@ -19,6 +24,4 @@ const BlankTextLayout = ({ title, subtitle }: { title: string; subtitle: string 
             </Text>
         </Stack>
     );
-};
-
-export default BlankTextLayout;
+}

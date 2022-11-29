@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import ContentContainer from '../../layout/ContentContainer';
 import ModConfig from '../../../types/Configuration';
-import LabelledDropzone from '../../dropzone';
+import LabelledDropzone from '../../dropzone/LabelledDropzone';
 import GeneralOptions from './GeneralOptions';
 import ModInformation from './ModInformation';
 import { saveSelectedMod } from '../../../redux/slices/saving';

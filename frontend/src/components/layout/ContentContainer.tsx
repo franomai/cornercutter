@@ -1,7 +1,11 @@
-import { Box, Stack, StackProps } from '@chakra-ui/react';
 import { ReactNode } from 'react';
+import { Stack, StackProps } from '@chakra-ui/react';
 
-const ContentContainer = ({ children, ...stackProps }: { children?: ReactNode } & StackProps) => {
+interface ContentContainerProps extends StackProps {
+    children?: ReactNode;
+}
+
+export default function ContentContainer({ children, ...stackProps }: ContentContainerProps) {
     return (
         <Stack
             flexGrow={1}
@@ -24,6 +28,4 @@ const ContentContainer = ({ children, ...stackProps }: { children?: ReactNode } 
             {children}
         </Stack>
     );
-};
-
-export default ContentContainer;
+}
