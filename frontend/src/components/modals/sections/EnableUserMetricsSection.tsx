@@ -21,13 +21,9 @@ export default function EnableUserMetricsSection({ isEnabled, setIsEnabled }: En
                     onChange={(e) => setIsEnabled(e.target.checked)}
                 />
                 <Text fontSize="sm">
-                    Allow us to see how you are using Cornercutter. None of the metrics we collect can be linked back to
-                    you. You can view our privacy policy{' '}
-                    <Link
-                        isExternal
-                        color="green.300"
-                        href="https://github.com/franomai/cornercutter/blob/main/PRIVACY_POLICY.md"
-                    >
+                    Allow us to see how Cornercutter is being used. We don't collect any personal information about you.
+                    Find out more{' '}
+                    <Link isExternal color="green.300" href="https://github.com/franomai/cornercutter#user_metrics">
                         here
                     </Link>
                     .

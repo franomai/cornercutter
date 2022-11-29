@@ -166,10 +166,9 @@ const Settings = ({ openRef }: { openRef: RefObject<HTMLButtonElement> }) => {
                 </ModalBody>
                 <ModalFooter>
                     <ButtonGroup variant="outline">
-                        <Button onClick={handleSave} variant="primary" disabled={!hasChangedSettings}>
-                            Save Changes
+                        <Button title="Discard any changes made to the settings" onClick={handleDiscard}>
+                            Discard Changes
                         </Button>
-                        <Button onClick={handleDiscard}>Discard Changes</Button>
                     </ButtonGroup>
                 </ModalFooter>
             </ModalContent>
