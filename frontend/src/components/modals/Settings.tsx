@@ -9,13 +9,10 @@ import {
     setGlobalOptions,
 } from '../../redux/slices/cornercutter';
 import {
-    Button,
-    ButtonGroup,
     Modal,
     ModalBody,
     ModalCloseButton,
     ModalContent,
-    ModalFooter,
     ModalHeader,
     ModalOverlay,
     useDisclosure,
@@ -23,9 +20,9 @@ import {
 import { invoke } from '@tauri-apps/api';
 import { useDispatch, useSelector } from 'react-redux';
 import { OptionDetails } from '../forms/TooltipCheckbox';
+import { RefObject, useCallback, useEffect } from 'react';
 import { GlobalOptions } from '../../types/Configuration';
-import { setOptionFlag, hasOptionSet } from '../../utility/ConfigHelpers';
-import { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
+import { setOptionFlag } from '../../utility/ConfigHelpers';
 
 const optionDetails: Record<GlobalOptions, OptionDetails> = {
     [GlobalOptions.DisableCornercutter]: {
@@ -63,28 +60,6 @@ export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonEle
     const enableUserMetrics = useSelector(getEnableUserMetrics);
 
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [updatedOptions, setUpdatedOptions] = useState(globalOptions);
-    const [updatedEnableUserMetrics, setUpdatedEnableUserMetrics] = useState(enableUserMetrics);
-
-    const hasChangedEnableUserMetrics = useMemo(
-        () => updatedEnableUserMetrics !== enableUserMetrics,
-        [updatedEnableUserMetrics, enableUserMetrics],
-    );
-
-    const hasChangedSettings = useMemo(
-        () => updatedOptions !== globalOptions || hasChangedEnableUserMetrics,
-        [updatedOptions, globalOptions, hasChangedEnableUserMetrics],
-    );
-
-    // The following two useEffects are because initially, these options are populated with default values until the
-    // actual values are fetched from the backend.When this is retrieved, we need to use this for the updated options.
-    useEffect(() => {
-        setUpdatedOptions(globalOptions);
-    }, [globalOptions]);
-
-    useEffect(() => {
-        setUpdatedEnableUserMetrics(enableUserMetrics);
-    }, [enableUserMetrics]);
 
     useEffect(() => {
         const handler = () => onOpen();
@@ -94,67 +69,35 @@ export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonEle
         return () => current?.removeEventListener('click', handler);
     }, [openRef, onOpen]);
 
-    const ifChanged = useCallback(
-        (flag: GlobalOptions, callback: (isSet: boolean) => void) => {
-            const newValue = hasOptionSet(updatedOptions, flag);
-            const hasChanged = newValue !== hasOptionSet(globalOptions, flag);
-            if (hasChanged) {
-                callback(newValue);
-            }
+    const handleUpdateEnableUserMetrics = useCallback(
+        (enableUserMetrics: boolean) => {
+            invoke('set_enable_user_metrics', { enableUserMetrics }).then(() =>
+                dispatch(setEnableUserMetrics(enableUserMetrics)),
+            );
         },
-        [updatedOptions, globalOptions],
+        [dispatch],
     );
 
-    const handleSave = useCallback(() => {
-        if (hasChangedSettings) {
-            ifChanged(GlobalOptions.DisableCornercutter, (isSet) => {
-                const action = isSet ? 'Disable Cornercutter' : 'Enable Cornercutter';
-                GA.event({ category: 'Settings', action });
-            });
-            if (hasChangedEnableUserMetrics) {
-                const action = updatedEnableUserMetrics ? 'Enable User Metrics' : 'Disable User Metrics';
-                GA.event({ category: 'User Metrics', action });
-            }
-
-            Promise.all([
-                invoke('set_global_options', { options: updatedOptions }),
-                invoke('set_enable_user_metrics', { enableUserMetrics: updatedEnableUserMetrics }),
-            ]).then(() => {
-                dispatch(setGlobalOptions(updatedOptions));
-                dispatch(setEnableUserMetrics(updatedEnableUserMetrics));
-            });
-        }
-        onClose();
-    }, [
-        GA,
-        updatedOptions,
-        hasChangedSettings,
-        updatedEnableUserMetrics,
-        hasChangedEnableUserMetrics,
-        dispatch,
-        ifChanged,
-        onClose,
-    ]);
-
-    const handleDiscard = useCallback(() => {
-        setUpdatedOptions(globalOptions);
-        setUpdatedEnableUserMetrics(enableUserMetrics);
-        onClose();
-    }, [globalOptions, enableUserMetrics, onClose]);
-
-    const setFlag = useCallback(
+    const handleSetFlag = useCallback(
         (flag: GlobalOptions, isChecked: boolean) => {
-            setUpdatedOptions(setOptionFlag(updatedOptions, flag, isChecked) as GlobalOptions);
+            const updatedOptions = setOptionFlag(globalOptions, flag, isChecked) as GlobalOptions;
+            if (flag === GlobalOptions.DisableCornercutter) {
+                const action = isChecked ? 'Disable Cornercutter' : 'Enable Cornercutter';
+                GA.event({ category: 'Settings', action });
+            }
+            invoke('set_global_options', { options: updatedOptions }).then(() =>
+                dispatch(setGlobalOptions(updatedOptions)),
+            );
         },
-        [updatedOptions],
+        [GA, globalOptions, dispatch],
     );
 
     return (
-        <Modal isOpen={isOpen} onClose={handleSave}>
+        <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>Global Option</ModalHeader>
-                <ModalCloseButton onClick={handleSave} title="Save changes" />
+                <ModalCloseButton title="Save changes" />
                 <ModalBody>
                     <OptionCheckboxes<GlobalOptions>
                         flags={[
@@ -166,21 +109,14 @@ export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonEle
                             GlobalOptions.EnableExtraLogging,
                         ]}
                         optionDetails={optionDetails}
-                        options={updatedOptions}
-                        handleChange={setFlag}
+                        options={globalOptions}
+                        handleChange={handleSetFlag}
                     />
                     <EnableUserMetricsSection
-                        isEnabled={updatedEnableUserMetrics}
-                        setIsEnabled={setUpdatedEnableUserMetrics}
+                        isEnabled={enableUserMetrics}
+                        setIsEnabled={handleUpdateEnableUserMetrics}
                     />
                 </ModalBody>
-                <ModalFooter>
-                    <ButtonGroup variant="outline">
-                        <Button title="Discard any changes made to the settings" onClick={handleDiscard}>
-                            Discard Changes
-                        </Button>
-                    </ButtonGroup>
-                </ModalFooter>
             </ModalContent>
         </Modal>
     );

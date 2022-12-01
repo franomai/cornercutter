@@ -1,6 +1,6 @@
 import ReactGA from 'react-ga4';
 
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { UaEventOptions } from 'react-ga4/types/ga4';
 import { getEnableUserMetrics } from '../redux/slices/cornercutter';
@@ -35,8 +35,24 @@ export default function useGoogleAnalytics(): GoogleAnalytics {
         [enableUserMetrics],
     );
 
-    const send: SendHandler = (fieldObject) => tryCall(() => ReactGA.send(fieldObject));
-    const event: EventHandler = (optionOrName) => tryCall(() => ReactGA.event(optionOrName));
+    const send: SendHandler = useCallback(
+        (fieldObject) => {
+            tryCall(() => ReactGA.send(fieldObject));
+        },
+        [tryCall],
+    );
+
+    const event: EventHandler = useCallback(
+        (optionOrName) => {
+            tryCall(() => ReactGA.event(optionOrName));
+        },
+        [tryCall],
+    );
+
+    useEffect(() => {
+        const action = enableUserMetrics ? 'Enable User Metrics' : 'Disable User Metrics';
+        event({ category: 'User Metrics', action });
+    }, [enableUserMetrics, event]);
 
     return { send, event };
 }

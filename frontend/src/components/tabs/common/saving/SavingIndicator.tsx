@@ -1,23 +1,12 @@
-import { Box, Flex, FlexProps, ScaleFade, Spinner, Text, Tooltip } from '@chakra-ui/react';
-import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { getSavingState } from '../../../../redux/slices/saving';
-import { getRelativeTimeSince } from '../../../../utility/Utils';
 import SavingMessage from './SavingMessage';
 
-const flexProps: FlexProps = {
-    h: 'full',
-    w: 'full',
-    bg: 'blackAlpha.200',
-    borderBottomWidth: 2,
-    justifyContent: 'end',
-    alignItems: 'center',
-    flexDirection: 'row',
-    pr: 4,
-    gap: 2,
-};
+import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { Box, Spinner } from '@chakra-ui/react';
+import { getRelativeTimeSince } from '../../../../utility/Utils';
+import { getSavingState } from '../../../../redux/slices/saving';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 
 export default function SavingIndicator() {
     const [showSpinner, setShowSpinner] = useState(false);
