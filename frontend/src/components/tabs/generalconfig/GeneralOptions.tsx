@@ -9,8 +9,8 @@ import ModConfig, {
     PedestalSpawnType,
     MultiSpawnerType,
 } from '../../../types/Configuration';
-import { ReactNode, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import { ReactNode, useCallback } from 'react';
 import { AppDispatch } from '../../../redux/store';
 import { SimpleGrid, Stack, Text } from '@chakra-ui/react';
 import { OptionDetails } from '../../forms/TooltipCheckbox';
@@ -52,7 +52,7 @@ const optionDetails: Record<ModOptions, OptionDetails> = {
     },
 };
 
-const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
+export default function GeneralOptions({ selectedMod }: { selectedMod: ModConfig }) {
     const dispatch = useDispatch<AppDispatch>();
 
     const renderOptionCheckboxes = useCallback(
@@ -69,7 +69,7 @@ const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
                 />
             );
         },
-        [dispatch, selectedMod.general.options],
+        [selectedMod.general.options, dispatch],
     );
 
     return (
@@ -213,6 +213,4 @@ const GeneralOptions = ({ selectedMod }: { selectedMod: ModConfig }) => {
             </SimpleGrid>
         </Stack>
     );
-};
-
-export default GeneralOptions;
+}

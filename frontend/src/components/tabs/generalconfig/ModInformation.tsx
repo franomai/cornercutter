@@ -1,3 +1,6 @@
+import ModConfig from '../../../types/Configuration';
+import useGoogleAnalytics from '../../../hooks/useGoogleAnalytics';
+
 import {
     Box,
     Flex,
@@ -12,21 +15,19 @@ import {
     Text,
     useOutsideClick,
 } from '@chakra-ui/react';
-import { faArrowUpFromBracket, faCheck, faPenToSquare, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { invoke } from '@tauri-apps/api/tauri';
-import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import useGoogleAnalytics from '../../../hooks/useGoogleAnalytics';
-import { deleteMod, setModInfo } from '../../../redux/slices/mod';
-import { saveSelectedMod } from '../../../redux/slices/saving';
+import { invoke } from '@tauri-apps/api/tauri';
 import { AppDispatch } from '../../../redux/store';
-import ModConfig from '../../../types/Configuration';
+import { saveSelectedMod } from '../../../redux/slices/saving';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { deleteMod, setModInfo } from '../../../redux/slices/mod';
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { faArrowUpFromBracket, faCheck, faPenToSquare, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 
-const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
+export default function ModInformation({ selectedMod }: { selectedMod: ModConfig }) {
+    const GA = useGoogleAnalytics();
     const dispatch = useDispatch<AppDispatch>();
     const editableRef = useRef<HTMLDivElement>(null);
-    const GA = useGoogleAnalytics();
 
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState(selectedMod.info.name);
@@ -51,7 +52,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
             dispatch(saveSelectedMod());
         }
         setIsEditing(false);
-    }, [dispatch, newName, newDescription, selectedMod.info]);
+    }, [newName, newDescription, selectedMod.info, dispatch]);
 
     useOutsideClick({
         ref: editableRef,
@@ -82,7 +83,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
         } catch (err) {
             console.error(err);
         }
-    }, [selectedMod, GA]);
+    }, [GA, selectedMod]);
 
     const handleDeleteMod = useCallback(() => {
         invoke('delete_mod', { modId: selectedMod.id })
@@ -91,7 +92,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
                 dispatch(deleteMod(selectedMod.id));
             })
             .catch(console.error);
-    }, [selectedMod.id, dispatch, GA]);
+    }, [GA, selectedMod.id, dispatch]);
 
     const renderEditableControls = useCallback(
         (canSave: boolean): ReactNode => {
@@ -156,9 +157,9 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
         [
             isEditing,
             showConfigCodePopup,
+            handleDeleteMod,
             handleSaveChanges,
             handleDiscardChanges,
-            handleDeleteMod,
             handleExportConfigCode,
         ],
     );
@@ -197,7 +198,7 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
         ) : (
             <Text mt="3px">{newDescription}</Text>
         );
-    }, [newDescription, isEditing]);
+    }, [isEditing, newDescription]);
 
     return (
         <Stack spacing={3} ref={editableRef} onKeyDown={handleKeyPress}>
@@ -208,6 +209,4 @@ const ModInformation = ({ selectedMod }: { selectedMod: ModConfig }) => {
             <Box>{renderDescription()}</Box>
         </Stack>
     );
-};
-
-export default ModInformation;
+}

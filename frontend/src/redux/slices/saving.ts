@@ -1,11 +1,11 @@
-import ModConfig from '../../../types/Configuration';
+import ModConfig from '../../types/Configuration';
 
-import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
+import { StoreState } from '../store';
 import { invoke } from '@tauri-apps/api/tauri';
-import { CornercutterConfig, CornercutterModSettings } from '../../../types/CornercutterConfig';
-import { StoreState } from '../../store';
-import { setCornercutterConfig, setGlobalOptions } from '../cornercutter';
-import { addMods, setEnabledMod } from '../mod';
+import { addMods, setEnabledMod } from './mod';
+import { setCornercutterConfig, setGlobalOptions } from './cornercutter';
+import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit';
+import { CornercutterConfig, CornercutterModSettings } from '../../types/CornercutterConfig';
 
 export interface State {
     status: 'idle' | 'pending';

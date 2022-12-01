@@ -1,8 +1,8 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { StoreState } from '../../store';
+import Skill from '../../types/Skill';
+import skills from '../../assets/skills/skills.json';
 
-import Skill from '../../../types/Skill';
-import skills from '../../../assets/skills/skills.json';
+import { StoreState } from '../store';
+import { createSlice } from '@reduxjs/toolkit';
 
 export interface State {
     skills: Record<number, Skill>;

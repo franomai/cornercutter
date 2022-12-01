@@ -1,12 +1,11 @@
 import ReactGA from 'react-ga4';
 
-import { useMemo } from 'react';
-import { UaEventOptions } from 'react-ga4/types/ga4';
+import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { getGlobalOptions } from '../redux/slices/cornercutter';
-import { GlobalOptions } from '../types/Configuration';
-import { hasOptionSet } from '../utility/ConfigHelpers';
+import { UaEventOptions } from 'react-ga4/types/ga4';
+import { getEnableUserMetrics } from '../redux/slices/cornercutter';
 
+// This doesn't seem to send anything about the user to Google Analytics
 ReactGA.initialize(import.meta.env.VITE_MEASUREMENT_ID);
 
 type EventHandler = (optionsOrName: string | UaEventOptions) => void;
@@ -17,37 +16,27 @@ export interface GoogleAnalytics {
     event: EventHandler;
 }
 
-// Used to ignore track requests when user metrics have been disabled.
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const EmptyFunction = () => {};
-
 export default function useGoogleAnalytics(): GoogleAnalytics {
-    const globalOptions = useSelector(getGlobalOptions);
-    const enableUserMetrics = hasOptionSet(globalOptions, GlobalOptions.EnableUserMetrics);
+    const enableUserMetrics = useSelector(getEnableUserMetrics);
 
-    const event: EventHandler = useMemo(() => {
-        return enableUserMetrics
-            ? (optionsOrName) => {
-                  try {
-                      ReactGA.event(optionsOrName);
-                  } catch (e) {
-                      // Ignore errors - This will likely be that the user is not connected to the internet
-                  }
-              }
-            : EmptyFunction;
-    }, [enableUserMetrics]);
+    const tryCall = useCallback(
+        (func: VoidFunction) => {
+            if (!enableUserMetrics) {
+                // User metrics have been disabled so don't send any information.
+                return;
+            }
 
-    const send: SendHandler = useMemo(() => {
-        return enableUserMetrics
-            ? (fieldObject) => {
-                  try {
-                      ReactGA.send(fieldObject);
-                  } catch (e) {
-                      // Ignore errors - This will likely be that the user is not connected to the internet
-                  }
-              }
-            : EmptyFunction;
-    }, [enableUserMetrics]);
+            try {
+                func();
+            } catch (e) {
+                // Ignore errors - This will likely be that the user is not connected to the internet
+            }
+        },
+        [enableUserMetrics],
+    );
+
+    const send: SendHandler = (fieldObject) => tryCall(() => ReactGA.send(fieldObject));
+    const event: EventHandler = (optionOrName) => tryCall(() => ReactGA.event(optionOrName));
 
     return { send, event };
 }

@@ -1,5 +1,5 @@
+import { StoreState } from '../store';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { AppDispatch, StoreState } from '../../store';
 
 import ModConfig, {
     CurseSpawnType,
@@ -10,11 +10,10 @@ import ModConfig, {
     PedestalSpawnType,
     Room,
     SpawnType,
-} from '../../../types/Configuration';
-import { setOptionFlag } from '../../../utility/ConfigHelpers';
-import { WeightedSkill } from '../../../types/Skill';
+} from '../../types/Configuration';
 import { invoke } from '@tauri-apps/api';
-import { saveSelectedMod } from '../saving';
+import { WeightedSkill } from '../../types/Skill';
+import { setOptionFlag } from '../../utility/ConfigHelpers';
 
 export interface State {
     mods: Record<string, ModConfig>;
@@ -29,12 +28,6 @@ export const initialState: State = {
     selectedMod: null,
     enabledMod: null,
 };
-
-function ifModSelected(state: State, callback: (selectedMod: ModConfig) => void) {
-    if (state.selectedMod !== null) {
-        callback(state.mods[state.selectedMod]);
-    }
-}
 
 const modSlice = createSlice({
     name: 'mod',

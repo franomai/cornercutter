@@ -1,22 +1,23 @@
-import { Box, Button, Flex, Stack, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
-import { ReactNode, useCallback, useRef } from 'react';
-import { useSelector } from 'react-redux';
-import { getCornercutterConfig } from '../../redux/slices/cornercutter';
-import { getAllMods, getSelectedMod } from '../../redux/slices/mod';
-import ModConfig, { Floor, ModOptions } from '../../types/Configuration';
-import TabData from '../../types/TabData';
-import { hasOptionSet } from '../../utility/ConfigHelpers';
-import BlankTextLayout from '../layout/BlankTextLayout';
-import FindGoingUnder from '../modals/FirstStartup';
-import ModList from '../mods/ModList';
-import FloorConfigTab from '../tabs/FloorConfigTab';
-import GeneralConfigTab from '../tabs/generalconfig';
 import NewMod from '../modals/NewMod';
-import ImportMod from '../modals/ImportMod';
-import { SkillSearchColumn } from '../skills/searchbar';
-import Savingstatus from '../savingstatus';
+import ModList from '../mods/ModList';
+import TabData from '../../types/TabData';
 import Settings from '../modals/Settings';
-import useGoogleAnalytics from '../../hooks/useGoogleAnalytics';
+import TabBar from '../tabs/common/TabBar';
+import ImportMod from '../modals/ImportMod';
+import FindGoingUnder from '../modals/FirstStartup';
+import FloorConfigTab from '../tabs/FloorConfigTab';
+import BlankTextLayout from '../layout/BlankTextLayout';
+import SkillSearchColumn from '../skills/search/SkillSearchColumn';
+import SavingIndicator from '../tabs/common/saving/SavingIndicator';
+import GeneralConfigTab from '../tabs/generalconfig/GeneralConfigTab';
+import ModConfig, { Floor, ModOptions } from '../../types/Configuration';
+
+import { useSelector } from 'react-redux';
+import { ReactNode, useCallback, useRef } from 'react';
+import { hasOptionSet } from '../../utility/ConfigHelpers';
+import { Box, Button, Flex, Stack } from '@chakra-ui/react';
+import { getAllMods, getSelectedMod } from '../../redux/slices/mod';
+import { getCornercutterConfig } from '../../redux/slices/cornercutter';
 
 interface FloorData {
     name: string;
@@ -42,8 +43,7 @@ const SpecificFloorsData: FloorData[] = [
     },
 ];
 
-const ModdingConfig = () => {
-    const GA = useGoogleAnalytics();
+export default function ModdingConfig() {
     const mods = useSelector(getAllMods);
     const selectedMod = useSelector(getSelectedMod);
     const config = useSelector(getCornercutterConfig);
@@ -76,53 +76,6 @@ const ModdingConfig = () => {
         return tabs;
     }, []);
 
-    const trackSwitchTab = useCallback(
-        (tab: string) => {
-            GA.send({ hitType: 'pageview', page: tab });
-        },
-        [GA],
-    );
-
-    const renderTabs = useCallback(
-        (selectedMod: ModConfig): ReactNode => {
-            const tabs = getTabs(selectedMod);
-
-            return (
-                <Tabs
-                    h="full"
-                    w="full"
-                    maxW="full"
-                    display="flex"
-                    style={{ flexDirection: 'column' }}
-                    overflow="hidden"
-                >
-                    <TabList background="blackAlpha.200" w="full">
-                        {tabs.map((tab) => (
-                            <Tab
-                                key={tab.name}
-                                fontWeight="semibold"
-                                pt={5}
-                                pb={3}
-                                onClick={() => trackSwitchTab(tab.name)}
-                            >
-                                {tab.name}
-                            </Tab>
-                        ))}
-                    </TabList>
-                    {/* Height subtracted is the height of the TabList */}
-                    <TabPanels minH="calc(100% - 58px)" maxH="calc(100% - 58px)">
-                        {tabs.map((tab) => (
-                            <TabPanel key={tab.name} h="full" p={0}>
-                                {tab.tab}
-                            </TabPanel>
-                        ))}
-                    </TabPanels>
-                </Tabs>
-            );
-        },
-        [trackSwitchTab, getTabs],
-    );
-
     const renderLayout = useCallback((): ReactNode => {
         if (!selectedMod) {
             return (
@@ -139,16 +92,16 @@ const ModdingConfig = () => {
 
         return (
             <Flex flexDirection="row" w="full" overflow="hidden">
-                {renderTabs(selectedMod)}
+                <TabBar tabs={getTabs(selectedMod)} />
                 <Stack alignItems="flex-end">
                     <Box minH="58px" w="full" maxW="full">
-                        <Savingstatus />
+                        <SavingIndicator />
                     </Box>
                     <SkillSearchColumn />
                 </Stack>
             </Flex>
         );
-    }, [selectedMod, mods, renderTabs]);
+    }, [mods, selectedMod, getTabs]);
 
     return (
         <Box display="flex" flexDirection="row" h="full" maxW="full" w="full" overflowX="hidden">
@@ -170,6 +123,4 @@ const ModdingConfig = () => {
             <ImportMod openRef={openImportModRef} />
         </Box>
     );
-};
-
-export default ModdingConfig;
+}

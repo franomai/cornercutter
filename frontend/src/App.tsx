@@ -1,19 +1,17 @@
+import useGoogleAnalytics from './hooks/useGoogleAnalytics';
 import ModdingConfig from './components/pages/ModdingConfig';
 
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from './redux/store';
-import { TauriEvent, listen } from '@tauri-apps/api/event';
 import { loadSavedData } from './redux/slices/saving';
-
-import './App.css';
-import useGoogleAnalytics from './hooks/useGoogleAnalytics';
+import { TauriEvent, listen } from '@tauri-apps/api/event';
 
 export const startTime = Date.now();
 
 function App() {
-    const dispatch = useDispatch<AppDispatch>();
     const GA = useGoogleAnalytics();
+    const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
         dispatch(loadSavedData());
@@ -21,6 +19,8 @@ function App() {
 
     useEffect(() => {
         GA.send('pageview');
+        // This prevents the event from triggering again if you refresh the page. This shouldn't be possible
+        // for the built version as refreshing is only available in the dev environment.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
