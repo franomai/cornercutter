@@ -7,7 +7,7 @@ import { saveSelectedMod as reduxSaveSelectedMod } from '../redux/slices/saving'
 export default function SavingContextProvider({ children }: { children: ReactNode }) {
     const dispatch = useDispatch<AppDispatch>();
 
-    const [lastSaved, setLastSaved] = useState(0);
+    const [lastSaved, setLastSaved] = useState(Date.now());
     const [isSaving, setIsSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
 

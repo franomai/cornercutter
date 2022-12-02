@@ -11,7 +11,7 @@ export interface SavingContextProps {
 }
 
 const SavingContext = createContext<SavingContextProps>({
-    lastSaved: 0,
+    lastSaved: Date.now(),
     isSaving: false,
     error: null,
     save: unimplementedFunction,

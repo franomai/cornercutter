@@ -21,7 +21,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CornercutterConfig } from '../../types/CornercutterConfig';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { setEnableUserMetrics, setIsNotFirstStartup } from '../../redux/slices/cornercutter';
-import useSavingContext from '../../contexts/SavingContext';
 
 export default function FirstStartup({ config }: { config: CornercutterConfig }) {
     const dispatch = useDispatch();

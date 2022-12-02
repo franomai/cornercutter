@@ -1,7 +1,7 @@
 import SavingMessage from './SavingMessage';
 import useSavingContext from '../../../../contexts/SavingContext';
 
-import { Spinner } from '@chakra-ui/react';
+import { Spinner, Tooltip } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { getRelativeTimeSince } from '../../../../utility/Utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -39,7 +39,16 @@ export default function SavingIndicator() {
             hasError={hasError}
             message={
                 <span>
-                    Last saved <b>{getRelativeTimeSince(lastSaved)}</b>
+                    Last saved{' '}
+                    <Tooltip
+                        hasArrow
+                        label={new Date(lastSaved).toLocaleTimeString(undefined, {
+                            hour: 'numeric',
+                            minute: 'numeric',
+                        })}
+                    >
+                        <b style={{ borderBottom: '2px dotted' }}>{getRelativeTimeSince(lastSaved)}</b>
+                    </Tooltip>
                 </span>
             }
             tooltip={error}
