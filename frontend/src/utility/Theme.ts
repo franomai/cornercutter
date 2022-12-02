@@ -14,7 +14,7 @@ const Link: ComponentStyleConfig = {
 const Button: ComponentStyleConfig = {
     baseStyle: {
         _focusVisible: {
-            boxShadow: '0 0 0 3px var(--chakra-colors-green-200)',
+            boxShadow: '0 0 0 3px var(--chakra-colors-green-300)',
         },
     },
     variants: {
@@ -90,6 +90,14 @@ const Input: ComponentStyleConfig = {
             field: {
                 _focusVisible: {
                     borderColor: 'none',
+                },
+            },
+        },
+        flushed: {
+            field: {
+                _focusVisible: {
+                    borderColor: 'green.300',
+                    boxShadow: `0px 1px 0px 0px var(--chakra-colors-green-300)`,
                 },
             },
         },
