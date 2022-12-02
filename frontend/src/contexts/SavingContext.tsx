@@ -6,7 +6,8 @@ export interface SavingContextProps {
     isSaving: boolean;
     error: string | null;
     save(): void;
-    setError(error: string): void;
+    saveSelectedMod(): void;
+    setError(error: string | Error): void;
 }
 
 const SavingContext = createContext<SavingContextProps>({
@@ -14,6 +15,7 @@ const SavingContext = createContext<SavingContextProps>({
     isSaving: false,
     error: null,
     save: unimplementedFunction,
+    saveSelectedMod: unimplementedFunction,
     setError: unimplementedFunction,
 });
 

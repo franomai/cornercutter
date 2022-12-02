@@ -23,6 +23,7 @@ import { OptionDetails } from '../forms/TooltipCheckbox';
 import { RefObject, useCallback, useEffect } from 'react';
 import { setOptionFlag } from '../../utility/ConfigHelpers';
 import { GlobalOptions } from '../../types/enums/ConfigEnums';
+import useSavingContext from '../../contexts/SavingContext';
 
 const optionDetails: Record<GlobalOptions, OptionDetails> = {
     [GlobalOptions.DisableCornercutter]: {
@@ -67,6 +68,7 @@ export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonEle
     const globalOptions = useSelector(getGlobalOptions);
     const enableUserMetrics = useSelector(getEnableUserMetrics);
 
+    const { save, setError } = useSavingContext();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     useEffect(() => {
@@ -79,11 +81,12 @@ export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonEle
 
     const handleUpdateEnableUserMetrics = useCallback(
         (enableUserMetrics: boolean) => {
-            invoke('set_enable_user_metrics', { enableUserMetrics }).then(() =>
-                dispatch(setEnableUserMetrics(enableUserMetrics)),
-            );
+            invoke('set_enable_user_metrics', { enableUserMetrics })
+                .then(() => dispatch(setEnableUserMetrics(enableUserMetrics)))
+                .catch(setError);
+            save();
         },
-        [dispatch],
+        [save, setError, dispatch],
     );
 
     const handleSetFlag = useCallback(
@@ -93,11 +96,12 @@ export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonEle
                 const action = isChecked ? 'Disable Cornercutter' : 'Enable Cornercutter';
                 GA.event({ category: 'Settings', action });
             }
-            invoke('set_global_options', { options: updatedOptions }).then(() =>
-                dispatch(setGlobalOptions(updatedOptions)),
-            );
+            invoke('set_global_options', { options: updatedOptions })
+                .then(() => dispatch(setGlobalOptions(updatedOptions)))
+                .catch(setError);
+            save();
         },
-        [GA, globalOptions, dispatch],
+        [GA, globalOptions, save, setError, dispatch],
     );
 
     return (

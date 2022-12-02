@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 import { Checkbox, Stack, Text } from '@chakra-ui/react';
 import { updateEnabledMod, setSelectedMod } from '../../redux/slices/mod';
+import useSavingContext from '../../contexts/SavingContext';
 
 interface ModOverviewProps {
     mod: ModConfig;
@@ -13,9 +14,11 @@ interface ModOverviewProps {
 
 export default function ModOverview({ mod, isEnabled, isSelected }: ModOverviewProps) {
     const dispatch = useDispatch<AppDispatch>();
+    const { save, setError } = useSavingContext();
 
     const handleEnable = () => {
-        dispatch(updateEnabledMod(isEnabled ? null : mod.id));
+        dispatch(updateEnabledMod(isEnabled ? null : mod.id)).catch(setError);
+        save();
     };
 
     const handleSelect = () => {

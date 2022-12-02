@@ -1,4 +1,5 @@
 import ModConfig from '../../../types/Configuration';
+import useSavingContext from '../../../contexts/SavingContext';
 import useGoogleAnalytics from '../../../hooks/useGoogleAnalytics';
 
 import {
@@ -18,7 +19,6 @@ import {
 import { useDispatch } from 'react-redux';
 import { invoke } from '@tauri-apps/api/tauri';
 import { AppDispatch } from '../../../redux/store';
-import { saveSelectedMod } from '../../../redux/slices/saving';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { deleteMod, setModInfo } from '../../../redux/slices/mod';
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
@@ -29,6 +29,7 @@ export default function ModInformation({ selectedMod }: { selectedMod: ModConfig
     const dispatch = useDispatch<AppDispatch>();
     const editableRef = useRef<HTMLDivElement>(null);
 
+    const { saveSelectedMod } = useSavingContext();
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState(selectedMod.info.name);
     const [newDescription, setNewDescription] = useState(selectedMod.info.description);
@@ -49,10 +50,10 @@ export default function ModInformation({ selectedMod }: { selectedMod: ModConfig
     const handleSaveChanges = useCallback(() => {
         if (newName !== selectedMod.info.name || newDescription !== selectedMod.info.description) {
             dispatch(setModInfo({ name: newName, description: newDescription }));
-            dispatch(saveSelectedMod());
+            saveSelectedMod();
         }
         setIsEditing(false);
-    }, [newName, newDescription, selectedMod.info, dispatch]);
+    }, [newName, newDescription, selectedMod.info, dispatch, saveSelectedMod]);
 
     useOutsideClick({
         ref: editableRef,

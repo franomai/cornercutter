@@ -1,6 +1,5 @@
 import modSlice from './slices/mod';
 import skillsSlice from './slices/skills';
-import savingSlice from './slices/saving';
 import cornercutterSlice from './slices/cornercutter';
 
 import { configureStore } from '@reduxjs/toolkit';
@@ -10,7 +9,6 @@ const store = configureStore({
         mod: modSlice,
         skills: skillsSlice,
         cornercutter: cornercutterSlice,
-        saving: savingSlice,
     },
 });
 

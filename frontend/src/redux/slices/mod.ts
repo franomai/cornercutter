@@ -1,16 +1,16 @@
 import { StoreState } from '../store';
+import ModConfig, { ModInfo } from '../../types/Configuration';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import ModConfig, {
-    CurseSpawnType,
-    Floor,
-    ModInfo,
-    MultiSpawnerType,
-    PedestalSpawnType,
+import {
+    ModOptions,
     Room,
     SpawnType,
-} from '../../types/Configuration';
-import { ModOptions } from '../../types/ModOptions.1';
+    MultiSpawnerType,
+    PedestalSpawnType,
+    CurseSpawnType,
+    Floor,
+} from '../../types/enums/ConfigEnums';
 import { invoke } from '@tauri-apps/api';
 import { WeightedSkill } from '../../types/Skill';
 import { setOptionFlag } from '../../utility/ConfigHelpers';

@@ -1,6 +1,7 @@
 import ModConfig from '../../../types/Configuration';
 import TooltipRadio from '../../forms/TooltipRadio';
 import OptionCheckboxes from '../../forms/OptionCheckboxes';
+import useSavingContext from '../../../contexts/SavingContext';
 import LabelledRadioGroup from '../../forms/LabelledRadioGroup';
 
 import {
@@ -12,10 +13,8 @@ import {
 } from '../../../types/enums/ConfigEnums';
 import { useDispatch } from 'react-redux';
 import { ReactNode, useCallback } from 'react';
-import { AppDispatch } from '../../../redux/store';
 import { SimpleGrid, Stack, Text } from '@chakra-ui/react';
 import { OptionDetails } from '../../forms/TooltipCheckbox';
-import { saveSelectedMod } from '../../../redux/slices/saving';
 import { setCurseSpawns, setMultiSpawners, setOption, setPedestalSpawns, setSpawns } from '../../../redux/slices/mod';
 
 const optionDetails: Record<ModOptions, OptionDetails> = {
@@ -62,7 +61,8 @@ const optionDetails: Record<ModOptions, OptionDetails> = {
 };
 
 export default function GeneralOptions({ selectedMod }: { selectedMod: ModConfig }) {
-    const dispatch = useDispatch<AppDispatch>();
+    const dispatch = useDispatch();
+    const { saveSelectedMod } = useSavingContext();
 
     const renderOptionCheckboxes = useCallback(
         (flags: ModOptions[]): ReactNode => {
@@ -73,12 +73,12 @@ export default function GeneralOptions({ selectedMod }: { selectedMod: ModConfig
                     options={selectedMod.general.options}
                     handleChange={(flag, isEnabled) => {
                         dispatch(setOption({ flag, isEnabled }));
-                        dispatch(saveSelectedMod());
+                        saveSelectedMod();
                     }}
                 />
             );
         },
-        [selectedMod.general.options, dispatch],
+        [selectedMod.general.options, dispatch, saveSelectedMod],
     );
 
     return (
@@ -93,7 +93,7 @@ export default function GeneralOptions({ selectedMod }: { selectedMod: ModConfig
                     value={selectedMod.general.spawns}
                     onChange={(newValue) => {
                         dispatch(setSpawns(newValue as SpawnType));
-                        dispatch(saveSelectedMod());
+                        saveSelectedMod();
                     }}
                 >
                     <TooltipRadio
@@ -121,7 +121,7 @@ export default function GeneralOptions({ selectedMod }: { selectedMod: ModConfig
                     value={selectedMod.general.curseSpawns}
                     onChange={(newValue) => {
                         dispatch(setCurseSpawns(newValue as CurseSpawnType));
-                        dispatch(saveSelectedMod());
+                        saveSelectedMod();
                     }}
                 >
                     <TooltipRadio
@@ -152,7 +152,7 @@ export default function GeneralOptions({ selectedMod }: { selectedMod: ModConfig
                     value={selectedMod.general.pedestalSpawns}
                     onChange={(newValue) => {
                         dispatch(setPedestalSpawns(newValue as PedestalSpawnType));
-                        dispatch(saveSelectedMod());
+                        saveSelectedMod();
                     }}
                 >
                     <TooltipRadio
@@ -186,7 +186,7 @@ export default function GeneralOptions({ selectedMod }: { selectedMod: ModConfig
                     value={selectedMod.general.multiSpawners}
                     onChange={(newValue) => {
                         dispatch(setMultiSpawners(newValue as MultiSpawnerType));
-                        dispatch(saveSelectedMod());
+                        saveSelectedMod();
                     }}
                 >
                     <TooltipRadio
