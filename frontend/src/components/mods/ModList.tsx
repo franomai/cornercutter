@@ -15,6 +15,7 @@ export default function ModList({ children }: { children?: ReactNode }) {
             maxW="240px"
             minW="240px"
             p={4}
+            pt={2}
             h="full"
             background="blackAlpha.300"
             overflow="hidden"

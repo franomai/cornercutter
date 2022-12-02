@@ -3,8 +3,8 @@ import SavingMessage from './SavingMessage';
 import { useSelector } from 'react-redux';
 import { Spinner } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { getRelativeTimeSince } from '../../../../utility/Utils';
-import { getSavingState } from '../../../../redux/slices/saving';
+import { getRelativeTimeSince } from '../utility/Utils';
+import { getSavingState } from '../redux/slices/saving';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 

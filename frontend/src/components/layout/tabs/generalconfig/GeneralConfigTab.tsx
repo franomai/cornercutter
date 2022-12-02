@@ -1,13 +1,13 @@
 import GeneralOptions from './GeneralOptions';
 import ModInformation from './ModInformation';
-import ModConfig from '../../../types/Configuration';
-import ContentContainer from '../../layout/ContentContainer';
-import LabelledDropzone from '../../dropzone/LabelledDropzone';
+import ModConfig from '../../../../types/Configuration';
+import ContentContainer from '../../ContentContainer';
+import LabelledDropzone from '../../../dropzone/LabelledDropzone';
 
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../../redux/store';
-import { setStartingSkills } from '../../../redux/slices/mod';
-import { saveSelectedMod } from '../../../redux/slices/saving';
+import { AppDispatch } from '../../../../redux/store';
+import { setStartingSkills } from '../../../../redux/slices/mod';
+import { saveSelectedMod } from '../../../../redux/slices/saving';
 
 export default function GeneralConfigTab({ selectedMod }: { selectedMod: ModConfig }) {
     const dispatch = useDispatch<AppDispatch>();

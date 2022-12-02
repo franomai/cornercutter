@@ -1,5 +1,5 @@
-import ModConfig from '../../../types/Configuration';
-import useGoogleAnalytics from '../../../hooks/useGoogleAnalytics';
+import ModConfig from '../../../../types/Configuration';
+import useGoogleAnalytics from '../../../../hooks/useGoogleAnalytics';
 
 import {
     Box,
@@ -17,10 +17,10 @@ import {
 } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { invoke } from '@tauri-apps/api/tauri';
-import { AppDispatch } from '../../../redux/store';
-import { saveSelectedMod } from '../../../redux/slices/saving';
+import { AppDispatch } from '../../../../redux/store';
+import { saveSelectedMod } from '../../../../redux/slices/saving';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { deleteMod, setModInfo } from '../../../redux/slices/mod';
+import { deleteMod, setModInfo } from '../../../../redux/slices/mod';
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { faArrowUpFromBracket, faCheck, faPenToSquare, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 

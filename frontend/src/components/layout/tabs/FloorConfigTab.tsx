@@ -1,17 +1,17 @@
-import HelpIcon from '../forms/HelpIcon';
-import ModConfig from '../../types/Configuration';
-import ContentContainer from '../layout/ContentContainer';
-import LabelledDropzone from '../dropzone/LabelledDropzone';
+import HelpIcon from '../../forms/HelpIcon';
+import ModConfig from '../../../types/Configuration';
+import ContentContainer from '../ContentContainer';
+import LabelledDropzone from '../../dropzone/LabelledDropzone';
 
 import { Flex } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { ReactNode, useCallback } from 'react';
-import { AppDispatch } from '../../redux/store';
-import { capitalise } from '../../utility/Utils';
-import { setFloorSkills } from '../../redux/slices/mod';
-import { hasOptionSet } from '../../utility/ConfigHelpers';
-import { saveSelectedMod } from '../../redux/slices/saving';
-import { ModOptions, Floor, Room } from '../../types/enums/ConfigEnums';
+import { AppDispatch } from '../../../redux/store';
+import { capitalise } from '../../../utility/Utils';
+import { setFloorSkills } from '../../../redux/slices/mod';
+import { hasOptionSet } from '../../../utility/ConfigHelpers';
+import { saveSelectedMod } from '../../../redux/slices/saving';
+import { ModOptions, Floor, Room } from '../../../types/enums/ConfigEnums';
 
 interface FloorConfigTabProps {
     selectedMod: ModConfig;

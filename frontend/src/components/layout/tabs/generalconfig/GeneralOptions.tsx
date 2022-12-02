@@ -1,7 +1,7 @@
-import ModConfig from '../../../types/Configuration';
-import TooltipRadio from '../../forms/TooltipRadio';
-import OptionCheckboxes from '../../forms/OptionCheckboxes';
-import LabelledRadioGroup from '../../forms/LabelledRadioGroup';
+import ModConfig from '../../../../types/Configuration';
+import TooltipRadio from '../../../forms/TooltipRadio';
+import OptionCheckboxes from '../../../forms/OptionCheckboxes';
+import LabelledRadioGroup from '../../../forms/LabelledRadioGroup';
 
 import {
     SpawnType,
@@ -9,14 +9,20 @@ import {
     CurseSpawnType,
     MultiSpawnerType,
     PedestalSpawnType,
-} from '../../../types/enums/ConfigEnums';
+} from '../../../../types/enums/ConfigEnums';
 import { useDispatch } from 'react-redux';
 import { ReactNode, useCallback } from 'react';
-import { AppDispatch } from '../../../redux/store';
+import { AppDispatch } from '../../../../redux/store';
 import { SimpleGrid, Stack, Text } from '@chakra-ui/react';
-import { OptionDetails } from '../../forms/TooltipCheckbox';
-import { saveSelectedMod } from '../../../redux/slices/saving';
-import { setCurseSpawns, setMultiSpawners, setOption, setPedestalSpawns, setSpawns } from '../../../redux/slices/mod';
+import { OptionDetails } from '../../../forms/TooltipCheckbox';
+import { saveSelectedMod } from '../../../../redux/slices/saving';
+import {
+    setCurseSpawns,
+    setMultiSpawners,
+    setOption,
+    setPedestalSpawns,
+    setSpawns,
+} from '../../../../redux/slices/mod';
 
 const optionDetails: Record<ModOptions, OptionDetails> = {
     [ModOptions.ConfigPerFloor]: {

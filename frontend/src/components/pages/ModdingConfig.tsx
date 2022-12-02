@@ -2,15 +2,15 @@ import NewMod from '../modals/NewMod';
 import ModList from '../mods/ModList';
 import TabData from '../../types/TabData';
 import Settings from '../modals/Settings';
-import TabBar from '../tabs/common/TabBar';
+import TabBar from '../layout/tabs/TabBar';
 import ImportMod from '../modals/ImportMod';
 import ModConfig from '../../types/Configuration';
 import FindGoingUnder from '../modals/FirstStartup';
-import FloorConfigTab from '../tabs/FloorConfigTab';
+import FloorConfigTab from '../layout/tabs/FloorConfigTab';
 import BlankTextLayout from '../layout/BlankTextLayout';
 import SkillSearchColumn from '../skills/search/SkillSearchColumn';
-import SavingIndicator from '../tabs/common/saving/SavingIndicator';
-import GeneralConfigTab from '../tabs/generalconfig/GeneralConfigTab';
+import SavingIndicator from '../../saving/SavingIndicator';
+import GeneralConfigTab from '../layout/tabs/generalconfig/GeneralConfigTab';
 
 import { useSelector } from 'react-redux';
 import { ReactNode, useCallback, useRef } from 'react';
@@ -19,6 +19,7 @@ import { Box, Button, Flex, Stack } from '@chakra-ui/react';
 import { Floor, ModOptions } from '../../types/enums/ConfigEnums';
 import { getAllMods, getSelectedMod } from '../../redux/slices/mod';
 import { getCornercutterConfig } from '../../redux/slices/cornercutter';
+import GlobalSettingsBar from '../layout/GlobalSettingsBar';
 
 interface FloorData {
     name: string;
@@ -105,23 +106,26 @@ export default function ModdingConfig() {
     }, [mods, selectedMod, getTabs]);
 
     return (
-        <Box display="flex" flexDirection="row" h="full" maxW="full" w="full" overflowX="hidden">
-            <ModList>
-                <Button variant="outline" w="full" ref={openNewModRef}>
-                    New Mod
-                </Button>
-                <Button variant="outline" w="full" ref={openImportModRef}>
-                    Import Mod
-                </Button>
-                <Button variant="outline" w="full" ref={openSettingsRef}>
-                    Global Settings
-                </Button>
-            </ModList>
-            {renderLayout()}
-            {config && <FindGoingUnder config={config} />}
-            <Settings openRef={openSettingsRef} />
-            <NewMod openRef={openNewModRef} />
-            <ImportMod openRef={openImportModRef} />
-        </Box>
+        <Stack spacing={0} overflow="hidden" h="full" maxW="full" w="full">
+            <GlobalSettingsBar />
+            <Flex flexDirection="row" overflowX="hidden">
+                <ModList>
+                    <Button variant="outline" w="full" ref={openNewModRef}>
+                        New Mod
+                    </Button>
+                    <Button variant="outline" w="full" ref={openImportModRef}>
+                        Import Mod
+                    </Button>
+                    <Button variant="outline" w="full" ref={openSettingsRef}>
+                        Global Settings
+                    </Button>
+                </ModList>
+                {renderLayout()}
+                {config && <FindGoingUnder config={config} />}
+                <Settings openRef={openSettingsRef} />
+                <NewMod openRef={openNewModRef} />
+                <ImportMod openRef={openImportModRef} />
+            </Flex>
+        </Stack>
     );
 }
