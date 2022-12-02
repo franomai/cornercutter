@@ -1,17 +1,24 @@
-import { Flex } from '@chakra-ui/react';
-import { ReactNode, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import { setFloorSkills } from '../../redux/slices/mod';
-import { saveSelectedMod } from '../../redux/slices/saving';
-import { AppDispatch } from '../../redux/store';
-import ModConfig, { Floor, ModOptions, Room } from '../../types/Configuration';
-import { hasOptionSet } from '../../utility/ConfigHelpers';
-import { capitalise } from '../../utility/Utils';
-import LabelledDropzone from '../dropzone';
 import HelpIcon from '../forms/HelpIcon';
+import ModConfig from '../../types/Configuration';
 import ContentContainer from '../layout/ContentContainer';
+import LabelledDropzone from '../dropzone/LabelledDropzone';
 
-const roomToolTip: Record<string, string> = {
+import { Flex } from '@chakra-ui/react';
+import { useDispatch } from 'react-redux';
+import { ReactNode, useCallback } from 'react';
+import { AppDispatch } from '../../redux/store';
+import { capitalise } from '../../utility/Utils';
+import { setFloorSkills } from '../../redux/slices/mod';
+import { hasOptionSet } from '../../utility/ConfigHelpers';
+import { saveSelectedMod } from '../../redux/slices/saving';
+import { ModOptions, Floor, Room } from '../../types/enums/ConfigEnums';
+
+interface FloorConfigTabProps {
+    selectedMod: ModConfig;
+    floor: Floor;
+}
+
+const roomTooltips: Record<string, string> = {
     [Room.All]: 'Any time a skill would spawn, it will try to grab one from here instead.',
     [Room.Free]:
         "Skills for anywhere you don't have to pay anything - the default skill room, pedestals, even the final boss fight.",
@@ -23,7 +30,7 @@ const roomToolTip: Record<string, string> = {
         'This decides what skill comes out of the cube for completing the end of floor battle, if it would drop one.',
 };
 
-const FloorConfigTab = ({ selectedMod, floor }: { selectedMod: ModConfig; floor: Floor }) => {
+export default function FloorConfigTab({ selectedMod, floor }: FloorConfigTabProps) {
     const dispatch = useDispatch<AppDispatch>();
 
     const renderRoomLabel = useCallback((room: Room) => {
@@ -33,7 +40,7 @@ const FloorConfigTab = ({ selectedMod, floor }: { selectedMod: ModConfig; floor:
 
     const renderRoomTooltip = useCallback(
         (room: Room): ReactNode => {
-            const tooltip = roomToolTip[room];
+            const tooltip = roomTooltips[room];
             return tooltip ? (
                 <Flex alignItems="center" gap={2} ml={-2}>
                     <HelpIcon tooltip={tooltip} placement="left" size="sm" />
@@ -62,7 +69,7 @@ const FloorConfigTab = ({ selectedMod, floor }: { selectedMod: ModConfig; floor:
                 />
             );
         },
-        [dispatch, selectedMod.floorSkills[floor]],
+        [floor, selectedMod.floorSkills, dispatch, renderRoomTooltip],
     );
 
     const renderDropzones = useCallback((): ReactNode => {
@@ -71,9 +78,7 @@ const FloorConfigTab = ({ selectedMod, floor }: { selectedMod: ModConfig; floor:
         }
 
         return renderDropzone(Room.All, false);
-    }, [selectedMod.general, selectedMod.floorSkills[floor]]);
+    }, [selectedMod.general, renderDropzone]);
 
     return <ContentContainer>{renderDropzones()}</ContentContainer>;
-};
-
-export default FloorConfigTab;
+}

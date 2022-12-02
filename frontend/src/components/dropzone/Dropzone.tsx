@@ -1,15 +1,16 @@
-import { Box, Flex, FlexProps, SimpleGrid, SimpleGridProps, Stack, Text } from '@chakra-ui/react';
-import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import SkillCard from '../skills/SkillCard';
+import useDebounce from '../../hooks/UseDebounce';
+import BlankTextLayout from '../layout/BlankTextLayout';
+
 import { useDrop } from 'react-dnd';
 import { useSelector } from 'react-redux';
-import useDebounce from '../../hooks/UseDebounce';
+import { WeightedSkill } from '../../types/Skill';
+import { ItemType } from '../../types/enums/SkillEnums';
 import { getSelectedMod } from '../../redux/slices/mod';
 import { getAllSkills } from '../../redux/slices/skills';
-import { SpawnType } from '../../types/Configuration';
-import { ItemType } from '../../types/ItemTypes';
-import { WeightedSkill } from '../../types/Skill';
-import BlankTextLayout from '../layout/BlankTextLayout';
-import SkillCard from '../skills/SkillCard';
+import { SpawnType } from '../../types/enums/ConfigEnums';
+import { Box, Flex, FlexProps, Stack, Text } from '@chakra-ui/react';
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export interface DropzoneProps {
     skills: WeightedSkill[];
@@ -17,28 +18,41 @@ export interface DropzoneProps {
     handleSetSkills(skills: WeightedSkill[]): void;
 }
 
-const Dropzone = ({ skills, singleRow, handleSetSkills }: DropzoneProps) => {
-    const selectedMod = useSelector(getSelectedMod);
+export default function Dropzone({ skills, singleRow, handleSetSkills }: DropzoneProps) {
     const allSkills = useSelector(getAllSkills);
     const scrollRef = useRef<HTMLDivElement>(null);
+    const selectedMod = useSelector(getSelectedMod);
 
     const [prevSkillCount, setPrevSkillCount] = useState(0);
     const [updatedSkills, setUpdatedSkills] = useState(skills);
+
     const debouncedSkills = useDebounce(updatedSkills, 600);
+
+    const flexProps = useMemo<FlexProps>(
+        () =>
+            singleRow
+                ? { overflowY: 'hidden', overflowX: 'auto' }
+                : { flexWrap: 'wrap', height: 'full', overflowY: 'auto' },
+        [singleRow],
+    );
 
     const [{ canDrop }, dropRef] = useDrop<{ id: number }, unknown, { canDrop: boolean }>(() => ({
         accept: ItemType.SKILL,
         drop: ({ id }) => {
             setUpdatedSkills((updatedSkills) => [...updatedSkills, { id, weight: 10 }]);
         },
-        collect: (monitor) => ({
-            canDrop: monitor.canDrop(),
-        }),
+        collect: (monitor) => ({ canDrop: monitor.canDrop() }),
     }));
 
     useEffect(() => {
         setUpdatedSkills(skills);
     }, [skills]);
+
+    useEffect(() => {
+        if (debouncedSkills !== skills) {
+            handleSetSkills(debouncedSkills);
+        }
+    }, [skills, debouncedSkills, handleSetSkills]);
 
     useEffect(() => {
         if (singleRow && updatedSkills.length > prevSkillCount) {
@@ -48,19 +62,13 @@ const Dropzone = ({ skills, singleRow, handleSetSkills }: DropzoneProps) => {
             });
         }
         setPrevSkillCount(updatedSkills.length);
-    }, [updatedSkills.length, singleRow, prevSkillCount]);
-
-    useEffect(() => {
-        if (debouncedSkills !== skills) {
-            handleSetSkills(debouncedSkills);
-        }
-    }, [debouncedSkills]);
+    }, [singleRow, prevSkillCount, updatedSkills.length]);
 
     const handleDeleteSkill = useCallback(
         (skillIndex: number) => {
             setUpdatedSkills(updatedSkills.filter((_, index) => index !== skillIndex));
         },
-        [setUpdatedSkills, updatedSkills],
+        [updatedSkills, setUpdatedSkills],
     );
 
     const handleUpdateSkillWeight = useCallback(
@@ -69,22 +77,16 @@ const Dropzone = ({ skills, singleRow, handleSetSkills }: DropzoneProps) => {
                 updatedSkills.map((skill, index) => (index === skillIndex ? { ...skill, weight: newWeight } : skill)),
             );
         },
-        [setUpdatedSkills, updatedSkills],
+        [updatedSkills, setUpdatedSkills],
     );
 
-    function renderInCenter(children: ReactNode): ReactNode {
+    const renderInCenter = useCallback((children: ReactNode): ReactNode => {
         return (
             <Stack position="absolute" m={-2} w="full" h="full" alignItems="center" justifyContent="center">
                 {children}
             </Stack>
         );
-    }
-
-    function getFlexProps(): FlexProps {
-        return singleRow
-            ? { overflowY: 'hidden', overflowX: 'auto' }
-            : { flexWrap: 'wrap', height: 'full', overflowY: 'auto' };
-    }
+    }, []);
 
     return (
         <Box
@@ -107,7 +109,7 @@ const Dropzone = ({ skills, singleRow, handleSetSkills }: DropzoneProps) => {
                 maxW="full"
                 direction="row"
                 alignContent="flex-start"
-                {...getFlexProps()}
+                {...flexProps}
             >
                 {updatedSkills.map((weightedSkill, skillIndex) => (
                     <SkillCard
@@ -131,6 +133,4 @@ const Dropzone = ({ skills, singleRow, handleSetSkills }: DropzoneProps) => {
             </Flex>
         </Box>
     );
-};
-
-export default Dropzone;
+}

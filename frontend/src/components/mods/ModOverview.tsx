@@ -1,11 +1,17 @@
-import { Checkbox, Stack, Text } from '@chakra-ui/react';
-import { useDispatch } from 'react-redux';
-import { updateEnabledMod, setSelectedMod } from '../../redux/slices/mod';
-import { AppDispatch } from '../../redux/store';
-
 import ModConfig from '../../types/Configuration';
 
-const ModOverview = ({ mod, isEnabled, isSelected }: { mod: ModConfig; isEnabled: boolean; isSelected: boolean }) => {
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../redux/store';
+import { Checkbox, Stack, Text } from '@chakra-ui/react';
+import { updateEnabledMod, setSelectedMod } from '../../redux/slices/mod';
+
+interface ModOverviewProps {
+    mod: ModConfig;
+    isEnabled: boolean;
+    isSelected: boolean;
+}
+
+export default function ModOverview({ mod, isEnabled, isSelected }: ModOverviewProps) {
     const dispatch = useDispatch<AppDispatch>();
 
     const handleEnable = () => {
@@ -45,6 +51,4 @@ const ModOverview = ({ mod, isEnabled, isSelected }: { mod: ModConfig; isEnabled
             <Checkbox isChecked={isEnabled} size="lg" onChange={handleEnable} />
         </Stack>
     );
-};
-
-export default ModOverview;
+}

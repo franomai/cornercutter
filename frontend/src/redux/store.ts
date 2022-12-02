@@ -1,8 +1,9 @@
-import { configureStore } from '@reduxjs/toolkit';
 import modSlice from './slices/mod';
 import skillsSlice from './slices/skills';
+import savingSlice from './slices/saving';
 import cornercutterSlice from './slices/cornercutter';
-import savingSlice from './slices/saving/saving.slice';
+
+import { configureStore } from '@reduxjs/toolkit';
 
 const store = configureStore({
     reducer: {

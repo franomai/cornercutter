@@ -1,38 +1,46 @@
-import { Flex, Stack, Text } from '@chakra-ui/react';
-import { ReactNode, useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { getAllSkills } from '../../../redux/slices/skills';
-import DraggableSkillCard from '../DraggableSkillCard';
 import SearchBar from './SearchBar';
+import DraggableSkillCard from '../DraggableSkillCard';
 
-const SkillSearchColumn = () => {
+import { useSelector } from 'react-redux';
+import { Flex, Stack, Text } from '@chakra-ui/react';
+import { getAllSkills } from '../../../redux/slices/skills';
+import { ReactNode, useCallback, useMemo, useState } from 'react';
+
+export default function SkillSearchColumn() {
     const skills = useSelector(getAllSkills);
 
-    const allSkills = useCallback(() => {
+    const allSkills = useMemo(() => {
         return Object.values(skills).sort((a, b) => a.name.localeCompare(b.name));
     }, [skills]);
 
-    const [visibleSkills, setVisibleSkills] = useState(allSkills());
+    const [visibleSkills, setVisibleSkills] = useState(allSkills);
 
     const filterSkills = useCallback(
         (search: string) => {
             const loweredSearch = search.toLowerCase();
             if (search === '') {
-                setVisibleSkills(allSkills());
+                setVisibleSkills(allSkills);
             } else {
-                setVisibleSkills(allSkills().filter((skill) => skill.name.toLowerCase().includes(loweredSearch)));
+                setVisibleSkills(
+                    allSkills.filter((skill) => {
+                        return (
+                            skill.name.toLowerCase().includes(loweredSearch) ||
+                            skill.description.toLowerCase().includes(loweredSearch)
+                        );
+                    }),
+                );
             }
         },
-        [skills],
+        [allSkills],
     );
 
-    function renderItems(): ReactNode {
+    const renderItems = useCallback((): ReactNode => {
         if (visibleSkills.length === 0) {
             return <Text align="center">No results...</Text>;
         }
 
         return visibleSkills.map((skill) => <DraggableSkillCard key={skill.id} skill={skill} infoIcon />);
-    }
+    }, [visibleSkills]);
 
     return (
         <Flex
@@ -53,6 +61,4 @@ const SkillSearchColumn = () => {
             </Stack>
         </Flex>
     );
-};
-
-export default SkillSearchColumn;
+}

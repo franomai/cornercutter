@@ -1,21 +1,24 @@
-import { Box, Flex, IconButton, Stack, Text } from '@chakra-ui/react';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ReactNode, useCallback } from 'react';
-import Dropzone, { DropzoneProps } from './Dropzone';
 import HelpIcon from '../forms/HelpIcon';
+import Dropzone, { DropzoneProps } from './Dropzone';
 
-const LabelledDropzone = ({
+import { ReactNode, useCallback } from 'react';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Box, Flex, IconButton, Stack } from '@chakra-ui/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+interface LabelledDropzoneProps extends DropzoneProps {
+    label: ReactNode;
+    rotateLabel?: boolean;
+    tooltip?: string;
+}
+
+export default function LabelledDropzone({
     label,
     handleSetSkills,
     rotateLabel,
     tooltip,
     ...dropzoneProps
-}: {
-    label: ReactNode;
-    rotateLabel?: boolean;
-    tooltip?: string;
-} & DropzoneProps) => {
+}: LabelledDropzoneProps) {
     const renderLabel = useCallback(() => {
         if (rotateLabel)
             return (
@@ -59,7 +62,7 @@ const LabelledDropzone = ({
                 />
             </Flex>
         );
-    }, [label, handleSetSkills, rotateLabel]);
+    }, [label, tooltip, rotateLabel, handleSetSkills]);
 
     return (
         <Stack spacing={6} height="full" w="full" direction={rotateLabel ? 'row' : 'column'} userSelect="none">
@@ -67,6 +70,4 @@ const LabelledDropzone = ({
             <Dropzone handleSetSkills={handleSetSkills} {...dropzoneProps} />
         </Stack>
     );
-};
-
-export default LabelledDropzone;
+}

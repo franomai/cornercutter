@@ -5,6 +5,30 @@ const config: ThemeConfig = {
     useSystemColorMode: false,
 };
 
+const Link: ComponentStyleConfig = {
+    baseStyle: {
+        color: 'green.300',
+    },
+};
+
+const Button: ComponentStyleConfig = {
+    variants: {
+        primary: {
+            bg: 'green.300',
+            _hover: {
+                bg: 'green.400',
+            },
+            _disabled: {
+                _hover: {
+                    // For some reason there's a default style that's a higher priority
+                    // than this hence the !important is needed to override it.
+                    bg: 'green.300 !important',
+                },
+            },
+        },
+    },
+};
+
 const Checkbox: ComponentStyleConfig = {
     baseStyle: {
         control: {
@@ -74,6 +98,8 @@ const theme = extendTheme({
         Radio,
         Tabs,
         Input,
+        Button,
+        Link,
     },
 });
 

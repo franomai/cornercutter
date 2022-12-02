@@ -1,11 +1,17 @@
-import ModConfig, { DEFAULT_CONFIG, Floor, FloorSkills, ModOptions, GlobalOptions, Options,  Room } from '../types/Configuration';
+import ModConfig, { DEFAULT_CONFIG, FloorSkills, Options } from '../types/Configuration';
+
 import { WeightedSkill } from '../types/Skill';
+import { ModOptions, GlobalOptions, Floor, Room } from '../types/enums/ConfigEnums';
 
 export function hasOptionSet(option: Options, flag: Options) {
     return flag === (option & flag);
 }
 
-export function setOptionFlag (option: ModOptions | GlobalOptions, flag: ModOptions | GlobalOptions, isSet: boolean): ModOptions | GlobalOptions {
+export function setOptionFlag(
+    option: ModOptions | GlobalOptions,
+    flag: ModOptions | GlobalOptions,
+    isSet: boolean,
+): ModOptions | GlobalOptions {
     if (isSet) {
         // Append flag
         option |= flag;

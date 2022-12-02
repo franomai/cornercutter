@@ -1,24 +1,22 @@
-import { CloseButton, Input, InputGroup, InputLeftElement, InputRightElement } from '@chakra-ui/react';
+import { useEffect, useRef, useState } from 'react';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect, useRef, useState } from 'react';
+import { CloseButton, Input, InputGroup, InputLeftElement, InputRightElement } from '@chakra-ui/react';
 
-const SearchBar = ({
-    handleSearch,
-    placeholder = 'Search...',
-}: {
+interface SearchBarProps {
     handleSearch(search: string): void;
     placeholder?: string;
-}) => {
+}
+
+export default function SearchBar({ handleSearch, placeholder = 'Search...' }: SearchBarProps) {
     const [search, setSearch] = useState('');
     const ref = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         // Wait 0.3 seconds after they've finished typing to apply the search
         const timeout = setTimeout(() => handleSearch(search), 300);
-
         return () => clearTimeout(timeout);
-    }, [search]);
+    }, [search, handleSearch]);
 
     const handleUpdateSearch = (search: string) => {
         setSearch(search);
@@ -52,6 +50,4 @@ const SearchBar = ({
             )}
         </InputGroup>
     );
-};
-
-export default SearchBar;
+}

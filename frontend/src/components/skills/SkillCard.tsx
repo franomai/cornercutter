@@ -1,3 +1,6 @@
+import Skill from '../../types/Skill';
+import HelpIcon from '../forms/HelpIcon';
+
 import {
     Box,
     Flex,
@@ -15,9 +18,7 @@ import {
 } from '@chakra-ui/react';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ReactNode, useEffect, useState } from 'react';
-import Skill from '../../types/Skill';
-import HelpIcon from '../forms/HelpIcon';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 
 export interface SkillCardProps {
     skill: Skill;
@@ -39,16 +40,14 @@ const SkillCard = forwardRef<SkillCardProps, 'div'>(
             if (weighting !== newWeight) {
                 // Don't call the update function until they stop editing it for a while
                 const timeout = setTimeout(() => {
-                    if (handleUpdateWeight) {
-                        handleUpdateWeight(newWeight);
-                    }
+                    handleUpdateWeight?.(newWeight);
                 }, 500);
 
                 return () => clearTimeout(timeout);
             }
-        }, [weighting, newWeight]);
+        }, [weighting, newWeight, handleUpdateWeight]);
 
-        function renderIcons(): ReactNode {
+        const renderIcons = useCallback((): ReactNode => {
             return (
                 <Stack direction="row" position="absolute" right={2} top={2.5} spacing={1}>
                     {deleteIcon && (
@@ -65,9 +64,9 @@ const SkillCard = forwardRef<SkillCardProps, 'div'>(
                     {infoIcon && <HelpIcon tooltip={skill.description} size="lg" />}
                 </Stack>
             );
-        }
+        }, [infoIcon, deleteIcon, skill.description, handleDelete]);
 
-        function renderWeighting(): ReactNode {
+        const renderWeighting = useCallback((): ReactNode => {
             return (
                 <Box position="absolute" left={2} top={2.5}>
                     {isHovering ? (
@@ -95,7 +94,7 @@ const SkillCard = forwardRef<SkillCardProps, 'div'>(
                     )}
                 </Box>
             );
-        }
+        }, [newWeight, isHovering]);
 
         return (
             <Flex

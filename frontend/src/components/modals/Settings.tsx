@@ -1,143 +1,133 @@
+import OptionCheckboxes from '../forms/OptionCheckboxes';
+import useGoogleAnalytics from '../../hooks/useGoogleAnalytics';
+import EnableUserMetricsSection from './sections/EnableUserMetricsSection';
+
 import {
-    Button,
-    Checkbox,
-    FormControl,
-    FormLabel,
-    Input,
+    getEnableUserMetrics,
+    getGlobalOptions,
+    setEnableUserMetrics,
+    setGlobalOptions,
+} from '../../redux/slices/cornercutter';
+import {
     Modal,
     ModalBody,
+    ModalCloseButton,
     ModalContent,
-    ModalFooter,
     ModalHeader,
     ModalOverlay,
-    Stack,
-    Textarea,
-    Tooltip,
     useDisclosure,
 } from '@chakra-ui/react';
-import { ReactNode, useCallback, useEffect, useState } from 'react';
-import { setOptionFlag, hasOptionSet } from '../../utility/ConfigHelpers';
-import ModConfig, { DEFAULT_CONFIG, GlobalOptions } from '../../types/Configuration';
-import { generateEmptyFloorSkills } from '../../utility/ConfigHelpers';
-import { useSelector } from 'react-redux';
-import { getGlobalOptions } from '../../redux/slices/cornercutter';
+import { invoke } from '@tauri-apps/api';
+import { useDispatch, useSelector } from 'react-redux';
+import { OptionDetails } from '../forms/TooltipCheckbox';
+import { RefObject, useCallback, useEffect } from 'react';
+import { setOptionFlag } from '../../utility/ConfigHelpers';
+import { GlobalOptions } from '../../types/enums/ConfigEnums';
 
-const optionLabels: Record<GlobalOptions, string> = {
-    [GlobalOptions.DisableCornercutter]: 'Disable Cornercutter',
-    [GlobalOptions.DisableHighscores]: 'Disable highscores',
-    [GlobalOptions.DisableSteamAchievements]: 'Disable Steam achievements',
-    [GlobalOptions.RespectUnlocks]: 'Only spawn unlocked skills',
-    [GlobalOptions.EnableDebugMenu]: 'Enable debug menu',
-    [GlobalOptions.EnableExtraLogging]: 'Enable additional Cornercutter logging',
-    [GlobalOptions.EnsureAlwaysFiveCubitShopOptions]: 'Ensure the Cubit shop always has five skills',
-    [GlobalOptions.EnableFreeCubitShop]: 'Make the Cubit shop free',
+const optionDetails: Record<GlobalOptions, OptionDetails> = {
+    [GlobalOptions.DisableCornercutter]: {
+        label: 'Disable Cornercutter',
+        tooltip: 'Turns cornercutter off for the next run. No indicator will show in-game.',
+    },
+    [GlobalOptions.DisableHighscores]: {
+        label: 'Disable highscores',
+        tooltip:
+            'New best times with Cornercutter enabled will not be saved, unless it is the fist clear for that dungeon.',
+    },
+    [GlobalOptions.DisableSteamAchievements]: {
+        label: 'Disable Steam achievements',
+        tooltip: 'Turns off steam achievements for progression and unlocks.',
+    },
+    [GlobalOptions.RespectUnlocks]: {
+        label: 'Only spawn unlocked skills',
+        tooltip:
+            'While enabled, mods will not spawn items not unlocked in gain - effectively, the pool will be reduced.',
+    },
+    [GlobalOptions.EnableDebugMenu]: {
+        label: 'Enable debug menu',
+        tooltip: 'Activates the debug menu in the pause screen.',
+    },
+    [GlobalOptions.EnableExtraLogging]: {
+        label: 'Enable additional Cornercutter logging',
+        tooltip: 'Adds some extra logging to Cornercutter to help diagnose spawning issues.',
+    },
+    [GlobalOptions.EnsureAlwaysFiveCubitShopOptions]: {
+        label: 'Ensure the Cubit shop always has five skills',
+        tooltip: 'The Cubit shop in Fizzle will always have five spots, rerolling skills if purchased.',
+    },
+    [GlobalOptions.EnableFreeCubitShop]: {
+        label: 'Make the Cubit shop free',
+        tooltip: 'Skills in the Cubit shop in Fizzle cost 0 cubits.',
+    },
 };
 
-const optionTooltips: Record<GlobalOptions, string> = {
-    [GlobalOptions.DisableCornercutter]: 'Turns Cornercutter off for the next run. No indicator will show in-game.',
-    [GlobalOptions.DisableHighscores]:
-        'New best times with Cornercutter enabled will not be saved, unless it is the first clear for that dungeon.',
-    [GlobalOptions.DisableSteamAchievements]: 'Turns off Steam achievements for progression and unlocks.',
-    [GlobalOptions.RespectUnlocks]:
-        'While enabled, mods will not spawn items not unlocked in-game - effectively, the pool will be reduced.',
-    [GlobalOptions.EnableDebugMenu]: 'Activates the debug menu in the pause screen.',
-    [GlobalOptions.EnableExtraLogging]: 'Adds some extra logging to Cornercutter to help diagnose spawning issues.',
-    [GlobalOptions.EnsureAlwaysFiveCubitShopOptions]: 'The Cubit shop in Fizzle will always have five spots, rerolling skills if purchased',
-    [GlobalOptions.EnableFreeCubitShop]: 'Skills in the Cubit shop in Fizzle cost 0 cubits.',
-};
-
-const Settings = ({
-    isShown,
-    handleSaveChanges,
-    handleDiscardChanges,
-}: {
-    isShown: boolean;
-    handleDiscardChanges(): void;
-    handleSaveChanges(settings: GlobalOptions): void;
-}) => {
+export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonElement> }) {
+    const dispatch = useDispatch();
+    const GA = useGoogleAnalytics();
     const globalOptions = useSelector(getGlobalOptions);
-
-    console.log(globalOptions);
+    const enableUserMetrics = useSelector(getEnableUserMetrics);
 
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [updatedSettings, setUpdatedSettings] = useState(globalOptions);
 
     useEffect(() => {
-        if (isShown) {
-            onOpen();
-            setUpdatedSettings(globalOptions);
-        } else {
-            onClose();
-        }
-    }, [globalOptions, handleSaveChanges, handleDiscardChanges]);
+        const handler = () => onOpen();
+        const current = openRef.current;
+        current?.addEventListener('click', handler);
 
-    const handleSave = useCallback(() => {
-        handleSaveChanges(updatedSettings);
-    }, [handleSaveChanges, updatedSettings]);
+        return () => current?.removeEventListener('click', handler);
+    }, [openRef, onOpen]);
 
-    const handleDiscard = useCallback(() => {
-        handleDiscardChanges();
-        onClose();
-    }, [handleDiscardChanges, onClose]);
+    const handleUpdateEnableUserMetrics = useCallback(
+        (enableUserMetrics: boolean) => {
+            invoke('set_enable_user_metrics', { enableUserMetrics }).then(() =>
+                dispatch(setEnableUserMetrics(enableUserMetrics)),
+            );
+        },
+        [dispatch],
+    );
 
-    function renderOptionCheckbox(flag: GlobalOptions, label: string, tooltip: string): ReactNode {
-        return (
-            <Checkbox
-                key={flag}
-                isChecked={hasOptionSet(updatedSettings, flag)}
-                onChange={(e) => {
-                    setUpdatedSettings(setOptionFlag(updatedSettings, flag, e.target.checked) as GlobalOptions); // :^)
-                }}
-            >
-                <Tooltip hasArrow label={tooltip} aria-label="More info" placement="top" openDelay={700}>
-                    {label}
-                </Tooltip>
-            </Checkbox>
-        );
-    }
-
-    function renderOptionCheckboxes(flags: GlobalOptions[]): ReactNode {
-        return (
-            <Stack spacing={2}>
-                {flags.map((flag) => renderOptionCheckbox(flag, optionLabels[flag], optionTooltips[flag]))}
-            </Stack>
-        );
-    }
+    const handleSetFlag = useCallback(
+        (flag: GlobalOptions, isChecked: boolean) => {
+            const updatedOptions = setOptionFlag(globalOptions, flag, isChecked) as GlobalOptions;
+            if (flag === GlobalOptions.DisableCornercutter) {
+                const action = isChecked ? 'Disable Cornercutter' : 'Enable Cornercutter';
+                GA.event({ category: 'Settings', action });
+            }
+            invoke('set_global_options', { options: updatedOptions }).then(() =>
+                dispatch(setGlobalOptions(updatedOptions)),
+            );
+        },
+        [GA, globalOptions, dispatch],
+    );
 
     return (
-        <Modal
-            isOpen={isOpen}
-            onClose={() => {
-                handleDiscardChanges();
-                onClose();
-            }}
-        >
+        <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>Global Settings</ModalHeader>
+                <ModalCloseButton title="Save changes" />
                 <ModalBody>
-                    {renderOptionCheckboxes([
-                        GlobalOptions.DisableCornercutter,
-                        GlobalOptions.DisableHighscores,
-                        GlobalOptions.DisableSteamAchievements,
-                        GlobalOptions.RespectUnlocks,
-                        GlobalOptions.EnsureAlwaysFiveCubitShopOptions,
-                        GlobalOptions.EnableFreeCubitShop,
-                        GlobalOptions.EnableDebugMenu,
-                        GlobalOptions.EnableExtraLogging,
-                    ])}
+                    <OptionCheckboxes<GlobalOptions>
+                        flags={[
+                            GlobalOptions.DisableCornercutter,
+                            GlobalOptions.DisableHighscores,
+                            GlobalOptions.DisableSteamAchievements,
+                            GlobalOptions.RespectUnlocks,
+                            GlobalOptions.EnableDebugMenu,
+                            GlobalOptions.EnableExtraLogging,
+                            GlobalOptions.EnsureAlwaysFiveCubitShopOptions,
+                            GlobalOptions.EnableFreeCubitShop,
+                        ]}
+                        optionDetails={optionDetails}
+                        options={globalOptions}
+                        handleChange={handleSetFlag}
+                    />
+                    <EnableUserMetricsSection
+                        isEnabled={enableUserMetrics}
+                        setIsEnabled={handleUpdateEnableUserMetrics}
+                    />
                 </ModalBody>
-                <ModalFooter gap={2}>
-                    <Button onClick={handleSave} variant="outline">
-                        Save Changes
-                    </Button>
-                    <Button onClick={handleDiscard} variant="outline">
-                        Discard Changes
-                    </Button>
-                </ModalFooter>
             </ModalContent>
         </Modal>
     );
-};
-
-export default Settings;
+}

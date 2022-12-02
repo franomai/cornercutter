@@ -10,13 +10,11 @@ use config_io::{
     CornercutterConfig,
     CornercutterCache,
     CornercutterGlobalSettings,
-    is_valid_going_under_dir,
-    create_cornercutter_folders,
     load_cornercutter_cache,
     serialize_mod,
     get_mod_filename,
     serialize_settings_config,
-    delete_mod_file
+    delete_mod_file, serialize_cornercutter_config
 };
 
 mod mod_handlers;
@@ -31,8 +29,6 @@ use types::structs::ModConfig;
 use tauri::State;
 use uuid::Uuid;
 
-use crate::config_io::serialize_cornercutter_config;
-
 #[tauri::command]
 fn get_settings(cache: State<CornercutterCache>) -> CornercutterGlobalSettings {
     return cache.settings.lock().unwrap().clone();
@@ -45,6 +41,21 @@ fn get_cornercutter_config(cache: State<CornercutterCache>) -> CornercutterConfi
 }
 
 #[tauri::command]
+fn set_is_not_first_startup(cache: State<CornercutterCache>) {
+    let mut config = cache.config.lock().unwrap();
+    config.is_first_startup = false;
+    serialize_cornercutter_config(&config);
+}
+
+#[tauri::command]
+fn set_enable_user_metrics(cache: State<CornercutterCache>, enable_user_metrics: bool) {
+    let mut config = cache.config.lock().unwrap();
+    config.enable_user_metrics = enable_user_metrics;
+    serialize_cornercutter_config(&config);
+}
+
+
+#[tauri::command]
 fn get_mods(cache: State<CornercutterCache>) -> Vec<ModConfig> {
     let mods = cache.mods.lock()
         .unwrap()
@@ -55,24 +66,10 @@ fn get_mods(cache: State<CornercutterCache>) -> Vec<ModConfig> {
 }
 
 #[tauri::command]
-fn set_going_under_dir(cache: State<CornercutterCache>, dir: String) -> bool {
-    let mut config = cache.config.lock().unwrap();
-
-    if is_valid_going_under_dir(dir.as_str()) {
-        config.going_under_dir = Some(dir);
-        config.set_directory = true;
-        serialize_cornercutter_config(&config);
-        create_cornercutter_folders(&config);
-        return true;
-    }
-    return false;
-}
-
-#[tauri::command]
 fn set_global_options(cache: State<CornercutterCache>, options: u32) -> bool {
     let mut settings = cache.settings.lock().unwrap();
     settings.global_options = options;
-    serialize_settings_config(&cache.config.lock().unwrap(), &settings);
+    serialize_settings_config(cache.going_under_dir.as_str(), &settings);
     return true;
 }
 
@@ -81,26 +78,25 @@ fn delete_mod(cache: State<CornercutterCache>, mod_id: String) {
     let mut mods = cache.mods.lock().unwrap();
     if mods.contains_key(&mod_id) {
         let mod_config = mods.remove(&mod_id).unwrap();
-        delete_mod_file(&cache.config.lock().unwrap(), &mod_config);
+        delete_mod_file(cache.going_under_dir.as_str(), &mod_config);
     }
 }
 
 #[tauri::command]
 fn save_mod(cache: State<CornercutterCache>, mod_config: ModConfig) -> Result<(), String> {
-    let result = serialize_mod(&cache.config.lock().unwrap(), &mod_config);
+    let result = serialize_mod(cache.going_under_dir.as_str(), &mod_config);
     cache.mods.lock().unwrap().insert(mod_config.id.clone(), mod_config);
     return result;
 }
 
 #[tauri::command]
 fn import_mod(cache: State<CornercutterCache>, config_string: String) -> Result<ModConfig, String> {
-    let config = cache.config.lock().unwrap();
     let id = get_new_id(&cache.mods.lock().unwrap());
 
     let res = match decode_configuration(&config_string, &id) {
         Err(err) => Err(err),
         Ok(mod_config) => {
-            let result  = serialize_mod(&config, &mod_config);
+            let result  = serialize_mod(cache.going_under_dir.as_str(), &mod_config);
             cache.mods.lock().unwrap().insert(id, mod_config.clone());
             result.map(|_| mod_config)
         },
@@ -116,10 +112,8 @@ fn get_new_mod_id(cache: State<CornercutterCache>) -> String {
 
 #[tauri::command]
 fn set_enabled_mod(cache: State<CornercutterCache>, enabled_mod: Option<String>) {
-    let config = cache.config.lock().unwrap();
-
     cache.settings.lock().unwrap().current_mod = enabled_mod.map(|id| get_mod_filename(id));
-    serialize_settings_config(&config, &cache.settings.lock().unwrap())
+    serialize_settings_config(cache.going_under_dir.as_str(), &cache.settings.lock().unwrap())
 }
 
 #[tauri::command]
@@ -144,10 +138,11 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             get_config_code, 
             get_cornercutter_config, 
+            set_is_not_first_startup,
+            set_enable_user_metrics,
             get_settings,
             delete_mod,
-            save_mod, 
-            set_going_under_dir, 
+            save_mod,
             get_mods,
             import_mod,
             get_new_mod_id,

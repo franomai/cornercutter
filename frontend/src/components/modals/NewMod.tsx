@@ -1,3 +1,6 @@
+import useGoogleAnalytics from '../../hooks/useGoogleAnalytics';
+import ModConfig, { DEFAULT_CONFIG } from '../../types/Configuration';
+
 import {
     Button,
     FormControl,
@@ -13,42 +16,68 @@ import {
     Textarea,
     useDisclosure,
 } from '@chakra-ui/react';
-import { useCallback, useEffect, useState } from 'react';
-import ModConfig, { DEFAULT_CONFIG } from '../../types/Configuration';
+import { invoke } from '@tauri-apps/api';
+import { useDispatch } from 'react-redux';
+import { addMod, setSelectedMod } from '../../redux/slices/mod';
 import { generateEmptyFloorSkills } from '../../utility/ConfigHelpers';
+import { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
 
-const NewMod = ({
-    id,
-    handleCreate,
-    handleDiscard,
-}: {
-    id: string;
-    handleDiscard(): void;
-    handleCreate(mod: ModConfig): void;
-}) => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+export default function NewMod({ openRef }: { openRef: RefObject<HTMLButtonElement> }) {
+    const dispatch = useDispatch();
+    const GA = useGoogleAnalytics();
+
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [newModId, setNewModId] = useState<null | string>(null);
+
+    const canSave = useMemo(() => newModId !== null && name.trim().length !== 0, [name, newModId]);
+
+    const handleGetNewModId = useCallback(() => {
+        invoke<string>('get_new_mod_id')
+            .then((id) => setNewModId(id))
+            .then(onOpen)
+            .catch(console.error);
+    }, [onOpen, setNewModId]);
 
     useEffect(() => {
-        onOpen();
-    }, [id]);
+        const handler = () => handleGetNewModId();
+        const current = openRef.current;
+        current?.addEventListener('click', handler);
 
-    const canSave = name.trim().length !== 0;
+        return () => current?.removeEventListener('click', handler);
+    }, [openRef, handleGetNewModId]);
+
+    const handleClose = useCallback(() => {
+        setName('');
+        setDescription('');
+        setNewModId(null);
+        onClose();
+    }, [onClose]);
 
     const handleCreateMod = useCallback(() => {
-        handleCreate({
-            id,
+        // This is a sanity check and should never be called as the Create Mod
+        // button is disabled when newModId is null.
+        if (newModId === null) return;
+
+        const newMod: ModConfig = {
+            id: newModId,
             info: { name, description },
             general: DEFAULT_CONFIG,
             floorSkills: generateEmptyFloorSkills(),
-        });
-    }, [id, handleCreate, name, description]);
+        };
+
+        dispatch(addMod(newMod));
+        dispatch(setSelectedMod(newModId));
+
+        GA.event({ category: 'mods', action: 'create mod' });
+
+        handleClose();
+    }, [GA, name, newModId, description, dispatch, handleClose]);
 
     const handleDiscardMod = useCallback(() => {
-        handleDiscard();
-        onClose();
-    }, [handleDiscard, onClose]);
+        handleClose();
+    }, [handleClose]);
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -89,6 +118,4 @@ const NewMod = ({
             </ModalContent>
         </Modal>
     );
-};
-
-export default NewMod;
+}

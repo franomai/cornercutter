@@ -1,3 +1,6 @@
+import ModConfig from '../../types/Configuration';
+import useGoogleAnalytics from '../../hooks/useGoogleAnalytics';
+
 import {
     Button,
     FormControl,
@@ -13,54 +16,58 @@ import {
     Textarea,
     useDisclosure,
 } from '@chakra-ui/react';
+import { useDispatch } from 'react-redux';
 import { invoke } from '@tauri-apps/api/tauri';
-import React, { useCallback, useEffect, useState } from 'react';
-import ModConfig from '../../types/Configuration';
+import { addMod, setSelectedMod } from '../../redux/slices/mod';
+import { RefObject, useCallback, useEffect, useState } from 'react';
 
 const ModCodeRegex = /^(#[^\r\n]*\r?\n)?(#[^\r\n]*\r?\n)?([\w\d+/]+={0,2})$/;
 
-const ImportMod = ({
-    isShown,
-    handleCreate,
-    handleDiscard,
-}: {
-    isShown: boolean;
-    handleDiscard(): void;
-    handleCreate(mod: ModConfig): void;
-}) => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const [modCode, setModCode] = useState('');
+export default function ImportMod({ openRef }: { openRef: RefObject<HTMLButtonElement> }) {
+    const dispatch = useDispatch();
+    const GA = useGoogleAnalytics();
+
     const [error, setError] = useState('');
+    const [modCode, setModCode] = useState('');
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     useEffect(() => {
-        if (isShown) {
-            if (document.hasFocus()) {
-                navigator.clipboard.readText().then((clipboard) => {
-                    setModCode(ModCodeRegex.test(clipboard) ? clipboard : '');
-                });
-            } else {
-                setModCode('');
-            }
-            setError('');
-            onOpen();
-        } else {
-            onClose();
+        const handler = () => onOpen();
+        const current = openRef.current;
+        current?.addEventListener('click', handler);
+
+        return () => current?.removeEventListener('click', handler);
+    }, [openRef, onOpen]);
+
+    useEffect(() => {
+        if (isOpen && document.hasFocus()) {
+            navigator.clipboard.readText().then((clipboard) => {
+                setModCode(ModCodeRegex.test(clipboard) ? clipboard : '');
+            });
         }
-    }, [isShown]);
+    }, [isOpen]);
+
+    const handleClose = useCallback(() => {
+        setError('');
+        setModCode('');
+        onClose();
+    }, [onClose]);
 
     const handleImportMod = useCallback(() => {
         invoke<ModConfig>('import_mod', { configString: modCode })
-            .then(handleCreate)
-            .catch((err: string) => {
-                console.error(err);
-                setError(err);
-            });
-    }, [handleCreate, modCode]);
+            .then((mod) => {
+                dispatch(addMod(mod));
+                dispatch(setSelectedMod(mod.id));
+                GA.event({ category: 'mods', action: 'import mod' });
+
+                handleClose();
+            })
+            .catch(setError);
+    }, [GA, modCode, dispatch, handleClose]);
 
     const handleDiscardMod = useCallback(() => {
-        handleDiscard();
-        onClose();
-    }, [handleDiscard, onClose]);
+        handleClose();
+    }, [handleClose]);
 
     const handleChangeModCode = useCallback(
         (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -73,13 +80,7 @@ const ImportMod = ({
     );
 
     return (
-        <Modal
-            isOpen={isOpen}
-            onClose={() => {
-                handleDiscard();
-                onClose();
-            }}
-        >
+        <Modal isOpen={isOpen} onClose={handleDiscardMod}>
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>Import New Mod</ModalHeader>
@@ -105,6 +106,4 @@ const ImportMod = ({
             </ModalContent>
         </Modal>
     );
-};
-
-export default ImportMod;
+}
