@@ -1,14 +1,7 @@
 import { WeightedSkill } from './Skill';
-import {
-    CurseSpawnType,
-    Floor,
-    GlobalOptions,
-    ModOptions,
-    MultiSpawnerType,
-    PedestalSpawnType,
-    Room,
-    SpawnType,
-} from './enums/ConfigEnums';
+import { CurseSpawnType, Floor, MultiSpawnerType, PedestalSpawnType, Room, SpawnType } from './enums/ConfigEnums';
+import { GlobalOptions } from './enums/GlobalOptions';
+import { ModOptions } from './enums/ModOptions';
 
 export default interface ModConfig {
     id: string;

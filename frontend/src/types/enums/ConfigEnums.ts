@@ -39,28 +39,3 @@ export enum Room {
     Curse = 'curse',
     Finale = 'finale',
 }
-
-export enum ModOptions {
-    NoneSelected = 0,
-    ConfigPerFloor = 1 << 0,
-    ConfigPerRoom = 1 << 1,
-    SelectRandomItemOnEmpty = 1 << 2,
-    DisableMentorAbilities = 1 << 3,
-    DisableGiftOfIntern = 1 << 4,
-    DisablePinned = 1 << 5,
-    AwardSkillsPerFloor = 1 << 6,
-    DisableHealing = 1 << 7,
-    DisableItemPickup = 1 << 8,
-}
-
-export enum GlobalOptions {
-    NoneSelected = 0,
-    DisableCornercutter = 1 << 0,
-    DisableHighscores = 1 << 1,
-    DisableSteamAchievements = 1 << 2,
-    RespectUnlocks = 1 << 3,
-    EnableDebugMenu = 1 << 4,
-    EnableExtraLogging = 1 << 5,
-    EnsureAlwaysFiveCubitShopOptions = 1 << 6,
-    EnableFreeCubitShop = 1 << 7,
-}

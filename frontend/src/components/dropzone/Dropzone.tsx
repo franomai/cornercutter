@@ -5,7 +5,7 @@ import BlankTextLayout from '../layout/BlankTextLayout';
 import { useDrop } from 'react-dnd';
 import { useSelector } from 'react-redux';
 import { WeightedSkill } from '../../types/Skill';
-import { ItemType } from '../../types/enums/SkillEnums';
+import { ItemType } from '../../types/enums/ItemType';
 import { getSelectedMod } from '../../redux/slices/mod';
 import { getAllSkills } from '../../redux/slices/skills';
 import { SpawnType } from '../../types/enums/ConfigEnums';

@@ -3,7 +3,6 @@ import ModConfig, { ModInfo } from '../../types/Configuration';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import {
-    ModOptions,
     Room,
     SpawnType,
     MultiSpawnerType,
@@ -11,6 +10,7 @@ import {
     CurseSpawnType,
     Floor,
 } from '../../types/enums/ConfigEnums';
+import { ModOptions } from '../../types/enums/ModOptions';
 import { invoke } from '@tauri-apps/api';
 import { WeightedSkill } from '../../types/Skill';
 import { setOptionFlag } from '../../utility/ConfigHelpers';

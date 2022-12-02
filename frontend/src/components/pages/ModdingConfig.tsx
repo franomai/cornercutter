@@ -16,7 +16,8 @@ import { useSelector } from 'react-redux';
 import { ReactNode, useCallback, useRef } from 'react';
 import { hasOptionSet } from '../../utility/ConfigHelpers';
 import { Box, Button, Flex, Stack } from '@chakra-ui/react';
-import { Floor, ModOptions } from '../../types/enums/ConfigEnums';
+import { Floor } from '../../types/enums/ConfigEnums';
+import { ModOptions } from '../../types/enums/ModOptions';
 import { getAllMods, getSelectedMod } from '../../redux/slices/mod';
 import { getCornercutterConfig } from '../../redux/slices/cornercutter';
 

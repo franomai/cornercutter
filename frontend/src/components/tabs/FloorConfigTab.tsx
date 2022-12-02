@@ -9,7 +9,8 @@ import { ReactNode, useCallback } from 'react';
 import { capitalise } from '../../utility/Utils';
 import { setFloorSkills } from '../../redux/slices/mod';
 import { hasOptionSet } from '../../utility/ConfigHelpers';
-import { ModOptions, Floor, Room } from '../../types/enums/ConfigEnums';
+import { Floor, Room } from '../../types/enums/ConfigEnums';
+import { ModOptions } from '../../types/enums/ModOptions';
 import useSavingContext from '../../contexts/SavingContext';
 
 interface FloorConfigTabProps {
