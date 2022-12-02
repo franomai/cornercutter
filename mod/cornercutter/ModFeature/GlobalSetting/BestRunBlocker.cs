@@ -12,9 +12,9 @@ namespace cornercutter.ModFeature.GlobalSetting
 
         static void Postfix(ref SaveData __instance, ref RunData runData)
         {
-            GlobalOptions globals = CutterConfig.Instance.GlobalOptions;
-            if (!CutterConfig.Instance.CornercutterIsEnabled()) return;
-            if (!globals.HasFlag(GlobalOptions.DisableHighscores)) return;
+            CutterConfig cornercutter = CutterConfig.Instance;
+            GlobalOptions globals = cornercutter.GlobalOptions;
+            if (!(cornercutter.CornercutterIsEnabled() && globals.HasFlag(GlobalOptions.DisableHighscores))) return;
 
             // Because other parts of the run end routine are using this runData reference, we have to
             // make a copy with the invalid time and overwrite the run that's there, rather than
@@ -37,6 +37,21 @@ namespace cornercutter.ModFeature.GlobalSetting
                 won = originalRunData.won
             };
             return clonedRunData;
+        }
+    }
+
+    [HarmonyPatch(typeof(GameManager), nameof(GameManager.IsBestTime))]
+    class BestTimeImageBlocker
+    {
+        static bool Prefix(ref bool __result)
+        {
+            CutterConfig cornercutter = CutterConfig.Instance;
+            GlobalOptions globals = cornercutter.GlobalOptions;
+            if (!(cornercutter.CornercutterIsEnabled() && globals.HasFlag(GlobalOptions.DisableHighscores))) return true;
+
+            // If highscores are disabled, don't check if this run is best, just display nothing
+            __result = false;
+            return false;
         }
     }
 }

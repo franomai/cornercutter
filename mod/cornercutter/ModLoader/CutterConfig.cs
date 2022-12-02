@@ -7,9 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using TMPro;
-using UnityEngine;
 
 namespace cornercutter.ModLoader
 {
@@ -30,6 +28,7 @@ namespace cornercutter.ModLoader
         public WeightedSkill[] StartingSkills { get; private set; }
         private Dictionary<Floor, FloorConfig> floorConfigs;
 
+        private bool InDungeon = false;
         private ManualLogSource Logger = null;
         private TextMeshProUGUI VisualIndicator = null;
         private PauseTabButton DebugMenu = null;
@@ -39,9 +38,20 @@ namespace cornercutter.ModLoader
         {
         }
 
-        public void Setup(ManualLogSource logger)
+        public void Setup(ManualLogSource logger = null)
         {
-            Logger = logger;
+            if (logger == null)
+            {
+                if (Logger == null)
+                {
+                    throw new Exception("First cornercutter setup should set a logger.");
+                }
+                // Don't unset the logger via this call
+            }
+            else
+            {
+                Logger = logger;
+            }
             ClearConfig();
             LoadGlobalSettings();
         }
@@ -68,9 +78,10 @@ namespace cornercutter.ModLoader
             UpdateDebugVisibility();
         }
 
-        public void LoadCurrentConfig()
+        public void LoadDungeonConfig()
         {
             ClearConfig();
+            InDungeon = true;
             LoadGlobalSettings();
             if (!HasCurrentMod) return;
             ModConfigDTO config = Reader.ReadMod(ModFileLocation);
@@ -134,7 +145,7 @@ namespace cornercutter.ModLoader
             ModFileLocation = null;
             GlobalOptions = GlobalOptions.NoneSelected;
             HasCurrentMod = false;
-
+            InDungeon = false;
             SpawnCollectionType = SpawnCollectionType.NoneSelected;
             CurseSpawnType = CurseSpawnType.NoneSelected;
             ConfigOptions = ConfigOptions.NoneSelected;
@@ -160,7 +171,20 @@ namespace cornercutter.ModLoader
         public void UpdateIndicatorVisibility()
         {
             if (VisualIndicator == null) return;
-            VisualIndicator.text = HasCurrentMod ? "Cutting corners..." : "Not cutting corners!";
+
+            if (HasCurrentMod)
+            {
+                VisualIndicator.text = InDungeon
+                    ? "Cutting corners..."
+                    : "Ready to cut some corners!";
+            }
+            else
+            {
+                VisualIndicator.text = InDungeon
+                    ? "Not cutting corners!"
+                    : "Thinking about cutting corners...";
+            }
+
             VisualIndicator.enabled = CornercutterIsEnabled();
         }
 
@@ -184,6 +208,13 @@ namespace cornercutter.ModLoader
         public bool CornercutterIsEnabled()
         {
             return !GlobalOptions.HasFlag(GlobalOptions.DisableCornercutter);
+        }
+
+        public bool ModIsActive()
+        {
+            // DungeonManager.GetCurrentDungeonCompany doesn't reset on Fizzle enter and has a NPE
+            // so it is more accurate for us to track it
+            return HasCurrentMod && InDungeon;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace cornercutter.ModFeature.ModSetting
         {
             CutterConfig cornercutter = CutterConfig.Instance;
             ConfigOptions options = cornercutter.ConfigOptions;
-            bool modEnabled = cornercutter.CornercutterIsEnabled() && cornercutter.HasCurrentMod;
+            bool modEnabled = cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive();
 
             if (modEnabled && options.HasFlag(ConfigOptions.DisableGiftOfIntern))
             {
@@ -39,7 +39,7 @@ namespace cornercutter.ModFeature.ModSetting
         {
             CutterConfig cornercutter = CutterConfig.Instance;
             ConfigOptions options = cornercutter.ConfigOptions;
-            bool modEnabled = cornercutter.CornercutterIsEnabled() && cornercutter.HasCurrentMod;
+            bool modEnabled = cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive();
 
             if (modEnabled && options.HasFlag(ConfigOptions.DisableGiftOfIntern))
             {

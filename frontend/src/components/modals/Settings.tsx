@@ -51,6 +51,14 @@ const optionDetails: Record<GlobalOptions, OptionDetails> = {
         label: 'Enable additional Cornercutter logging',
         tooltip: 'Adds some extra logging to Cornercutter to help diagnose spawning issues.',
     },
+    [GlobalOptions.EnsureAlwaysFiveCubitShopOptions]: {
+        label: 'Ensure the Cubit shop always has five skills',
+        tooltip: 'The Cubit shop in Fizzle will always have five spots, rerolling skills if purchased.',
+    },
+    [GlobalOptions.EnableFreeCubitShop]: {
+        label: 'Make the Cubit shop free',
+        tooltip: 'Skills in the Cubit shop in Fizzle cost 0 cubits.',
+    },
 };
 
 export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonElement> }) {
@@ -107,6 +115,8 @@ export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonEle
                             GlobalOptions.RespectUnlocks,
                             GlobalOptions.EnableDebugMenu,
                             GlobalOptions.EnableExtraLogging,
+                            GlobalOptions.EnsureAlwaysFiveCubitShopOptions,
+                            GlobalOptions.EnableFreeCubitShop,
                         ]}
                         optionDetails={optionDetails}
                         options={globalOptions}

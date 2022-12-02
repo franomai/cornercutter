@@ -36,6 +36,8 @@ bitflags! {
         const DISABLE_GIFT_OF_INTERN = 1 << 4;
         const DISABLE_PINNED = 1 << 5;
         const AWARD_SKILLS_PER_LEVEL = 1 << 6;
+        const DISABLE_HEALING = 1 << 7;
+        const DISABLE_ITEM_PICKUP = 1 << 8;
     }
 }
 
@@ -48,5 +50,7 @@ bitflags! {
         const RESPECT_UNLOCKS = 1 << 3;
         const ENABLE_DEBUG_MENU = 1 << 4;
         const ENABLE_EXTRA_LOGGING = 1 << 5;
+        const ENSURE_ALWAYS_FIVE_CUBIT_SHOP_OPTIONS = 1 << 6;
+        const ENABLE_FREE_CUBIT_SHOP = 1 << 7;
     }
 }

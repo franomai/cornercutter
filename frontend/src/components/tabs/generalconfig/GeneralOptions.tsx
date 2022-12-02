@@ -51,6 +51,14 @@ const optionDetails: Record<ModOptions, OptionDetails> = {
         label: 'Disable pinned skills',
         tooltip: 'When enabled, the pinned skill will not be granted at the start of the dungeon.',
     },
+    [ModOptions.DisableHealing]: {
+        label: 'Disable healing and armour from non-skills',
+        tooltip: 'When enabled, anything that grants armour or health will do nothing instead, except for skills.',
+    },
+    [ModOptions.DisableItemPickup]: {
+        label: 'Disable item pickups from non-skills',
+        tooltip: 'When enabled, trying to pick up or otherwise gain items or weapons will do nothing instead.',
+    },
 };
 
 export default function GeneralOptions({ selectedMod }: { selectedMod: ModConfig }) {
@@ -204,12 +212,14 @@ export default function GeneralOptions({ selectedMod }: { selectedMod: ModConfig
                     ModOptions.ConfigPerFloor,
                     ModOptions.ConfigPerRoom,
                     ModOptions.AwardSkillsPerFloor,
+                    ModOptions.DisableHealing,
                     ModOptions.SelectRandomItemOnEmpty,
                 ])}
                 {renderOptionCheckboxes([
                     ModOptions.DisableMentorAbilities,
                     ModOptions.DisableGiftOfIntern,
                     ModOptions.DisablePinned,
+                    ModOptions.DisableItemPickup,
                 ])}
             </SimpleGrid>
         </Stack>

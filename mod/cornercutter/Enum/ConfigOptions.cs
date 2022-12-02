@@ -13,6 +13,8 @@ namespace cornercutter.Enum
         DisableMentorAbilities = 1 << 3,
         DisableGiftOfIntern = 1 << 4,
         DisablePinnedSkill = 1 << 5,
-        AwardSkillsPerLevel = 1 << 6
+        AwardSkillsPerLevel = 1 << 6,
+        DisableHealing = 1 << 7,
+        DisableItemPickup = 1 << 8,
     }
 }

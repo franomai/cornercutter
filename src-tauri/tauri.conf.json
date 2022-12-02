@@ -39,14 +39,21 @@
 				"signingIdentity": null
 			},
 			"resources": [
-				"built-mod"
+				"built-mod",
+				"installer/install_cornercutter_dependencies.ps1",
+				"installer/uninstall_cornercutter_dependencies.ps1"
 			],
 			"shortDescription": "",
 			"targets": "all",
 			"windows": {
 				"certificateThumbprint": null,
 				"digestAlgorithm": "sha256",
-				"timestampUrl": ""
+				"timestampUrl": "",
+				"wix": {
+					"template": "installer/custom_installer.wsx",
+					"bannerPath": "installer/banner.png",
+					"dialogImagePath": "installer/dialogImage.png"
+				}
 			}
 		},
 		"security": {

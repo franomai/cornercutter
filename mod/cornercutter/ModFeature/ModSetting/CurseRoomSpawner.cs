@@ -13,7 +13,7 @@ namespace cornercutter.ModFeature.ModSetting
         static void Postfix(ref float __result)
         {
             CutterConfig cornercutter = CutterConfig.Instance;
-            if (!(cornercutter.CornercutterIsEnabled() && cornercutter.HasCurrentMod)) return;
+            if (!(cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive())) return;
 
             CurseSpawnType curseSpawnType = cornercutter.CurseSpawnType;
             switch (curseSpawnType)
