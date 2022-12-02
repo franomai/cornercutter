@@ -19,7 +19,7 @@ export default function SavingIndicator() {
         if (status === 'pending') {
             setShowSpinner(true);
         } else {
-            const timeout = setTimeout(() => setShowSpinner(false), 2000);
+            const timeout = setTimeout(() => setShowSpinner(false), 350);
             setRefreshInterval(1);
             return () => clearTimeout(timeout);
         }

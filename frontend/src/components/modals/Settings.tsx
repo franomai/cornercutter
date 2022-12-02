@@ -104,7 +104,7 @@ export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonEle
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Global Option</ModalHeader>
+                <ModalHeader>Global Settings</ModalHeader>
                 <ModalCloseButton title="Save changes" />
                 <ModalBody>
                     <OptionCheckboxes<GlobalOptions>

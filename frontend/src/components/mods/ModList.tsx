@@ -20,7 +20,7 @@ export default function ModList({ children }: { children?: ReactNode }) {
             overflow="hidden"
             justifyContent="space-between"
         >
-            <Stack gap={2} h="full" overflowX="auto" p={2} pl={1}>
+            <Stack gap={2} h="full" overflowX="auto" p={2} mx={-2}>
                 {Object.values(mods).map((mod) => (
                     <ModOverview
                         key={mod.id}
