@@ -1,34 +1,33 @@
 import SavingMessage from './SavingMessage';
+import useSavingContext from '../../../../contexts/SavingContext';
 
-import { useSelector } from 'react-redux';
-import { Spinner } from '@chakra-ui/react';
+import { Spinner, Tooltip } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { getRelativeTimeSince } from '../../../../utility/Utils';
-import { getSavingState } from '../../../../redux/slices/saving';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 
 export default function SavingIndicator() {
-    const [showSpinner, setShowSpinner] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
     const [refreshInterval, setRefreshInterval] = useState(1);
-    const { status, lastSaved, error } = useSelector(getSavingState);
+    const { lastSaved, error } = useSavingContext();
 
     const hasError = error !== null;
 
+    // In reality, the time it takes to send the updated config to the backend to be persisted
+    // is extremely fast. This means if we were to only show the spinner for this period it would just
+    // flash for an instant. Instead, what we're doing is artificially causing the spinner to show for
+    // a fixed period of time to give the users the illusion that it's "actually" being saved.
     useEffect(() => {
-        if (status === 'pending') {
-            setShowSpinner(true);
-        } else {
-            const timeout = setTimeout(() => setShowSpinner(false), 350);
-            setRefreshInterval(1);
+        if (lastSaved) {
+            setIsSaving(true);
+            const timeout = setTimeout(() => setIsSaving(false), 350);
             return () => clearTimeout(timeout);
         }
-    }, [status]);
+    }, [lastSaved]);
 
-    /**
-     * Cause the component to remount so the last saved time updates. This needs to be done less and less
-     * frequently as more time passes, hence the refresh interval is doubled each iteration.
-     */
+    // Cause the component to remount so the last saved time updates. This needs to be done less and less
+    // frequently as more time passes, hence the refresh interval is doubled each iteration.
     useEffect(() => {
         const timeout = setTimeout(() => setRefreshInterval(refreshInterval * 2), refreshInterval * 1000);
         return () => clearTimeout(timeout);
@@ -36,7 +35,7 @@ export default function SavingIndicator() {
 
     if (lastSaved === null) return null;
 
-    if (showSpinner) {
+    if (isSaving) {
         return (
             <SavingMessage
                 message="Saving..."
@@ -51,10 +50,19 @@ export default function SavingIndicator() {
             hasError={hasError}
             message={
                 <span>
-                    Last saved <b>{getRelativeTimeSince(lastSaved)}</b>
+                    Last saved{' '}
+                    <Tooltip
+                        hasArrow
+                        label={new Date(lastSaved).toLocaleTimeString(undefined, {
+                            hour: 'numeric',
+                            minute: 'numeric',
+                        })}
+                    >
+                        <b style={{ borderBottom: '2px dotted' }}>{getRelativeTimeSince(lastSaved)}</b>
+                    </Tooltip>
                 </span>
             }
-            tooltip={error?.message}
+            tooltip={error}
             icon={hasError ? <FontAwesomeIcon icon={faCircleExclamation} /> : <FontAwesomeIcon icon={faCheck} />}
         />
     );

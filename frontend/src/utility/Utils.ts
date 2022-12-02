@@ -22,8 +22,14 @@ export function getRelativeTimeSince(time: number): string {
         return 'a few minutes ago';
     } else if (relativeTime < ONE_HOUR) {
         return `${Math.floor(relativeTime / ONE_MINUTE)} minutes ago`;
+    } else if (relativeTime < 2 * ONE_HOUR) {
+        return '1 hour ago';
     } else if (relativeTime < ONE_DAY) {
         return `${Math.floor(relativeTime / ONE_HOUR)} hours ago`;
     }
     return `on ${new Date(time).toLocaleDateString()}`;
+}
+
+export function unimplementedFunction() {
+    throw new Error("This function hasn't been implemented");
 }

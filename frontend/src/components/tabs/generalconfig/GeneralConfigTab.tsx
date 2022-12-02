@@ -2,15 +2,15 @@ import GeneralOptions from './GeneralOptions';
 import ModInformation from './ModInformation';
 import ModConfig from '../../../types/Configuration';
 import ContentContainer from '../../layout/ContentContainer';
+import useSavingContext from '../../../contexts/SavingContext';
 import LabelledDropzone from '../../dropzone/LabelledDropzone';
 
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../../redux/store';
 import { setStartingSkills } from '../../../redux/slices/mod';
-import { saveSelectedMod } from '../../../redux/slices/saving';
 
 export default function GeneralConfigTab({ selectedMod }: { selectedMod: ModConfig }) {
-    const dispatch = useDispatch<AppDispatch>();
+    const dispatch = useDispatch();
+    const { saveSelectedMod } = useSavingContext();
 
     return (
         <ContentContainer>
@@ -22,7 +22,7 @@ export default function GeneralConfigTab({ selectedMod }: { selectedMod: ModConf
                 skills={selectedMod.general.startingSkills}
                 handleSetSkills={(skills) => {
                     dispatch(setStartingSkills(skills));
-                    dispatch(saveSelectedMod());
+                    saveSelectedMod();
                 }}
             />
         </ContentContainer>

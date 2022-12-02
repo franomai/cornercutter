@@ -1,6 +1,6 @@
 import { StoreState } from '../store';
 import { createSlice } from '@reduxjs/toolkit';
-import { GlobalOptions } from '../../types/enums/ConfigEnums';
+import { GlobalOptions } from '../../types/enums/GlobalOptions';
 import { CornercutterConfig } from '../../types/CornercutterConfig';
 
 export interface State {

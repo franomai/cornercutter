@@ -6,12 +6,12 @@ import LabelledDropzone from '../dropzone/LabelledDropzone';
 import { Flex } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { ReactNode, useCallback } from 'react';
-import { AppDispatch } from '../../redux/store';
 import { capitalise } from '../../utility/Utils';
 import { setFloorSkills } from '../../redux/slices/mod';
 import { hasOptionSet } from '../../utility/ConfigHelpers';
-import { saveSelectedMod } from '../../redux/slices/saving';
-import { ModOptions, Floor, Room } from '../../types/enums/ConfigEnums';
+import { Floor, Room } from '../../types/enums/ConfigEnums';
+import { ModOptions } from '../../types/enums/ModOptions';
+import useSavingContext from '../../contexts/SavingContext';
 
 interface FloorConfigTabProps {
     selectedMod: ModConfig;
@@ -31,7 +31,8 @@ const roomTooltips: Record<string, string> = {
 };
 
 export default function FloorConfigTab({ selectedMod, floor }: FloorConfigTabProps) {
-    const dispatch = useDispatch<AppDispatch>();
+    const dispatch = useDispatch();
+    const { saveSelectedMod } = useSavingContext();
 
     const renderRoomLabel = useCallback((room: Room) => {
         if (room === Room.All) return 'All Rooms';
@@ -64,12 +65,12 @@ export default function FloorConfigTab({ selectedMod, floor }: FloorConfigTabPro
                     label={renderRoomTooltip(room)}
                     handleSetSkills={(skills) => {
                         dispatch(setFloorSkills({ floor, room, skills }));
-                        dispatch(saveSelectedMod());
+                        saveSelectedMod();
                     }}
                 />
             );
         },
-        [floor, selectedMod.floorSkills, dispatch, renderRoomTooltip],
+        [floor, selectedMod.floorSkills, dispatch, renderRoomTooltip, saveSelectedMod],
     );
 
     const renderDropzones = useCallback((): ReactNode => {

@@ -4,7 +4,7 @@ import { Box, Flex, ScaleFade, Text, Tooltip } from '@chakra-ui/react';
 interface SavingMessageProps {
     hasError?: boolean;
     message: ReactNode;
-    tooltip?: string;
+    tooltip?: string | null;
     icon: ReactNode;
 }
 

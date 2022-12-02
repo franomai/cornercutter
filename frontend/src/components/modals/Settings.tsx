@@ -1,4 +1,5 @@
 import OptionCheckboxes from '../forms/OptionCheckboxes';
+import useSavingContext from '../../contexts/SavingContext';
 import useGoogleAnalytics from '../../hooks/useGoogleAnalytics';
 import EnableUserMetricsSection from './sections/EnableUserMetricsSection';
 
@@ -19,47 +20,9 @@ import {
 } from '@chakra-ui/react';
 import { invoke } from '@tauri-apps/api';
 import { useDispatch, useSelector } from 'react-redux';
-import { OptionDetails } from '../forms/TooltipCheckbox';
 import { RefObject, useCallback, useEffect } from 'react';
 import { setOptionFlag } from '../../utility/ConfigHelpers';
-import { GlobalOptions } from '../../types/enums/ConfigEnums';
-
-const optionDetails: Record<GlobalOptions, OptionDetails> = {
-    [GlobalOptions.DisableCornercutter]: {
-        label: 'Disable Cornercutter',
-        tooltip: 'Turns cornercutter off for the next run. No indicator will show in-game.',
-    },
-    [GlobalOptions.DisableHighscores]: {
-        label: 'Disable highscores',
-        tooltip:
-            'New best times with Cornercutter enabled will not be saved, unless it is the fist clear for that dungeon.',
-    },
-    [GlobalOptions.DisableSteamAchievements]: {
-        label: 'Disable Steam achievements',
-        tooltip: 'Turns off steam achievements for progression and unlocks.',
-    },
-    [GlobalOptions.RespectUnlocks]: {
-        label: 'Only spawn unlocked skills',
-        tooltip:
-            'While enabled, mods will not spawn items not unlocked in gain - effectively, the pool will be reduced.',
-    },
-    [GlobalOptions.EnableDebugMenu]: {
-        label: 'Enable debug menu',
-        tooltip: 'Activates the debug menu in the pause screen.',
-    },
-    [GlobalOptions.EnableExtraLogging]: {
-        label: 'Enable additional Cornercutter logging',
-        tooltip: 'Adds some extra logging to Cornercutter to help diagnose spawning issues.',
-    },
-    [GlobalOptions.EnsureAlwaysFiveCubitShopOptions]: {
-        label: 'Ensure the Cubit shop always has five skills',
-        tooltip: 'The Cubit shop in Fizzle will always have five spots, rerolling skills if purchased.',
-    },
-    [GlobalOptions.EnableFreeCubitShop]: {
-        label: 'Make the Cubit shop free',
-        tooltip: 'Skills in the Cubit shop in Fizzle cost 0 cubits.',
-    },
-};
+import { globalOptionDetails, GlobalOptions } from '../../types/enums/GlobalOptions';
 
 export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonElement> }) {
     const dispatch = useDispatch();
@@ -67,6 +30,7 @@ export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonEle
     const globalOptions = useSelector(getGlobalOptions);
     const enableUserMetrics = useSelector(getEnableUserMetrics);
 
+    const { save, setError } = useSavingContext();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     useEffect(() => {
@@ -79,11 +43,12 @@ export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonEle
 
     const handleUpdateEnableUserMetrics = useCallback(
         (enableUserMetrics: boolean) => {
-            invoke('set_enable_user_metrics', { enableUserMetrics }).then(() =>
-                dispatch(setEnableUserMetrics(enableUserMetrics)),
-            );
+            invoke('set_enable_user_metrics', { enableUserMetrics })
+                .then(() => dispatch(setEnableUserMetrics(enableUserMetrics)))
+                .catch(setError);
+            save();
         },
-        [dispatch],
+        [save, setError, dispatch],
     );
 
     const handleSetFlag = useCallback(
@@ -93,11 +58,12 @@ export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonEle
                 const action = isChecked ? 'Disable Cornercutter' : 'Enable Cornercutter';
                 GA.event({ category: 'Settings', action });
             }
-            invoke('set_global_options', { options: updatedOptions }).then(() =>
-                dispatch(setGlobalOptions(updatedOptions)),
-            );
+            invoke('set_global_options', { options: updatedOptions })
+                .then(() => dispatch(setGlobalOptions(updatedOptions)))
+                .catch(setError);
+            save();
         },
-        [GA, globalOptions, dispatch],
+        [GA, globalOptions, save, setError, dispatch],
     );
 
     return (
@@ -118,7 +84,7 @@ export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonEle
                             GlobalOptions.EnsureAlwaysFiveCubitShopOptions,
                             GlobalOptions.EnableFreeCubitShop,
                         ]}
-                        optionDetails={optionDetails}
+                        optionDetails={globalOptionDetails}
                         options={globalOptions}
                         handleChange={handleSetFlag}
                     />
