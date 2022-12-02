@@ -49,6 +49,8 @@ export enum ModOptions {
     DisableGiftOfIntern = 1 << 4,
     DisablePinned = 1 << 5,
     AwardSkillsPerFloor = 1 << 6,
+    DisableHealing = 1 << 7,
+    DisableItemPickup = 1 << 8,
 }
 
 export enum GlobalOptions {
@@ -59,4 +61,6 @@ export enum GlobalOptions {
     RespectUnlocks = 1 << 3,
     EnableDebugMenu = 1 << 4,
     EnableExtraLogging = 1 << 5,
+    EnsureAlwaysFiveCubitShopOptions = 1 << 6,
+    EnableFreeCubitShop = 1 << 7,
 }
