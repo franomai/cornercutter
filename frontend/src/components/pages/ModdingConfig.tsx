@@ -4,18 +4,19 @@ import TabData from '../../types/TabData';
 import Settings from '../modals/Settings';
 import TabBar from '../tabs/common/TabBar';
 import ImportMod from '../modals/ImportMod';
+import ModConfig from '../../types/Configuration';
 import FindGoingUnder from '../modals/FirstStartup';
 import FloorConfigTab from '../tabs/FloorConfigTab';
 import BlankTextLayout from '../layout/BlankTextLayout';
 import SkillSearchColumn from '../skills/search/SkillSearchColumn';
 import SavingIndicator from '../tabs/common/saving/SavingIndicator';
 import GeneralConfigTab from '../tabs/generalconfig/GeneralConfigTab';
-import ModConfig, { Floor, ModOptions } from '../../types/Configuration';
 
 import { useSelector } from 'react-redux';
 import { ReactNode, useCallback, useRef } from 'react';
 import { hasOptionSet } from '../../utility/ConfigHelpers';
 import { Box, Button, Flex, Stack } from '@chakra-ui/react';
+import { Floor, ModOptions } from '../../types/enums/ConfigEnums';
 import { getAllMods, getSelectedMod } from '../../redux/slices/mod';
 import { getCornercutterConfig } from '../../redux/slices/cornercutter';
 

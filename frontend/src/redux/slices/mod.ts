@@ -6,11 +6,11 @@ import ModConfig, {
     Floor,
     ModInfo,
     MultiSpawnerType,
-    ModOptions,
     PedestalSpawnType,
     Room,
     SpawnType,
 } from '../../types/Configuration';
+import { ModOptions } from '../../types/ModOptions.1';
 import { invoke } from '@tauri-apps/api';
 import { WeightedSkill } from '../../types/Skill';
 import { setOptionFlag } from '../../utility/ConfigHelpers';

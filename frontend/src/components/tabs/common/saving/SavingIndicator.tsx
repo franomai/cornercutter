@@ -1,8 +1,8 @@
 import SavingMessage from './SavingMessage';
 
 import { useSelector } from 'react-redux';
+import { Spinner } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { Box, Spinner } from '@chakra-ui/react';
 import { getRelativeTimeSince } from '../../../../utility/Utils';
 import { getSavingState } from '../../../../redux/slices/saving';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -50,9 +50,9 @@ export default function SavingIndicator() {
         <SavingMessage
             hasError={hasError}
             message={
-                <Box>
+                <span>
                     Last saved <b>{getRelativeTimeSince(lastSaved)}</b>
-                </Box>
+                </span>
             }
             tooltip={error?.message}
             icon={hasError ? <FontAwesomeIcon icon={faCircleExclamation} /> : <FontAwesomeIcon icon={faCheck} />}

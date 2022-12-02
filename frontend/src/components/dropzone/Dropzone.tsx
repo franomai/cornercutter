@@ -5,10 +5,10 @@ import BlankTextLayout from '../layout/BlankTextLayout';
 import { useDrop } from 'react-dnd';
 import { useSelector } from 'react-redux';
 import { WeightedSkill } from '../../types/Skill';
-import { SpawnType } from '../../types/Configuration';
 import { ItemType } from '../../types/enums/SkillEnums';
 import { getSelectedMod } from '../../redux/slices/mod';
 import { getAllSkills } from '../../redux/slices/skills';
+import { SpawnType } from '../../types/enums/ConfigEnums';
 import { Box, Flex, FlexProps, Stack, Text } from '@chakra-ui/react';
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 

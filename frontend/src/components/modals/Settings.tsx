@@ -21,8 +21,8 @@ import { invoke } from '@tauri-apps/api';
 import { useDispatch, useSelector } from 'react-redux';
 import { OptionDetails } from '../forms/TooltipCheckbox';
 import { RefObject, useCallback, useEffect } from 'react';
-import { GlobalOptions } from '../../types/Configuration';
 import { setOptionFlag } from '../../utility/ConfigHelpers';
+import { GlobalOptions } from '../../types/enums/ConfigEnums';
 
 const optionDetails: Record<GlobalOptions, OptionDetails> = {
     [GlobalOptions.DisableCornercutter]: {

@@ -1,14 +1,15 @@
+import ModConfig from '../../../types/Configuration';
 import TooltipRadio from '../../forms/TooltipRadio';
 import OptionCheckboxes from '../../forms/OptionCheckboxes';
 import LabelledRadioGroup from '../../forms/LabelledRadioGroup';
 
-import ModConfig, {
-    CurseSpawnType,
-    ModOptions,
+import {
     SpawnType,
-    PedestalSpawnType,
+    ModOptions,
+    CurseSpawnType,
     MultiSpawnerType,
-} from '../../../types/Configuration';
+    PedestalSpawnType,
+} from '../../../types/enums/ConfigEnums';
 import { useDispatch } from 'react-redux';
 import { ReactNode, useCallback } from 'react';
 import { AppDispatch } from '../../../redux/store';

@@ -3,7 +3,7 @@ import TooltipCheckbox, { OptionDetails } from './TooltipCheckbox';
 import { useCallback } from 'react';
 import { Stack } from '@chakra-ui/react';
 import { hasOptionSet } from '../../utility/ConfigHelpers';
-import { GlobalOptions, ModOptions } from '../../types/Configuration';
+import { GlobalOptions, ModOptions } from '../../types/ModOptions.1';
 
 interface OptionCheckboxesProps<T extends ModOptions | GlobalOptions> {
     flags: T[];
