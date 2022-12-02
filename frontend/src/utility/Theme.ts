@@ -12,6 +12,11 @@ const Link: ComponentStyleConfig = {
 };
 
 const Button: ComponentStyleConfig = {
+    baseStyle: {
+        _focusVisible: {
+            boxShadow: '0 0 0 3px var(--chakra-colors-green-200)',
+        },
+    },
     variants: {
         primary: {
             bg: 'green.300',
