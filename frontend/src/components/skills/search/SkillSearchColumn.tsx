@@ -21,7 +21,14 @@ export default function SkillSearchColumn() {
             if (search === '') {
                 setVisibleSkills(allSkills);
             } else {
-                setVisibleSkills(allSkills.filter((skill) => skill.name.toLowerCase().includes(loweredSearch)));
+                setVisibleSkills(
+                    allSkills.filter((skill) => {
+                        return (
+                            skill.name.toLowerCase().includes(loweredSearch) ||
+                            skill.description.toLowerCase().includes(loweredSearch)
+                        );
+                    }),
+                );
             }
         },
         [allSkills],
