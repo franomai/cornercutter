@@ -3,7 +3,6 @@ import { unimplementedFunction } from '../utility/Utils';
 
 export interface SavingContextProps {
     lastSaved: number;
-    isSaving: boolean;
     error: string | null;
     save(): void;
     saveSelectedMod(): void;
@@ -12,7 +11,6 @@ export interface SavingContextProps {
 
 const SavingContext = createContext<SavingContextProps>({
     lastSaved: Date.now(),
-    isSaving: false,
     error: null,
     save: unimplementedFunction,
     saveSelectedMod: unimplementedFunction,
