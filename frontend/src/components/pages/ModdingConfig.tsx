@@ -95,7 +95,7 @@ export default function ModdingConfig() {
             <Flex flexDirection="row" w="full" overflow="hidden">
                 <TabBar tabs={getTabs(selectedMod)} />
                 <Stack alignItems="flex-end">
-                    <Box minH="58px" w="full" maxW="full">
+                    <Box minH="42px" w="full" maxW="full">
                         <SavingIndicator />
                     </Box>
                     <SkillSearchColumn />

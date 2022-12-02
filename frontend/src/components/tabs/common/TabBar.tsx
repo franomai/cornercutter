@@ -17,8 +17,6 @@ export default function TabBar({ tabs }: TabBarProps) {
                     <Tab
                         key={tab.name}
                         fontWeight="semibold"
-                        pt={5}
-                        pb={3}
                         onClick={() => GA.send({ hitType: 'pageview', page: tab.name })}
                     >
                         {tab.name}
@@ -26,7 +24,7 @@ export default function TabBar({ tabs }: TabBarProps) {
                 ))}
             </TabList>
             {/* Height subtracted is the height of the TabList */}
-            <TabPanels minH="calc(100% - 58px)" maxH="calc(100% - 58px)">
+            <TabPanels minH="calc(100% - 42px)" maxH="calc(100% - 58px)">
                 {tabs.map((tab) => (
                     <TabPanel key={tab.name} h="full" p={0}>
                         {tab.tab}
