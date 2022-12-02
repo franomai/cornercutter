@@ -27,3 +27,7 @@ export function getRelativeTimeSince(time: number): string {
     }
     return `on ${new Date(time).toLocaleDateString()}`;
 }
+
+export function unimplementedFunction() {
+    throw new Error("This function hasn't been implemented");
+}
