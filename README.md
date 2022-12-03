@@ -2,7 +2,7 @@
 
 # Cornercutter
 
-Cornercutter is a mod for the Steam version of the game [Going Under](https://aggrocrab.com/Going-Under) that, amongst lots of exciting stuff, lets you control the spawning of skills within dungeons. Get ready to cut some corners!
+Cornercutter is a mod for the Steam version of the game [Going Under](https://aggrocrab.com/Going-Under) that, along with many other exciting things, lets you control the spawning of skills within dungeons. Get ready to cut some corners!
 
 Features include:
 * Create mods to control where skills spawn and what skills they are - All skills are Bomb Dropper? Sure! No items at all? Why not!
