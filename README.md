@@ -63,37 +63,37 @@ Cornercutter is built using Tauri, and leverages BepInEx/Harmony to modify game 
 
 The following segments will briefly touch on how to get started with each component.
 
-### Frontend and backend (points 1 and 2)
+## Frontend and backend (points 1 and 2)
 
-#### Prerequisites 
+### Prerequisites 
 
 This application is built using Tauri. Follow their instructions [here](https://tauri.app/v1/guides/getting-started/prerequisites) to make sure you have all the required prerequisites.
 
-#### Setup
+### Setup
 
 1. Make sure to install all the dependencies by doing `npm install` in the root folder.
 2. Install the Prettier extension for your IDE of choice.
    - [VSCode](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
-#### Running Cornercutter
+### Running Cornercutter
 
 - `npm run client` - A development option that starts the application with hotswapping. **Note:** This is equivalent to `npm run tauri dev`.
   
 - `npm run tauri build` - Builds an optimised version of the application in `src-tauri/target/release/`.
 
-### Mod plugin (point 5)
+## Mod plugin (point 5)
 
-#### Prerequisites and Setup
+### Prerequisites and Setup
 
 The mode can be built as a standard Visual Studio project (2017 or higher) using the solution file contained in the mod directory. The project itself has dependencies on both the Going Under dlls (Assembly-CSharp.dll, plus the Unity dlls such as UnityEngine.dll), as well as the BepInEx/Harmony dlls (located in the BepInEx folder, such as 0Harmony.dll). For the latter dlls, these should be present if you have cornercutter installed. Otherwise, the version of BepInEx cornercutter uses, BepInEx 5.4.21, can be downloaded from [their repo](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.21)
 
-#### Adding or modifying mod code
+### Adding or modifying mod code
 
 Mods are written as Prefix and Postfix patches against Going Under methods, reading from the base config contained in CutterConfig. For documentation around the available features, please visit the [Harmony documentation](https://harmony.pardeike.net/articles/patching.html)
 
-#### Building the mod
+### Building the mod
 
-Once set up, the default build setting will generate two artifacts, the cornercutter dll and pdb. To test a build, copy these two files into the BepInEx\plugins folder in the Going Under directory, as well as any additional dependencies such as Newtonsoft.Json. To debug accurately, you can use a debugger such as dnSpy, which can be downloaded from [their archived repo](https://github.com/dnSpy/dnSpy/releases/tag/v6.1.8). To hook into Going Under you will need to modify the mono dll in the game folder - more information about this can be found at (the BepInEx wiki)[https://github.com/BepInEx/BepInEx/wiki/dnSpy-Debugging]
+Once set up, the default build setting will generate two artifacts, the cornercutter dll and pdb. To test a build, copy these two files into the BepInEx\plugins folder in the Going Under directory, as well as any additional dependencies such as Newtonsoft.Json. To debug accurately, you can use a debugger such as dnSpy, which can be downloaded from [their archived repo](https://github.com/dnSpy/dnSpy/releases/tag/v6.1.8). To hook into Going Under you will need to modify the mono dll in the game folder - more information about this can be found at [the BepInEx wiki](https://github.com/BepInEx/BepInEx/wiki/dnSpy-Debugging)
 
 # Questions?
 
