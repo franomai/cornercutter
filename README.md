@@ -13,8 +13,8 @@ Features include:
 
 and even more than that! Check out some of the screenshots below:
 
-![General mod settings](./screenshots/in-app/GeneralPage.jpg?raw=true "Setup your mod with lots of cool settings and also ones that make the game way harder!")
-![Configure skills per floor](./screenshots/in-game/MultipleStartingSkills.jpg?raw=true "Pick skills to show up on each floor! They're all there, we checked!")
+![General mod settings](./screenshots/in-app/GeneralPage.png?raw=true "Setup your mod with lots of cool settings and also ones that make the game way harder!")
+![Configure skills per floor](./screenshots/in-app/FloorsPage.png?raw=true "Pick skills to show up on each floor! They're all there, we checked!")
 
 ![Multiple starting skills](./screenshots/in-game/MultipleStartingSkills.jpg?raw=true "Start with mutiple skills! Become legendary right out the gate!")
 ![Shops with only skills](./screenshots/in-game/AllSkillShops.jpg?raw=true "Rig stores to overstock all the skills you could ever want! Be unable to afford any of them!")
@@ -30,7 +30,7 @@ Installing is as simple as running the msi installer - mod files should be dropp
 In the case they are not, please check the folder permissions. The files inside the built-mod folder of the installer directory can be manually copied if required.
 New versions of cornercutter will be pushed to your app automatically.
 To check if cornercutter is running, a visual indicator will display once you load into a Going Under save, like the one below:
-![Cornercutter indicator](./screenshots/in-game/DuplicateSkills2?raw=true "The cornercutter indicator is in the top left. It will change depending on if you are in a dungeon and if you have mods loaded.")
+![Cornercutter indicator](./screenshots/in-game/CornercutterIndicator.jpg?raw=true "The cornercutter indicator is in the top left. It will change depending on if you are in a dungeon and if you have mods loaded.")
 
 The currently selected mod will be loaded into your next run. Note that mod activations/deactivations and changes to settings will only come into effect after the dungeon is finished or the next dungeon is started.
 
@@ -49,7 +49,7 @@ The cornercutter team (franomai/Squiddles & pumbas600) would like to thank and s
 
 Hi there! You probably arrived here through the cornercutter app, and you're thinking, what the frick, they're taking my data? Do they want to sell me sparkling beverages based on my interests? Not at all! Cornercutter is a passion project, and we'd like to know when someone out there is enjoying it, so we can work on other parts of the app that they will enjoy, or flex to someone we know IRL when we are gunning for an unpaid internship that someone enjoyed something we made. To do that, we get a ping when you open and close cornercutter, as well as when you make, use, or share mods. If you would prefer that we don't though, that is okay as well, you can opt-out at any time from the settings menu.
 
-# This sounds so cool, I'd like to add stuff to cornercutter!
+# I'd like to add stuff to cornercutter!
 
 Hello, and welcome! You've come to the right place. The following will explain the general layout of cornercutter - how each component works, how they interact, and most importantly, how to contribute to them.
 
