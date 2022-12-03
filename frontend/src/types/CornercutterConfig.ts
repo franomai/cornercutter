@@ -1,4 +1,4 @@
-import { GlobalOptions } from './ModOptions.1';
+import { GlobalOptions } from './enums/GlobalOptions';
 
 export interface CornercutterConfig {
     isFirstStartup: boolean;
