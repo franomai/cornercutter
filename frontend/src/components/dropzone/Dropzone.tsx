@@ -24,9 +24,6 @@ export default function Dropzone({ skills, singleRow, handleSetSkills }: Dropzon
     const selectedMod = useSelector(getSelectedMod);
 
     const [prevSkillCount, setPrevSkillCount] = useState(0);
-    const [updatedSkills, setUpdatedSkills] = useState(skills);
-
-    const debouncedSkills = useDebounce(updatedSkills, 600);
 
     const flexProps = useMemo<FlexProps>(
         () =>
@@ -36,48 +33,41 @@ export default function Dropzone({ skills, singleRow, handleSetSkills }: Dropzon
         [singleRow],
     );
 
-    const [{ canDrop }, dropRef] = useDrop<{ id: number }, unknown, { canDrop: boolean }>(() => ({
-        accept: ItemType.SKILL,
-        drop: ({ id }) => {
-            setUpdatedSkills((updatedSkills) => [...updatedSkills, { id, weight: 10 }]);
-        },
-        collect: (monitor) => ({ canDrop: monitor.canDrop() }),
-    }));
+    const [{ canDrop }, dropRef] = useDrop<{ id: number }, unknown, { canDrop: boolean }>(
+        () => ({
+            accept: ItemType.SKILL,
+            drop: ({ id }) => {
+                handleSetSkills([...skills, { id, weight: 10 }]);
+            },
+            collect: (monitor) => ({ canDrop: monitor.canDrop() }),
+        }),
+        [skills, handleSetSkills],
+    );
 
     useEffect(() => {
-        setUpdatedSkills(skills);
-    }, [skills]);
-
-    useEffect(() => {
-        if (debouncedSkills !== skills) {
-            handleSetSkills(debouncedSkills);
-        }
-    }, [skills, debouncedSkills, handleSetSkills]);
-
-    useEffect(() => {
-        if (singleRow && updatedSkills.length > prevSkillCount) {
+        if (singleRow && skills.length > prevSkillCount) {
             scrollRef.current?.scrollTo({
                 left: scrollRef.current.scrollWidth,
                 behavior: 'smooth',
             });
         }
-        setPrevSkillCount(updatedSkills.length);
-    }, [singleRow, prevSkillCount, updatedSkills.length]);
+        setPrevSkillCount(skills.length);
+    }, [singleRow, skills.length, prevSkillCount]);
 
     const handleDeleteSkill = useCallback(
         (skillIndex: number) => {
-            setUpdatedSkills(updatedSkills.filter((_, index) => index !== skillIndex));
+            handleSetSkills(skills.filter((_, index) => index !== skillIndex));
         },
-        [updatedSkills, setUpdatedSkills],
+        [skills, handleSetSkills],
     );
 
     const handleUpdateSkillWeight = useCallback(
         (skillIndex: number, newWeight: number) => {
-            setUpdatedSkills(
-                updatedSkills.map((skill, index) => (index === skillIndex ? { ...skill, weight: newWeight } : skill)),
+            handleSetSkills(
+                skills.map((skill, index) => (index === skillIndex ? { ...skill, weight: newWeight } : skill)),
             );
         },
-        [updatedSkills, setUpdatedSkills],
+        [skills, handleSetSkills],
     );
 
     const renderInCenter = useCallback((children: ReactNode): ReactNode => {
@@ -111,7 +101,7 @@ export default function Dropzone({ skills, singleRow, handleSetSkills }: Dropzon
                 alignContent="flex-start"
                 {...flexProps}
             >
-                {updatedSkills.map((weightedSkill, skillIndex) => (
+                {skills.map((weightedSkill, skillIndex) => (
                     <SkillCard
                         key={skillIndex}
                         isWeighted={selectedMod?.general.spawns === SpawnType.Weighted}
