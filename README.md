@@ -58,7 +58,7 @@ Cornercutter is built using Tauri, and leverages BepInEx/Harmony to modify game 
 1. A user will configure a mod in the Tauri frontend. This is a WebView2 window that is running React - so your standard web technologies, JavaScript/TypeScript, HTML and CSS. The code for this is contained in cornercutter/frontend.
 2. A user will save their changes (or the app will do it for them). These commands are received by the Tauri backend, which is written in Rust. The code for this is contained in cornercutter/src-tauri.
 3. This will then drop a file to the user's cornercutter folder, located inside the Going Under directory. This is a JSON file, which is not really important, but keeps this description consistent.
-4. When Going Under is loaded, BepInEx will hook into the game, injecting any plugins that exist, including cornercutter. This is written in C#, and this loader is automatically installed with cornercutter. You should not need to touch this, but the repo can be found [here](https://github.com/BepInEx/BepInEx)
+4. When Going Under is loaded, BepInEx will hook into the game, injecting any plugins that exist, including cornercutter. This is written in C#, and this loader is automatically installed with cornercutter. You should not need to touch this, but the repo can be found [here](https://github.com/BepInEx/BepInEx).
 5. The cornercutter plugin will load the JSON file and get to work. The mod is written against .NET Standard 2.0 (C# 7.3), and modifies the base game with the hooks provided by Harmony, which you can find [here](https://github.com/pardeike/Harmony). The actual mod code is contained in cornercutter/mod.
 
 The following segments will briefly touch on how to get started with each component.
@@ -85,7 +85,7 @@ This application is built using Tauri. Follow their instructions [here](https://
 
 ### Prerequisites and Setup
 
-The mode can be built as a standard Visual Studio project (2017 or higher) using the solution file contained in the mod directory. The project itself has dependencies on both the Going Under dlls (Assembly-CSharp.dll, plus the Unity dlls such as UnityEngine.dll), as well as the BepInEx/Harmony dlls (located in the BepInEx folder, such as 0Harmony.dll). For the latter dlls, these should be present if you have cornercutter installed. Otherwise, the version of BepInEx cornercutter uses, BepInEx 5.4.21, can be downloaded from [their repo](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.21)
+The mode can be built as a standard Visual Studio project (2017 or higher) using the solution file contained in the mod directory. The project itself has dependencies on both the Going Under dlls (Assembly-CSharp.dll, plus the Unity dlls such as UnityEngine.dll), as well as the BepInEx/Harmony dlls (located in the BepInEx folder, such as 0Harmony.dll). For the latter dlls, these should be present if you have cornercutter installed. Otherwise, the version of BepInEx cornercutter uses, BepInEx 5.4.21, can be downloaded from [their repo](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.21).
 
 ### Adding or modifying mod code
 
@@ -93,7 +93,7 @@ Mods are written as Prefix and Postfix patches against Going Under methods, read
 
 ### Building the mod
 
-Once set up, the default build setting will generate two artifacts, the cornercutter dll and pdb. To test a build, copy these two files into the BepInEx\plugins folder in the Going Under directory, as well as any additional dependencies such as Newtonsoft.Json. To debug accurately, you can use a debugger such as dnSpy, which can be downloaded from [their archived repo](https://github.com/dnSpy/dnSpy/releases/tag/v6.1.8). To hook into Going Under you will need to modify the mono dll in the game folder - more information about this can be found at [the BepInEx wiki](https://github.com/BepInEx/BepInEx/wiki/dnSpy-Debugging)
+Once set up, the default build setting will generate two artifacts, the cornercutter dll and pdb. To test a build, copy these two files into the BepInEx\plugins folder in the Going Under directory, as well as any additional dependencies such as Newtonsoft.Json. To debug accurately, you can use a debugger such as dnSpy, which can be downloaded from [their archived repo](https://github.com/dnSpy/dnSpy/releases/tag/v6.1.8). To hook into Going Under you will need to modify the mono dll in the game folder - more information about this can be found at [the BepInEx wiki](https://github.com/BepInEx/BepInEx/wiki/dnSpy-Debugging).
 
 # Questions?
 
