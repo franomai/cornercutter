@@ -79,7 +79,6 @@ const SkillCard = forwardRef<SkillCardProps, 'div'>(
                             max={999}
                             precision={0}
                             allowMouseWheel
-                            focusBorderColor="green.300"
                             w="55px"
                         >
                             <NumberInputField pr={2} fontWeight="semibold" />
