@@ -104,6 +104,18 @@ const Input: ComponentStyleConfig = {
     },
 };
 
+const NumberInput: ComponentStyleConfig = {
+    defaultProps: {
+        focusBorderColor: 'green.300',
+    },
+};
+
+const Textarea: ComponentStyleConfig = {
+    defaultProps: {
+        focusBorderColor: 'green.300',
+    },
+};
+
 const theme = extendTheme({
     config,
     components: {
@@ -113,6 +125,8 @@ const theme = extendTheme({
         Button,
         Link,
         Input,
+        NumberInput,
+        Textarea,
     },
 });
 
