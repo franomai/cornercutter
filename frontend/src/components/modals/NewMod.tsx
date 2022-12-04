@@ -92,7 +92,7 @@ export default function NewMod({ openRef }: { openRef: RefObject<HTMLButtonEleme
                                 variant="flushed"
                                 placeholder="Mod Name..."
                                 value={name}
-                                fontSize="3xl"
+                                fontSize="xl"
                                 fontWeight="bold"
                                 onChange={(e) => setName(e.target.value)}
                             />
