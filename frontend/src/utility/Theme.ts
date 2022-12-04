@@ -104,17 +104,6 @@ const Input: ComponentStyleConfig = {
     },
 };
 
-const NumberInput: ComponentStyleConfig = {
-    baseStyle: {
-        field: {
-            _focusVisible: {
-                borderColor: 'green.300',
-                boxShadow: `0px 1px 0px 0px var(--chakra-colors-green-300)`,
-            },
-        },
-    },
-};
-
 const theme = extendTheme({
     config,
     components: {
@@ -124,7 +113,6 @@ const theme = extendTheme({
         Button,
         Link,
         Input,
-        NumberInput,
     },
 });
 
