@@ -26,7 +26,7 @@ And even more than that! Check out some of the screenshots below:
 ## Sounds cool, how do I get it?
 
 The newest release of Cornercutter will always be at [our releases page](https://github.com/franomai/cornercutter/releases).
-Installing is as simple as running the msi installer - Mod files should be dropped to the Going Under folder automatically.
+Installing is as simple as running the msi installer - mod files should be dropped to the Going Under folder automatically.
 In the case they are not, please check the folder permissions. The files inside the built-mod folder of the installer directory can be manually copied if required.
 New versions of Cornercutter will be pushed to your app automatically.
 To check if Cornercutter is running, a visual indicator will display once you load into a Going Under save, like the one below:
