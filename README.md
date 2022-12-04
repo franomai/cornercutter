@@ -37,8 +37,8 @@ The currently selected mod will be loaded into your next run. Note that mod acti
 ## Credits
 
 The Cornercutter team (franomai/Squiddles & pumbas600) would like to thank and shout out:
-* Hotkoin (check them out at [their insta](https://www.instagram.com/hotkoin) for the amazing art.
-* slyllama (check them out at [their website](https://www.slyllama.net/) for their graphics help and artistic direction.
+* Hotkoin (check them out at [their insta](https://www.instagram.com/hotkoin)) for the amazing art.
+* slyllama (check them out at [their website](https://www.slyllama.net/)) for their graphics help and artistic direction.
 * Sabertwooth, Jowee, Logan, and Boxness for their playtesting and feedback.
 * The Aggro Crab Discord community (especially #speefruns and #modding) for keeping a two year old game alive.
 * Jowee again, for the original inspiration for skill manipulation and their work in maintaining Going Under resources.
