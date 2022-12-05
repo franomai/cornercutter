@@ -12,6 +12,11 @@ const Link: ComponentStyleConfig = {
 };
 
 const Button: ComponentStyleConfig = {
+    baseStyle: {
+        _focusVisible: {
+            boxShadow: '0 0 0 3px var(--chakra-colors-green-300)',
+        },
+    },
     variants: {
         primary: {
             bg: 'green.300',
@@ -88,6 +93,26 @@ const Input: ComponentStyleConfig = {
                 },
             },
         },
+        flushed: {
+            field: {
+                _focusVisible: {
+                    borderColor: 'green.300',
+                    boxShadow: `0px 1px 0px 0px var(--chakra-colors-green-300)`,
+                },
+            },
+        },
+    },
+};
+
+const NumberInput: ComponentStyleConfig = {
+    defaultProps: {
+        focusBorderColor: 'green.300',
+    },
+};
+
+const Textarea: ComponentStyleConfig = {
+    defaultProps: {
+        focusBorderColor: 'green.300',
     },
 };
 
@@ -97,9 +122,11 @@ const theme = extendTheme({
         Checkbox,
         Radio,
         Tabs,
-        Input,
         Button,
         Link,
+        Input,
+        NumberInput,
+        Textarea,
     },
 });
 

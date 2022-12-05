@@ -21,7 +21,7 @@ import { invoke } from '@tauri-apps/api/tauri';
 import { addMod, setSelectedMod } from '../../redux/slices/mod';
 import { RefObject, useCallback, useEffect, useState } from 'react';
 
-const ModCodeRegex = /^(#[^\r\n]*\r?\n)?(#[^\r\n]*\r?\n)?([\w\d+/]+={0,2})$/;
+const ModCodeRegex = /^(#[^\r\n]*\r?\n)(#[^\r\n]*\r?\n)?([\w\d+/]+={0,2})$/;
 
 export default function ImportMod({ openRef }: { openRef: RefObject<HTMLButtonElement> }) {
     const dispatch = useDispatch();

@@ -26,7 +26,7 @@ And even more than that! Check out some of the screenshots below:
 ## Sounds cool, how do I get it?
 
 The newest release of Cornercutter will always be at [our releases page](https://github.com/franomai/cornercutter/releases).
-Installing is as simple as running the msi installer - Mod files should be dropped to the Going Under folder automatically.
+Installing is as simple as running the msi installer - mod files should be dropped to the Going Under folder automatically.
 In the case they are not, please check the folder permissions. The files inside the built-mod folder of the installer directory can be manually copied if required.
 New versions of Cornercutter will be pushed to your app automatically.
 To check if Cornercutter is running, a visual indicator will display once you load into a Going Under save, like the one below:
@@ -37,8 +37,8 @@ The currently selected mod will be loaded into your next run. Note that mod acti
 ## Credits
 
 The Cornercutter team (franomai/Squiddles & pumbas600) would like to thank and shout out:
-* Hotkoin (check them out at [their insta](https://www.instagram.com/hotkoin) for the amazing art.
-* slyllama (check them out at [their website](https://www.slyllama.net/) for their graphics help and artistic direction.
+* Hotkoin (check them out at [their insta](https://www.instagram.com/hotkoin)) for the amazing art.
+* slyllama (check them out at [their website](https://www.slyllama.net/)) for their graphics help and artistic direction.
 * Sabertwooth, Jowee, Logan, and Boxness for their playtesting and feedback.
 * The Aggro Crab Discord community (especially #speefruns and #modding) for keeping a two year old game alive.
 * Jowee again, for the original inspiration for skill manipulation and their work in maintaining Going Under resources.
@@ -97,4 +97,4 @@ Once set up, the default build setting will generate two artifacts, the cornercu
 
 # Questions?
 
-If you need any help with Cornercutter, from development to just running the mod, feel free to reach out [via a GitHub issue](https://github.com/franomai/cornercutter/issues), or post in the #modding channel of the [Aggro Crab Discord](http://discord.gg/aggrocrab). Thanks for reading!
+If you need any help with Cornercutter, from development to just running the mod, feel free to reach out [via a GitHub issue](https://github.com/franomai/cornercutter/issues/new), or post in the #modding channel of the [Aggro Crab Discord](http://discord.gg/aggrocrab). Thanks for reading!

@@ -72,7 +72,7 @@ export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonEle
             <ModalContent>
                 <ModalHeader>Global Settings</ModalHeader>
                 <ModalCloseButton title="Save changes" />
-                <ModalBody>
+                <ModalBody pb={4}>
                     <OptionCheckboxes<GlobalOptions>
                         flags={[
                             GlobalOptions.DisableCornercutter,
