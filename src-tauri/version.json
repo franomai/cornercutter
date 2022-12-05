@@ -1,11 +1,11 @@
 {
-    "version": "v1.0.0",
-    "notes": "The first release of Cornercutter!",
+    "version": "v1.0.1",
+    "notes": "The first release of Cornercutter! With a few minor cleanups.",
     "pub_date": "2022-12-04T09:09:49Z",
     "platforms": {
       "windows-x86_64": {
         "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcHltY1VDNG9ET3JCSFErQzNWRC9vL3o2eGZSeUZmUWdEK1IrT0E4VFZ2ZkxMYndyN2MwSzB0a3ZtS3RWY1docE9OVFN4azNKd0xmUko4eWRHTFJTeVBGMHdvZXlSMWdzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjcwMTQwODc3CWZpbGU6Q29ybmVyY3V0dGVyXzEuMC4wX3g2NF9lbi1VUy5tc2kuemlwCjFlbHQ3QWtWb3BLNGFHUStOeis4Z0NhZnNBZWR5TFU3NzZpdXc3UXU1VXB5OHRCL1R0ckJOSHhQMDlHbFdvSHM3WW8yZGdCK3czczFIUWNlWVN2c0JBPT0K",
-        "url": "https://github.com/franomai/cornercutter/releases/download/v1.0.0/Cornercutter_1.0.0_x64_en-US.msi.zip"
+        "url": "https://github.com/franomai/cornercutter/releases/download/v1.0.1/Cornercutter_1.0.1_x64_en-US.msi.zip"
       }
     }
   }
