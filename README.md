@@ -56,6 +56,10 @@ The Cornercutter indicator is in the top left. It will change depending on if yo
 
 The currently selected mod will be loaded into your next run. Note that mod activations/deactivations and changes to settings will only come into effect **after the dungeon is finished or the next dungeon is started**.
 
+## User metrics
+
+Hi there! You probably arrived here through the Cornercutter app, and you're thinking, what the frick, they're taking my data? Do they want to sell me sparkling beverages based on my interests? Not at all! Cornercutter is a passion project, and we'd like to know when someone out there is enjoying it, so we can work on other parts of the app that they will enjoy, or flex to someone we know IRL when we are gunning for an unpaid internship that someone enjoyed something we made. To do that, we get a ping when you open and close Cornercutter, as well as when you make, use, or share mods. If you would prefer that we don't though, that is okay as well, you can opt-out at any time from the settings menu.
+
 ## Credits
 
 The Cornercutter team (franomai/Squiddles & pumbas600) would like to thank and shout out:
@@ -66,10 +70,6 @@ The Cornercutter team (franomai/Squiddles & pumbas600) would like to thank and s
 * Jowee again, for the original inspiration for skill manipulation and their work in maintaining Going Under resources.
 * Aggro Crab, for making an amazing game, but especially Caelan and Paige for their support.
 * You, for reading and playing! We hope you like it!
-
-## User metrics
-
-Hi there! You probably arrived here through the Cornercutter app, and you're thinking, what the frick, they're taking my data? Do they want to sell me sparkling beverages based on my interests? Not at all! Cornercutter is a passion project, and we'd like to know when someone out there is enjoying it, so we can work on other parts of the app that they will enjoy, or flex to someone we know IRL when we are gunning for an unpaid internship that someone enjoyed something we made. To do that, we get a ping when you open and close Cornercutter, as well as when you make, use, or share mods. If you would prefer that we don't though, that is okay as well, you can opt-out at any time from the settings menu.
 
 # I'd like to add stuff to Cornercutter!
 
