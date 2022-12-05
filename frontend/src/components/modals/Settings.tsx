@@ -4,12 +4,6 @@ import useGoogleAnalytics from '../../hooks/useGoogleAnalytics';
 import EnableUserMetricsSection from './sections/EnableUserMetricsSection';
 
 import {
-    getEnableUserMetrics,
-    getGlobalOptions,
-    setEnableUserMetrics,
-    setGlobalOptions,
-} from '../../redux/slices/cornercutter';
-import {
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -22,13 +16,13 @@ import { invoke } from '@tauri-apps/api';
 import { useDispatch, useSelector } from 'react-redux';
 import { RefObject, useCallback, useEffect } from 'react';
 import { setOptionFlag } from '../../utility/ConfigHelpers';
+import { getGlobalOptions, setGlobalOptions } from '../../redux/slices/cornercutter';
 import { globalOptionDetails, GlobalOptions } from '../../types/enums/GlobalOptions';
 
 export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonElement> }) {
     const dispatch = useDispatch();
     const GA = useGoogleAnalytics();
     const globalOptions = useSelector(getGlobalOptions);
-    const enableUserMetrics = useSelector(getEnableUserMetrics);
 
     const { save, setError } = useSavingContext();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -40,16 +34,6 @@ export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonEle
 
         return () => current?.removeEventListener('click', handler);
     }, [openRef, onOpen]);
-
-    const handleUpdateEnableUserMetrics = useCallback(
-        (enableUserMetrics: boolean) => {
-            invoke('set_enable_user_metrics', { enableUserMetrics })
-                .then(() => dispatch(setEnableUserMetrics(enableUserMetrics)))
-                .catch(setError);
-            save();
-        },
-        [save, setError, dispatch],
-    );
 
     const handleSetFlag = useCallback(
         (flag: GlobalOptions, isChecked: boolean) => {
@@ -88,10 +72,7 @@ export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonEle
                         options={globalOptions}
                         handleChange={handleSetFlag}
                     />
-                    <EnableUserMetricsSection
-                        isEnabled={enableUserMetrics}
-                        setIsEnabled={handleUpdateEnableUserMetrics}
-                    />
+                    <EnableUserMetricsSection />
                 </ModalBody>
             </ModalContent>
         </Modal>

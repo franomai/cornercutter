@@ -19,8 +19,8 @@ import { useDispatch } from 'react-redux';
 import { ReactNode, useCallback, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { CornercutterConfig } from '../../types/CornercutterConfig';
+import { setIsNotFirstStartup } from '../../redux/slices/cornercutter';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
-import { setEnableUserMetrics, setIsNotFirstStartup } from '../../redux/slices/cornercutter';
 
 export default function FirstStartup({ config }: { config: CornercutterConfig }) {
     const dispatch = useDispatch();
@@ -76,10 +76,7 @@ export default function FirstStartup({ config }: { config: CornercutterConfig })
                 <ModalHeader>Welcome to Cornercutter</ModalHeader>
                 <ModalBody>
                     {renderCornercutterDescription()}
-                    <EnableUserMetricsSection
-                        isEnabled={config.enableUserMetrics}
-                        setIsEnabled={(isEnabled) => dispatch(setEnableUserMetrics(isEnabled))}
-                    />
+                    <EnableUserMetricsSection />
                 </ModalBody>
                 <ModalFooter>
                     <Button variant="primary" onClick={handleNext} disabled={!config.isSetupSuccessful}>

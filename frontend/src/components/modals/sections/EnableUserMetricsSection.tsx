@@ -1,13 +1,34 @@
 import TooltipCheckbox from '../../forms/TooltipCheckbox';
 
 import { Link, Stack, Text } from '@chakra-ui/react';
+import { useCallback } from 'react';
+import useGoogleAnalytics from '../../../hooks/useGoogleAnalytics';
+import { invoke } from '@tauri-apps/api';
+import { useDispatch, useSelector } from 'react-redux';
+import { getEnableUserMetrics, setEnableUserMetrics } from '../../../redux/slices/cornercutter';
+import useSavingContext from '../../../contexts/SavingContext';
 
-export interface EnableUserMetricsSectionProps {
-    isEnabled: boolean;
-    setIsEnabled(isEnabled: boolean): void;
-}
+export default function EnableUserMetricsSection() {
+    const dispatch = useDispatch();
+    const GA = useGoogleAnalytics();
+    const enableUserMetrics = useSelector(getEnableUserMetrics);
 
-export default function EnableUserMetricsSection({ isEnabled, setIsEnabled }: EnableUserMetricsSectionProps) {
+    const { save, setError } = useSavingContext();
+
+    const handleChangeIsEnabled = useCallback(
+        (isEnabled: boolean) => {
+            invoke('set_enable_user_metrics', { enableUserMetrics })
+                .then(() => {
+                    const action = isEnabled ? 'Enable User Metrics' : 'Disable User Metrics';
+                    GA.event({ category: 'User Metrics', action }, true);
+                    dispatch(setEnableUserMetrics(isEnabled));
+                })
+                .catch(setError);
+            save();
+        },
+        [GA, enableUserMetrics, save, setError, dispatch],
+    );
+
     return (
         <>
             <Text fontSize="xl" py={4}>
@@ -17,8 +38,8 @@ export default function EnableUserMetricsSection({ isEnabled, setIsEnabled }: En
                 <TooltipCheckbox
                     label="Enable User Metrics"
                     tooltip="Allow us to see how you use Cornercutter."
-                    isChecked={isEnabled}
-                    onChange={(e) => setIsEnabled(e.target.checked)}
+                    isChecked={enableUserMetrics}
+                    onChange={(e) => handleChangeIsEnabled(e.target.checked)}
                 />
                 <Text fontSize="sm">
                     Allow us to see how Cornercutter is being used. We don't collect any personal information about you.
