@@ -1,6 +1,6 @@
 import ReactGA from 'react-ga4';
 
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { UaEventOptions } from 'react-ga4/types/ga4';
 import { getEnableUserMetrics } from '../redux/slices/cornercutter';
