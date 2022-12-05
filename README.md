@@ -97,4 +97,4 @@ Once set up, the default build setting will generate two artifacts, the cornercu
 
 # Questions?
 
-If you need any help with Cornercutter, from development to just running the mod, feel free to reach out [via a GitHub issue](https://github.com/franomai/cornercutter/issues), or post in the #modding channel of the [Aggro Crab Discord](http://discord.gg/aggrocrab). Thanks for reading!
+If you need any help with Cornercutter, from development to just running the mod, feel free to reach out [via a GitHub issue](https://github.com/franomai/cornercutter/issues/new), or post in the #modding channel of the [Aggro Crab Discord](http://discord.gg/aggrocrab). Thanks for reading!
