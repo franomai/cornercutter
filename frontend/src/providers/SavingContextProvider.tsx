@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useCallback, useState } from 'react';
 import { AppDispatch } from '../redux/store';
 import { SavingContext } from '../contexts/SavingContext';
 import { saveSelectedMod as reduxSaveSelectedMod } from '../redux/slices/saving';
@@ -10,23 +10,23 @@ export default function SavingContextProvider({ children }: { children: ReactNod
     const [lastSaved, setLastSaved] = useState(Date.now());
     const [error, setError] = useState<string | null>(null);
 
-    const save = () => {
-        setError(null);
-        setLastSaved(Date.now());
-    };
-
-    const saveSelectedMod = () => {
-        dispatch(reduxSaveSelectedMod()).catch(handleError);
-        save();
-    };
-
-    const handleError = (error: string | Error) => {
+    const handleError = useCallback((error: string | Error) => {
         if (typeof error === 'string') {
             setError(error);
         } else {
             setError(error.message);
         }
-    };
+    }, []);
+
+    const save = useCallback(() => {
+        setError(null);
+        setLastSaved(Date.now());
+    }, []);
+
+    const saveSelectedMod = useCallback(() => {
+        dispatch(reduxSaveSelectedMod()).catch(handleError);
+        save();
+    }, [save, dispatch, handleError]);
 
     return (
         <SavingContext.Provider
