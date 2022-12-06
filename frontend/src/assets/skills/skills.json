@@ -102,10 +102,22 @@
         "image": "Yeet!.png"
     },
     {
+        "id": 18,
+        "name": "Trailblazer",
+        "description": "Dodge rolling ignites the ground behind you.",
+        "image": "Trailblazer.png"
+    },
+    {
         "id": 19,
         "name": "Free Hand",
         "description": "Two handed weapons are wielded like one handed weapons.",
         "image": "Free Hand.png"
+    },
+    {
+        "id": 20,
+        "name": "Sword Mastery",
+        "description": "Charge attacking with sharp weapons launches a laser.",
+        "image": "Sword Mastery.png"
     },
     {
         "id": 21,
@@ -130,6 +142,12 @@
         "name": "Loaded for Bear",
         "description": "Guns fire faster and have twice as much ammo.",
         "image": "Loaded for Bear.png"
+    },
+    {
+        "id": 25,
+        "name": "Personal Cloud",
+        "description": "Stores more data than anyone knows what to do with!",
+        "image": "Personal Cloud.png"
     },
     {
         "id": 26,
@@ -282,6 +300,12 @@
         "image": "Halt and Catch Fire.png"
     },
     {
+        "id": 51,
+        "name": "The Best Defense",
+        "description": "If you have none, gain armor from breaking an enemy's armor.",
+        "image": "The Best Defense.png"
+    },
+    {
         "id": 52,
         "name": "Blood Money",
         "description": "Don't have the cash? You can always...",
@@ -322,6 +346,12 @@
         "name": "Financial Gains",
         "description": "Your strength is tied to your wallet.",
         "image": "Financial Gains.png"
+    },
+    {
+        "id": 59,
+        "name": "Good Consumer",
+        "description": "Eating bricked phones gains armor.",
+        "image": "Good Consumer.png"
     },
     {
         "id": 60,
