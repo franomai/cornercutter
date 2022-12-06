@@ -111,7 +111,7 @@ The mode can be built as a standard Visual Studio project (2017 or higher) using
 
 ### Adding or modifying mod code
 
-Mods are written as Prefix and Postfix patches against Going Under methods, reading from the base config contained in CutterConfig. For documentation around the available features, please visit the [Harmony documentation](https://harmony.pardeike.net/articles/patching.html)
+Mods are written as Prefix and Postfix patches against Going Under methods, reading from the base config contained in CutterConfig. For documentation around the available features, please visit the [Harmony documentation](https://harmony.pardeike.net/articles/patching.html).
 
 ### Building the mod
 
