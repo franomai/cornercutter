@@ -46,7 +46,7 @@ export default function SkillSearchColumn() {
         <Flex
             minW="240px"
             maxW="240px"
-            minH="full"
+            minH="calc(100% - 58%)" // 58px here is the height of the tabs
             background="blackAlpha.200"
             pt={2}
             px={4}
