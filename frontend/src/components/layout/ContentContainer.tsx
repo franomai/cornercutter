@@ -17,10 +17,7 @@ export default function ContentContainer({ children, ...stackProps }: ContentCon
             minH="full"
             h="full"
             px="72px"
-            mb={2}
-            pb="56px"
-            mt={8}
-            pt={8}
+            py={8}
             spacing={8}
             style={{ scrollbarGutter: 'stable' }}
             {...stackProps}

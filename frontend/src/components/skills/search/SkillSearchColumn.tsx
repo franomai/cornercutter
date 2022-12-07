@@ -46,7 +46,7 @@ export default function SkillSearchColumn() {
         <Flex
             minW="240px"
             maxW="240px"
-            minH="full"
+            minH={0} // Overflow isn't applied without some minH (And 100% maxH doesn't respect parent boundaries)
             background="blackAlpha.200"
             pt={2}
             px={4}
