@@ -163,8 +163,7 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
             "CubicleGroundBotIce Variant",
             "CubicleGroundBotSawblade Variant",
             "CubicleGroundBotSmall",
-            // Spawns with no can ):
-            "JoblinCanbassador"
+            "Joblin"
         };
 
         public static bool RunGiftOnApplied(GiftType giftType, BackupSkill skillInstance)

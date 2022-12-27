@@ -1,7 +1,10 @@
-﻿using HarmonyLib;
+﻿using cornercutter.ModLoader;
+using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+
+using static cornercutter.ModFeature.SpecialMods.ModNames;
 
 namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
 {
@@ -104,6 +107,11 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
         static void Postfix(ref GameObject __result)
         {
             if (__result != GlobalSettings.defaults.fallbackSkill) return;
+            CutterConfig cornercutter = CutterConfig.Instance;
+            bool isChristmas = cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive()
+                && GetModFromName(cornercutter.ModName) == SpecialMod.CornercutterChristmas;
+            if (!isChristmas) return;
+
             // Make this a christmas gift instead
             List<GiftType> giftRefs = new List<GiftType>(PossibleGifts.Keys);
             int giftRef = (int) giftRefs[rng.Next(giftRefs.Count)];

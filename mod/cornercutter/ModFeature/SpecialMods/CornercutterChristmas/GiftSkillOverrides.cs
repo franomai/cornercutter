@@ -14,11 +14,22 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
             CutterConfig cornercutter = CutterConfig.Instance;
             bool isChristmas = cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive()
                 && GetModFromName(cornercutter.ModName) == SpecialMod.CornercutterChristmas;
-            if (!isChristmas) return true;
+            int giftId = __instance.pointCost;
+            if (!isChristmas)
+            {
+                if (giftId != 0)
+                {
+                    __instance.pointCost = 0;
+                    ModPickup pickup = GlobalSettings.defaults.fallbackSkill.GetComponent<ModPickup>();
+                    EntityMod mod = pickup.mod;
+                    mod.pointCost = 0;
+                    cornercutter.LogDebug("Reset gift successfully!");
+                }
+                return true;
+            }
 
             try
             {
-                int giftId = __instance.pointCost;
                 cornercutter.LogDebug("Applying gift effect ...");
                 // Returns if applying was successful - if so, don't run the normal gift logic
                 return !GiftHandler.ApplyGiftEffect(giftId, __instance);
