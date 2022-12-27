@@ -1,10 +1,10 @@
 {
     "version": "v1.0.4",
     "notes": "Added a Christmas treat! See the full release notes at the Cornercutter GitHub for more details.",
-    "pub_date": "2022-12-27T08:55:36Z",
+    "pub_date": "2022-12-27T12:09:09Z",
     "platforms": {
       "windows-x86_64": {
-        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcHltY1VDNG9ET25tb1Z3Ty83TUc5WmJEd0QyMU9IeVROYzkxenZhTjlvbFgyamMyYitLVTYxY1NLdk5BUHV5aW0ycFhvbmxDNWVpR2ttRFMrK2g1bkhhaFJWRlIraVFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjcyMTMxMTk1CWZpbGU6Q29ybmVyY3V0dGVyXzEuMC40X3g2NF9lbi1VUy5tc2kuemlwCjNtbU5ZK3VaUTlVU3Nuck91OC9jVkRPNkRROEtOck9DZTUrODFMZzEwYXF6M1Y3MU5peUJJdnNGakcxTVFvK3pKYmgvUnkrdjNhbEU5REczYktsaUNRPT0K",
+        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcHltY1VDNG9ET2tKM3BZaUdwdFg1QXorVUszZWZYb1gwR0wvQUxUZXVxdHBndUhvUExGUzh3bEl4NEpwMCsxR0F0V25uRk55aC8yRWhvTnVVNjA1M2FUamN4K25SYkFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjcyMTQyOTEyCWZpbGU6Q29ybmVyY3V0dGVyXzEuMC40X3g2NF9lbi1VUy5tc2kuemlwCjNMZlpOTDlUa3NXeEJxN2wvSCtOY1dSNUxoVDNnNW0zSmJwVG45QmhwaGxaUXVRaHhyUnpMWXBUU1N1RmROTE1uOENrU1ErS0lwUWV0YWY3NFlqeUNRPT0K",
         "url": "https://github.com/franomai/cornercutter/releases/download/v1.0.4/Cornercutter_1.0.4_x64_en-US.msi.zip"
       }
     }
