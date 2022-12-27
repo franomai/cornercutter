@@ -1,5 +1,6 @@
 ﻿using cornercutter.ModLoader;
 using HarmonyLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -20,6 +21,26 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
             Description = description;
             VagueDescription = vagueDescription;
             OnAppliedText = onAppliedText;
+        }
+    }
+
+    [HarmonyPatch(typeof(GUIManager), nameof(GUIManager.LoadFizzle))]
+    class StackResetOnFizzleReload
+    {
+        // This is a failsafe in case the RemoveListeners code doesn't run
+        // because of a failure upstream
+        static void Postfix()
+        {
+            foreach (GiftHandler.GiftType key in GiftHandler.CurrentStacks.Keys.ToList())
+            {
+                int currentStacks = GiftHandler.CurrentStacks[key];
+                if (currentStacks > 0)
+                {
+                    GiftListeners.DeregisterListeners(key);
+                }
+                GiftHandler.CurrentStacks[key] = 0;
+            }
+            CutterConfig.Instance.LogDebug("All stacks reset!");
         }
     }
 
@@ -97,6 +118,7 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
             if (!System.Enum.IsDefined(typeof(GiftType), giftId)) return (GiftType.None, null);
             GiftType giftType = (GiftType)giftId;
             ChristmasGift gift = PossibleGifts.ContainsKey(giftType) ? PossibleGifts[giftType] : null;
+            if (gift != null) CutterConfig.Instance.LogDebug("Got gift as " + gift.Name);
             return (giftType, gift);
         }
 
@@ -148,6 +170,7 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
             GiftType giftType = giftInfo.Item1;
             if (giftType == GiftType.None) return;
             int currentStacks = CurrentStacks[giftType]++;
+            CutterConfig.Instance.LogDebug("Original stacks for added gift at " + currentStacks);
             if (currentStacks == 0) GiftListeners.RegisterListeners(giftType);
             return;
         }
@@ -158,7 +181,16 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
             GiftType giftType = giftInfo.Item1;
             if (giftType == GiftType.None) return;
             int currentStacks = --CurrentStacks[giftType];
-            if (currentStacks == 0) GiftListeners.DeregisterListeners(giftType);
+            if (currentStacks < 0)
+            {
+                CutterConfig.Instance.LogDebug("Stacks removed externally, skipping ...");
+                CurrentStacks[giftType] = 0;
+            }
+            else
+            {
+                CutterConfig.Instance.LogDebug("Stacks for removed gift at " + currentStacks);
+                if (currentStacks == 0) GiftListeners.DeregisterListeners(giftType);
+            }
             return;
         }
     }
