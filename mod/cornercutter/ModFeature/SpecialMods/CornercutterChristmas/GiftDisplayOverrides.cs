@@ -1,8 +1,6 @@
 ﻿using cornercutter.ModLoader;
 using HarmonyLib;
 
-using static cornercutter.ModFeature.SpecialMods.ModNames;
-
 namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
 {
     [HarmonyPatch(typeof(EntityMod), "get_DisplayName")]
@@ -14,7 +12,7 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
             {
                 CutterConfig cornercutter = CutterConfig.Instance;
                 bool isChristmas = cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive()
-                    && GetModFromName(cornercutter.ModName) == SpecialMod.CornercutterChristmas;
+                    && cornercutter.IsSpecialModActive(ModNames.SpecialMod.CornercutterChristmas);
                 if (!isChristmas) return;
 
                 (GiftHandler.GiftType, ChristmasGift) giftInfo = GiftHandler.GetChristmasGiftById(__instance.pointCost);
@@ -36,7 +34,7 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
             {
                 CutterConfig cornercutter = CutterConfig.Instance;
                 bool isChristmas = cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive()
-                    && GetModFromName(cornercutter.ModName) == SpecialMod.CornercutterChristmas;
+                    && cornercutter.IsSpecialModActive(ModNames.SpecialMod.CornercutterChristmas);
                 if (!isChristmas) return;
 
                 (GiftHandler.GiftType, ChristmasGift) giftInfo = GiftHandler.GetChristmasGiftById(__instance.pointCost);
@@ -70,7 +68,7 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
             {
                 CutterConfig cornercutter = CutterConfig.Instance;
                 bool isChristmas = cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive()
-                    && GetModFromName(cornercutter.ModName) == SpecialMod.CornercutterChristmas;
+                    && cornercutter.IsSpecialModActive(ModNames.SpecialMod.CornercutterChristmas);
                 if (!isChristmas) return;
 
                 __result = "A very special gift!";

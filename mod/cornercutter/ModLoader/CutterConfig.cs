@@ -2,6 +2,7 @@
 using cornercutter.DTO;
 using cornercutter.Enum;
 using cornercutter.ModFeature.SpawnOverride.CollectionTypes;
+using cornercutter.ModFeature.SpecialMods;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,6 @@ namespace cornercutter.ModLoader
 
         private string ModFileLocation;
         public bool HasCurrentMod { get; private set; }
-        public string ModName { get; private set; }
         public GlobalOptions GlobalOptions { get; private set; }
 
         public SpawnCollectionType SpawnCollectionType { get; private set; }
@@ -31,9 +31,10 @@ namespace cornercutter.ModLoader
         private Dictionary<Floor, FloorConfig> floorConfigs;
 
         private bool InDungeon = false;
+        private string ModName = null;
         private ManualLogSource Logger = null;
         private TextMeshProUGUI VisualIndicator = null;
-        public PauseTabButton DebugMenu = null;
+        private PauseTabButton DebugMenu = null;
         private DebugStuff DebugResources = null;
         private ModReader Reader = new ModReader();
 
@@ -230,6 +231,11 @@ namespace cornercutter.ModLoader
             // DungeonManager.GetCurrentDungeonCompany doesn't reset on Fizzle enter and has a NPE
             // so it is more accurate for us to track it
             return HasCurrentMod && InDungeon;
+        }
+
+        public bool IsSpecialModActive(ModNames.SpecialMod specialMod)
+        {
+            return ModName == null ? false : ModNames.GetModFromName(ModName) == specialMod;
         }
     }
 

@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-using static cornercutter.ModFeature.SpecialMods.ModNames;
-
 namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
 {
     class ChristmasGift
@@ -109,7 +107,7 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
             if (__result != GlobalSettings.defaults.fallbackSkill) return;
             CutterConfig cornercutter = CutterConfig.Instance;
             bool isChristmas = cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive()
-                && GetModFromName(cornercutter.ModName) == SpecialMod.CornercutterChristmas;
+                && cornercutter.IsSpecialModActive(ModNames.SpecialMod.CornercutterChristmas);
             if (!isChristmas) return;
 
             // Make this a christmas gift instead

@@ -194,9 +194,8 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
                     break;
                 case GiftType.SpeedAndKnockbackIncrease:
                     Entity ent = skillInstance.moddedEntity;
-                    if (ent is Player)
+                    if (ent is Player player)
                     {
-                        Player player = ent as Player;
                         player.speedBuff += 1.25f;
                         player.stats.velocityHardCap *= 1.25f;
                     }
@@ -213,9 +212,8 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
             {
                 case GiftType.SpeedAndKnockbackIncrease:
                     Entity ent = skillInstance.moddedEntity;
-                    if (ent is Player)
+                    if (ent is Player player)
                     {
-                        Player player = ent as Player;
                         player.speedBuff -= 1.25f;
                         player.stats.velocityHardCap /= 1.25f;
                     }

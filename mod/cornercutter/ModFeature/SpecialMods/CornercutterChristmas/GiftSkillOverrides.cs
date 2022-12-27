@@ -2,8 +2,6 @@
 using HarmonyLib;
 using System;
 
-using static cornercutter.ModFeature.SpecialMods.ModNames;
-
 namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
 {
     [HarmonyPatch(typeof(BackupSkill), "OnApplied")]
@@ -13,7 +11,7 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
         {
             CutterConfig cornercutter = CutterConfig.Instance;
             bool isChristmas = cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive()
-                && GetModFromName(cornercutter.ModName) == SpecialMod.CornercutterChristmas;
+                && cornercutter.IsSpecialModActive(ModNames.SpecialMod.CornercutterChristmas);
             int giftId = __instance.pointCost;
             if (!isChristmas)
             {
@@ -76,7 +74,7 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
         {
             CutterConfig cornercutter = CutterConfig.Instance;
             bool isChristmas = cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive()
-                && GetModFromName(cornercutter.ModName) == SpecialMod.CornercutterChristmas;
+                && cornercutter.IsSpecialModActive(ModNames.SpecialMod.CornercutterChristmas);
             if (!isChristmas) return;
 
             try
