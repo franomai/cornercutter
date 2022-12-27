@@ -2,6 +2,7 @@
 using cornercutter.DTO;
 using cornercutter.Enum;
 using cornercutter.ModFeature.SpawnOverride.CollectionTypes;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +18,7 @@ namespace cornercutter.ModLoader
 
         private string ModFileLocation;
         public bool HasCurrentMod { get; private set; }
+        public string ModName { get; private set; }
         public GlobalOptions GlobalOptions { get; private set; }
 
         public SpawnCollectionType SpawnCollectionType { get; private set; }
@@ -31,7 +33,8 @@ namespace cornercutter.ModLoader
         private bool InDungeon = false;
         private ManualLogSource Logger = null;
         private TextMeshProUGUI VisualIndicator = null;
-        private PauseTabButton DebugMenu = null;
+        public PauseTabButton DebugMenu = null;
+        private DebugStuff DebugResources = null;
         private ModReader Reader = new ModReader();
 
         private CutterConfig()
@@ -85,6 +88,7 @@ namespace cornercutter.ModLoader
             LoadGlobalSettings();
             if (!HasCurrentMod) return;
             ModConfigDTO config = Reader.ReadMod(ModFileLocation);
+            ModName = config.ModInfo.Name;
             SpawnCollectionType = config.GeneralConfig.SpawnCollectionType;
             CurseSpawnType = config.GeneralConfig.CurseSpawnType;
             PedestalSpawnType = config.GeneralConfig.PedestalSpawnType;
@@ -136,7 +140,7 @@ namespace cornercutter.ModLoader
             // Get the config out of the config map for the floor provided
             // If the config is for all floors, ignore the input param and get the generic config instead
             return ConfigOptions.HasFlag(ConfigOptions.ConfigPerFloor)
-                ? floorConfigs[(Floor) floorNumber]
+                ? floorConfigs[(Floor)floorNumber]
                 : floorConfigs[Floor.AllFloors];
         }
 
@@ -146,10 +150,11 @@ namespace cornercutter.ModLoader
             GlobalOptions = GlobalOptions.NoneSelected;
             HasCurrentMod = false;
             InDungeon = false;
+            ModName = null;
             SpawnCollectionType = SpawnCollectionType.NoneSelected;
             CurseSpawnType = CurseSpawnType.NoneSelected;
             ConfigOptions = ConfigOptions.NoneSelected;
-            StartingSkills = new WeightedSkill[] {};
+            StartingSkills = new WeightedSkill[] { };
             floorConfigs = new Dictionary<Floor, FloorConfig>();
         }
 
@@ -188,6 +193,16 @@ namespace cornercutter.ModLoader
             VisualIndicator.enabled = CornercutterIsEnabled();
         }
 
+        public void SetDebugResources(DebugStuff debug)
+        {
+            DebugResources = debug;
+        }
+
+        public DebugStuff GetDebugResources()
+        {
+            return DebugResources;
+        }
+
         public void SetDebugMenu(PauseTabButton debugMenu)
         {
             if (debugMenu == null && DebugMenu != null) return;
@@ -215,6 +230,21 @@ namespace cornercutter.ModLoader
             // DungeonManager.GetCurrentDungeonCompany doesn't reset on Fizzle enter and has a NPE
             // so it is more accurate for us to track it
             return HasCurrentMod && InDungeon;
+        }
+    }
+
+    [HarmonyPatch(typeof(Player), "Awake")]
+    class SetDebugReference
+    {
+        static void Postfix(ref Player __instance)
+        {
+            CutterConfig cornercutter = CutterConfig.Instance;
+            cornercutter.LogDebug("Reassigning debug reference ...");
+            PauseMenu menu = (PauseMenu)GUIManager.instance.pauseMenu;
+            MenuTab tab = menu.tabs[0].GetComponentInChildren<MenuTab>();
+            tab.Open();
+            cornercutter.SetDebugResources(tab.gameObject.GetComponentInChildren<DebugStuff>());
+            tab.Close();
         }
     }
 }

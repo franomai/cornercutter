@@ -1,6 +1,9 @@
-﻿using HarmonyLib;
+﻿using cornercutter.Enum;
+using cornercutter.ModLoader;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using UnityEngine;
 
@@ -49,7 +52,7 @@ namespace cornercutter.ModFeature.GlobalSetting
             }
         }
     }
-    
+
     class OneHPEnemies
     {
         public static void SetHPToOne(Enemy enemy)
@@ -122,6 +125,29 @@ namespace cornercutter.ModFeature.GlobalSetting
                 // If we have free camera control because the cutscene ended before the
                 // pump method started, unlock our movement
                 Player.singlePlayer.LockMovement(false);
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(ItemRoom), "OnUpgradePickedUp")]
+    class FixGiftOfTheInternDespawn
+    {
+        static void Prefix(ref ItemRoom __instance, UpgradePickUpInfo info)
+        {
+            if (info.pickup.mod && info.pickup.mod is BackupSkill)
+            {
+                Pickup[] componentsInChildren = __instance.GetComponentsInChildren<Pickup>();
+                for (int i = componentsInChildren.Length - 1; i >= 0; i--)
+                {
+                    if (!__instance.ignorePickups.Contains(componentsInChildren[i]))
+                    {
+                        if (componentsInChildren[i] != info.pickup)
+                        {
+                            ParticleManager.instance.PlayPoof(componentsInChildren[i].transform.position + Vector3.up * 0.5f);
+                        }
+                        UnityEngine.Object.Destroy(componentsInChildren[i].gameObject);
+                    }
+                }
             }
         }
     }

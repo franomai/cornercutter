@@ -156,9 +156,9 @@ namespace cornercutter.ModFeature.SpawnOverride
                 return true;
             }
 
-            // Special handling needed here for finales and empty collections, otherwise we get no GOTI
-            if (__instance.name == "FinalRoomBattlePickup" && swappedObject == null && !options.HasFlag(ConfigOptions.DisableGiftOfIntern))
+            if (swappedObject == null && !options.HasFlag(ConfigOptions.DisableGiftOfIntern))
             {
+                // This is required so we can snipe GOTI spawns properly in downstream Postfixes
                 swappedObject = GlobalSettings.defaults.fallbackSkill;
             }
 
