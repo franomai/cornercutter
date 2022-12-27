@@ -1,11 +1,11 @@
 {
-    "version": "v1.0.3",
-    "notes": "The first release of Cornercutter! With a few minor cleanups, and then some. All skills included!",
-    "pub_date": "2022-12-07T09:22:56Z",
+    "version": "v1.0.4",
+    "notes": "Added a christmas treat! See the full release notes at https://github.com/franomai/cornercutter/releases/tag/v1.0.4 for details!",
+    "pub_date": "2022-12-27T08:55:36Z",
     "platforms": {
       "windows-x86_64": {
-        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcHltY1VDNG9ET3QvN1Q1YzdNMUtxeE5hM2x5aDlJQmxOTk1KQlV0RVE2OUxhbm5kVWVua1FGYW5DRU1jVFBLTit5WkNIUGM3SVpiQ2crVE15UGF5bC82OVBvc3hqZXdrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjcwNDA0ODY5CWZpbGU6Q29ybmVyY3V0dGVyXzEuMC4zX3g2NF9lbi1VUy5tc2kuemlwCldHdTg2UkNucGg2aGg0VTc3bVZZeG4wVTJLOXIwa2VuRGd1TkFWY2srYWlyUzFyUGpGTU12UHppL3dpb0RTVUVxVHAzOUU2dHNvODF1N3cvcDdTK0RBPT0K",
-        "url": "https://github.com/franomai/cornercutter/releases/download/v1.0.3/Cornercutter_1.0.3_x64_en-US.msi.zip"
+        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcHltY1VDNG9ET25tb1Z3Ty83TUc5WmJEd0QyMU9IeVROYzkxenZhTjlvbFgyamMyYitLVTYxY1NLdk5BUHV5aW0ycFhvbmxDNWVpR2ttRFMrK2g1bkhhaFJWRlIraVFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjcyMTMxMTk1CWZpbGU6Q29ybmVyY3V0dGVyXzEuMC40X3g2NF9lbi1VUy5tc2kuemlwCjNtbU5ZK3VaUTlVU3Nuck91OC9jVkRPNkRROEtOck9DZTUrODFMZzEwYXF6M1Y3MU5peUJJdnNGakcxTVFvK3pKYmgvUnkrdjNhbEU5REczYktsaUNRPT0K",
+        "url": "https://github.com/franomai/cornercutter/releases/download/v1.0.4/Cornercutter_1.0.4_x64_en-US.msi.zip"
       }
     }
   }
