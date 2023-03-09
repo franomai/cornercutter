@@ -107,7 +107,7 @@ This application is built using Tauri. Follow their instructions [here](https://
 
 ### Prerequisites and Setup
 
-The mode can be built as a standard Visual Studio project (2017 or higher) using the solution file contained in the mod directory. The project itself has dependencies on both the Going Under dlls (Assembly-CSharp.dll, plus the Unity dlls such as UnityEngine.dll), as well as the BepInEx/Harmony dlls (located in the BepInEx folder, such as 0Harmony.dll). For the latter dlls, these should be present if you have Cornercutter installed. Otherwise, the version of BepInEx Cornercutter uses, BepInEx 5.4.21, can be downloaded from [their repo](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.21).
+The mod can be built as a standard Visual Studio project (2017 or higher) using the solution file contained in the mod directory. The project itself has dependencies on both the Going Under dlls (Assembly-CSharp.dll, plus the Unity dlls such as UnityEngine.dll), as well as the BepInEx/Harmony dlls (located in the BepInEx folder, such as 0Harmony.dll). For the latter dlls, these should be present if you have Cornercutter installed. Otherwise, the version of BepInEx Cornercutter uses, BepInEx 5.4.21, can be downloaded from [their repo](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.21).
 
 ### Adding or modifying mod code
 
