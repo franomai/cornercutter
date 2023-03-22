@@ -67,6 +67,7 @@ export default function Settings({ openRef }: { openRef: RefObject<HTMLButtonEle
                             GlobalOptions.EnableExtraLogging,
                             GlobalOptions.EnsureAlwaysFiveCubitShopOptions,
                             GlobalOptions.EnableFreeCubitShop,
+                            GlobalOptions.UnlockAllCostumes,
                         ]}
                         optionDetails={globalOptionDetails}
                         options={globalOptions}
