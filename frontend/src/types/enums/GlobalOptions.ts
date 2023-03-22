@@ -10,6 +10,7 @@ export enum GlobalOptions {
     EnableExtraLogging = 1 << 5,
     EnsureAlwaysFiveCubitShopOptions = 1 << 6,
     EnableFreeCubitShop = 1 << 7,
+    UnlockAllCostumes = 1 << 8,
 }
 
 export const globalOptionDetails: Record<GlobalOptions, OptionDetails> = {
@@ -46,5 +47,9 @@ export const globalOptionDetails: Record<GlobalOptions, OptionDetails> = {
     [GlobalOptions.EnableFreeCubitShop]: {
         label: 'Make the Cubit shop free',
         tooltip: 'Skills in the Cubit shop in Fizzle cost 0 cubits.',
+    },
+    [GlobalOptions.UnlockAllCostumes]: {
+        label: 'Unlock all costumes',
+        tooltip: 'Costumes in Jackie\'s wardrobe are all unlocked, regardless of overtime or main story progress.',
     },
 };

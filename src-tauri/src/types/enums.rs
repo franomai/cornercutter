@@ -52,5 +52,6 @@ bitflags! {
         const ENABLE_EXTRA_LOGGING = 1 << 5;
         const ENSURE_ALWAYS_FIVE_CUBIT_SHOP_OPTIONS = 1 << 6;
         const ENABLE_FREE_CUBIT_SHOP = 1 << 7;
+        const UNLOCK_ALL_COSTUMES = 1 << 8;
     }
 }
