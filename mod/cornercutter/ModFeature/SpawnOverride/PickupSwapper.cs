@@ -3,6 +3,8 @@ using cornercutter.ModFeature.SpawnOverride.CollectionTypes;
 using cornercutter.ModLoader;
 using HarmonyLib;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace cornercutter.ModFeature.SpawnOverride
@@ -173,6 +175,35 @@ namespace cornercutter.ModFeature.SpawnOverride
         static void Postfix(ref GameObject __result)
         {
             CutterConfig.Instance.LogDebug("Final item, " + (__result == null ? "nothing!" : __result.name));
+        }
+    }
+
+    [HarmonyPatch(typeof(UnityEngine.Object), nameof(UnityEngine.Object.FindObjectsOfType), new Type[] { typeof(Type) })]
+    class OrderEntitySpawners
+    {
+        static void Postfix(Type type, ref UnityEngine.Object[] __result)
+        {
+            if (type != typeof(EntitySpawner)) return;
+            CutterConfig cornercutter = CutterConfig.Instance;
+            if (!(cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive())) return;
+            // Order the spawners based on the location of the room they are in, if available.
+            UnityEngine.Object[] reordered = __result.OfType<EntitySpawner>().OrderBy(es => es.GetComponentInParent<Room>(), new RoomOrderer()).ToArray();
+            __result = reordered;
+        }
+    }
+
+    class RoomOrderer : IComparer<Room>
+    {
+        int IComparer<Room>.Compare(Room roomA, Room roomB)
+        {
+            if (roomA == null)
+            {
+                // Null rooms shouldn't happen, but put them last just in case.
+                return roomB == null ? 0 : -1;
+            }
+            if (roomB == null) return 1;
+            int compareRoomDistance = roomA.distanceFromStart.CompareTo(roomB.distanceFromStart);
+            return compareRoomDistance == 0 ? roomA.name.CompareTo(roomB.name) : compareRoomDistance;
         }
     }
 }
