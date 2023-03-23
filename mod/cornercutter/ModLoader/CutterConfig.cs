@@ -226,6 +226,13 @@ namespace cornercutter.ModLoader
             return !GlobalOptions.HasFlag(GlobalOptions.DisableCornercutter);
         }
 
+        // This method should NOT be used for checking whether mod code should run
+        // We only call this to make sure a reload doesn't occur when a boss floor is entered
+        public bool IsInDungeon()
+        {
+            return InDungeon;
+        }
+
         public bool ModIsActive()
         {
             // DungeonManager.GetCurrentDungeonCompany doesn't reset on Fizzle enter and has a NPE
