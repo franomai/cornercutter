@@ -187,15 +187,18 @@ namespace cornercutter.ModFeature.SpawnOverride
             CutterConfig cornercutter = CutterConfig.Instance;
             if (!(cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive())) return;
             // Order the spawners based on the location of the room they are in, if available.
-            UnityEngine.Object[] reordered = __result.OfType<EntitySpawner>().OrderBy(es => es.GetComponentInParent<Room>(), new RoomOrderer()).ToArray();
+            UnityEngine.Object[] reordered = __result.OfType<EntitySpawner>().OrderBy(es => es, new EntitySpawnerOrderer()).ToArray();
             __result = reordered;
         }
     }
 
-    class RoomOrderer : IComparer<Room>
+    class EntitySpawnerOrderer : IComparer<EntitySpawner>
     {
-        int IComparer<Room>.Compare(Room roomA, Room roomB)
+        int IComparer<EntitySpawner>.Compare(EntitySpawner a, EntitySpawner b)
         {
+            Room roomA = a.GetComponentInParent<Room>();
+            Room roomB = b.GetComponentInParent<Room>();
+
             if (roomA == null)
             {
                 // Null rooms shouldn't happen, but put them last just in case.
@@ -203,7 +206,9 @@ namespace cornercutter.ModFeature.SpawnOverride
             }
             if (roomB == null) return 1;
             int compareRoomDistance = roomA.distanceFromStart.CompareTo(roomB.distanceFromStart);
-            return compareRoomDistance == 0 ? roomA.name.CompareTo(roomB.name) : compareRoomDistance;
+            if (compareRoomDistance != 0) return compareRoomDistance;
+            int compareRoomNames = roomA.name.CompareTo(roomB.name);
+            return compareRoomNames != 0 ? compareRoomNames : a.transform.position.z.CompareTo(b.transform.position.z);
         }
     }
 }
