@@ -21,7 +21,7 @@ export const globalOptionDetails: Record<GlobalOptions, OptionDetails> = {
     [GlobalOptions.DisableHighscores]: {
         label: 'Disable highscores',
         tooltip:
-            'New best times with Cornercutter enabled will not be saved, unless it is the fist clear for that dungeon.',
+            'New best times with Cornercutter enabled will not be saved, unless it is the first clear for that dungeon.',
     },
     [GlobalOptions.DisableSteamAchievements]: {
         label: 'Disable Steam achievements',
