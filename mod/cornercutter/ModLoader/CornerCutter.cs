@@ -60,8 +60,15 @@ namespace cornercutter.ModLoader
         static void Postfix()
         {
             CutterConfig cornercutter = CutterConfig.Instance;
-            // This method fires when a new dungeon is started - meaning new mods won't be hotloaded,
+
+            // This method should only run when a new dungeon is started - meaning new mods won't be hotloaded,
             // but instead will be picked up on the next run.
+            if (cornercutter.InDungeon)
+            {
+                cornercutter.LogInfo("DungeonManager regenerated while still in dungeon, skipping config reload ...");
+                return;
+            }
+
             cornercutter.LogInfo("Loading current cornercutter config ...");
             try
             {

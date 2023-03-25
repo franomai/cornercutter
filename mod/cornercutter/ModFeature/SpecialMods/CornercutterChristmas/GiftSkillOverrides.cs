@@ -10,7 +10,7 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
         static bool Prefix(ref BackupSkill __instance)
         {
             CutterConfig cornercutter = CutterConfig.Instance;
-            bool isChristmas = cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive()
+            bool isChristmas = cornercutter.CornercutterIsEnabled()
                 && cornercutter.IsSpecialModActive(ModNames.SpecialMod.CornercutterChristmas);
             int giftId = __instance.pointCost;
             if (!isChristmas)
@@ -73,7 +73,7 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
         static void Prefix(ref BackupSkill __instance)
         {
             CutterConfig cornercutter = CutterConfig.Instance;
-            bool isChristmas = cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive()
+            bool isChristmas = cornercutter.CornercutterIsEnabled()
                 && cornercutter.IsSpecialModActive(ModNames.SpecialMod.CornercutterChristmas);
             if (!isChristmas) return;
 

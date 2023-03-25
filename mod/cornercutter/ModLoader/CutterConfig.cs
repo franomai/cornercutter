@@ -19,6 +19,10 @@ namespace cornercutter.ModLoader
 
         private string ModFileLocation;
         public bool HasCurrentMod { get; private set; }
+
+        // This getter should NOT be used for checking whether mod code should run
+        // We only look at this outside CutterConfig to make sure a reload doesn't occur when a boss floor is entered
+        public bool InDungeon { get; private set; }
         public GlobalOptions GlobalOptions { get; private set; }
 
         public SpawnCollectionType SpawnCollectionType { get; private set; }
@@ -30,7 +34,6 @@ namespace cornercutter.ModLoader
         public WeightedSkill[] StartingSkills { get; private set; }
         private Dictionary<Floor, FloorConfig> floorConfigs;
 
-        private bool InDungeon = false;
         private string ModName = null;
         private ManualLogSource Logger = null;
         private TextMeshProUGUI VisualIndicator = null;
@@ -235,7 +238,7 @@ namespace cornercutter.ModLoader
 
         public bool IsSpecialModActive(ModNames.SpecialMod specialMod)
         {
-            return ModName == null ? false : ModNames.GetModFromName(ModName) == specialMod;
+            return ModIsActive() && (ModName != null && ModNames.GetModFromName(ModName) == specialMod);
         }
     }
 
