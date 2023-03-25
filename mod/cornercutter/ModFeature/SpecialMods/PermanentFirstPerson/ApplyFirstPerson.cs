@@ -56,4 +56,18 @@ namespace cornercutter.ModFeature.SpecialMods.PermanentFirstPerson
             if (PermanentFirstPerson.FirstPersonIsEnabled()) PermanentFirstPerson.ApplyFirstPersonCurse();
         }
     }
+
+    [HarmonyPatch(typeof(CameraController), nameof(CameraController.SetFov))]
+    class FixAvieTeleportFov
+    {
+        static void Prefix(ref float fov)
+        {
+            if (PermanentFirstPerson.FirstPersonIsEnabled() && Player.singlePlayer.firstPerson && fov == 30f)
+            {
+                // Every standard fov change touches singlePlayer.firstPerson except for the Avie teleport
+                // which hard sets it to 30! This zooms you in way too far, so we have to prevent it.
+                fov = 60f;
+            }
+        }
+    }
 }
