@@ -11,7 +11,7 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
             if (__instance.name == "Gift of the Intern (Jackie)")
             {
                 CutterConfig cornercutter = CutterConfig.Instance;
-                bool isChristmas = cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive()
+                bool isChristmas = cornercutter.CornercutterIsEnabled()
                     && cornercutter.IsSpecialModActive(ModNames.SpecialMod.CornercutterChristmas);
                 if (!isChristmas) return;
 
@@ -33,7 +33,7 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
             if (__instance.name.StartsWith("Gift of the Intern"))
             {
                 CutterConfig cornercutter = CutterConfig.Instance;
-                bool isChristmas = cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive()
+                bool isChristmas = cornercutter.CornercutterIsEnabled()
                     && cornercutter.IsSpecialModActive(ModNames.SpecialMod.CornercutterChristmas);
                 if (!isChristmas) return;
 
@@ -67,7 +67,7 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
             if (__instance.name == "BackupSkill" || __result == "Gift of the Intern")
             {
                 CutterConfig cornercutter = CutterConfig.Instance;
-                bool isChristmas = cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive()
+                bool isChristmas = cornercutter.CornercutterIsEnabled()
                     && cornercutter.IsSpecialModActive(ModNames.SpecialMod.CornercutterChristmas);
                 if (!isChristmas) return;
 

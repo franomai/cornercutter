@@ -208,6 +208,13 @@ namespace cornercutter.ModFeature.SpawnOverride
             int compareRoomDistance = roomA.distanceFromStart.CompareTo(roomB.distanceFromStart);
             if (compareRoomDistance != 0) return compareRoomDistance;
             int compareRoomNames = roomA.name.CompareTo(roomB.name);
+
+            // The following position sort is for one very specific case in the main game, when you go to fight the final boss -
+            // there are 15 spawners in the same room with non standard info binding them together.
+            // Instead of trying to code around this specific instance, a more generic catch
+            // (in case there is another instance like this now or in future)
+            // is to say "all things being equal, order them in a consistent direction at least".
+
             return compareRoomNames != 0 ? compareRoomNames : a.transform.position.z.CompareTo(b.transform.position.z);
         }
     }

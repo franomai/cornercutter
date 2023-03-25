@@ -9,7 +9,7 @@ namespace cornercutter.ModFeature.SpecialMods.PermanentFirstPerson
         public static bool FirstPersonIsEnabled()
         {
             CutterConfig cornercutter = CutterConfig.Instance;
-            return cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive()
+            return cornercutter.CornercutterIsEnabled()
                 && cornercutter.IsSpecialModActive(ModNames.SpecialMod.FirstPerson);
         }
 

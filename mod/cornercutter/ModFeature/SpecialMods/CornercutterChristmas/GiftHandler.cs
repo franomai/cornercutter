@@ -128,7 +128,7 @@ namespace cornercutter.ModFeature.SpecialMods.CornercutterChristmas
         {
             if (__result != GlobalSettings.defaults.fallbackSkill) return;
             CutterConfig cornercutter = CutterConfig.Instance;
-            bool isChristmas = cornercutter.CornercutterIsEnabled() && cornercutter.ModIsActive()
+            bool isChristmas = cornercutter.CornercutterIsEnabled()
                 && cornercutter.IsSpecialModActive(ModNames.SpecialMod.CornercutterChristmas);
             if (!isChristmas) return;
 
