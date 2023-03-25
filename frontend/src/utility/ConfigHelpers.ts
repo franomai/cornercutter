@@ -1,7 +1,4 @@
-import ModConfig, { DEFAULT_CONFIG, FloorSkills, Options } from '../types/Configuration';
-
-import { WeightedSkill } from '../types/Skill';
-import { Floor, Room } from '../types/enums/ConfigEnums';
+import { Options } from '../types/Configuration';
 import { ModOptions } from '../types/enums/ModOptions';
 import { GlobalOptions } from '../types/enums/GlobalOptions';
 
@@ -22,33 +19,4 @@ export function setOptionFlag(
         option &= ~flag;
     }
     return option;
-}
-
-export function generateEmptyMod(id: string): ModConfig {
-    return {
-        id,
-        info: { name: '', description: '' },
-        general: DEFAULT_CONFIG,
-        floorSkills: generateEmptyFloorSkills(),
-    };
-}
-
-export function generateEmptyFloorSkills(): FloorSkills {
-    return {
-        [Floor.AllFloors]: generateEmptyRoomSkills(),
-        [Floor.FirstFloor]: generateEmptyRoomSkills(),
-        [Floor.SecondFloor]: generateEmptyRoomSkills(),
-        [Floor.ThirdFloor]: generateEmptyRoomSkills(),
-        [Floor.Boss]: generateEmptyRoomSkills(),
-    };
-}
-
-export function generateEmptyRoomSkills(): Record<Room, WeightedSkill[]> {
-    return {
-        [Room.All]: [],
-        [Room.Free]: [],
-        [Room.Shop]: [],
-        [Room.Curse]: [],
-        [Room.Finale]: [],
-    };
 }

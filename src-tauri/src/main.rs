@@ -19,12 +19,19 @@ use config_io::{
 
 mod mod_handlers;
 use mod_handlers::{
+    mod_util::generate_empty_room_skills,
     mod_reader::decode_configuration,
     mod_writer::encode_configuration
 };
 
 mod types;
-use types::structs::ModConfig;
+use types::structs::{ModConfig, ModInfo, GeneralConfig, FloorSkills};
+use types::enums::{
+    SpawnType,
+    CurseSpawnType,
+    PedestalSpawnType,
+    MultiSpawnerType, Options
+};
 
 use tauri::State;
 use uuid::Uuid;
@@ -85,7 +92,9 @@ fn delete_mod(cache: State<CornercutterCache>, mod_id: String) {
 #[tauri::command]
 fn save_mod(cache: State<CornercutterCache>, mod_config: ModConfig) -> Result<(), String> {
     let result = serialize_mod(cache.going_under_dir.as_str(), &mod_config);
-    cache.mods.lock().unwrap().insert(mod_config.id.clone(), mod_config);
+    if result.is_ok() {
+        cache.mods.lock().unwrap().insert(mod_config.id.clone(), mod_config);
+    }
     return result;
 }
 
@@ -108,6 +117,36 @@ fn import_mod(cache: State<CornercutterCache>, config_string: String) -> Result<
 #[tauri::command]
 fn get_new_mod_id(cache: State<CornercutterCache>) -> String {
     return get_new_id(&cache.mods.lock().unwrap());
+}
+
+#[tauri::command]
+fn create_new_mod(cache: State<CornercutterCache>, mod_info: ModInfo) -> Result<ModConfig, String> {
+    let id = get_new_id(&cache.mods.lock().unwrap());
+    let mod_config = ModConfig{
+        id,
+        info: mod_info,
+        general: GeneralConfig{
+            spawns: SpawnType::Consecutive,
+            curse_spawns: CurseSpawnType::Randomly,
+            pedestal_spawns: PedestalSpawnType::Randomly,
+            multi_spawners: MultiSpawnerType::Randomly,
+            options: Options::SELECT_RANDOM_ITEM_ON_EMPTY.bits(),
+            starting_skills: Vec::new(),
+        },
+        floor_skills: FloorSkills{
+            all_floors: generate_empty_room_skills(),
+            first_floor: generate_empty_room_skills(),
+            second_floor: generate_empty_room_skills(),
+            third_floor: generate_empty_room_skills(),
+            boss: generate_empty_room_skills(),
+        },
+    };
+
+    let result = serialize_mod(cache.going_under_dir.as_str(), &mod_config);
+    return result.map(|_| {
+        cache.mods.lock().unwrap().insert(mod_config.id.clone(), mod_config.clone());
+        return mod_config;
+    });
 }
 
 #[tauri::command]
@@ -146,6 +185,7 @@ fn main() {
             get_mods,
             import_mod,
             get_new_mod_id,
+            create_new_mod,
             set_enabled_mod,
             set_global_options
         ])

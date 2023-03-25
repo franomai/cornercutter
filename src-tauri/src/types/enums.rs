@@ -31,7 +31,7 @@ bitflags! {
         const NONE_SELECTED = 0;
         const CONFIG_PER_FLOOR = 1 << 0;
         const CONFIG_PER_ROOM = 1 << 1;
-        const REMOVE_HEALING_ITEMS = 1 << 2;
+        const SELECT_RANDOM_ITEM_ON_EMPTY = 1 << 2;
         const DISABLE_MENTOR_ABILITIES = 1 << 3;
         const DISABLE_GIFT_OF_INTERN = 1 << 4;
         const DISABLE_PINNED = 1 << 5;

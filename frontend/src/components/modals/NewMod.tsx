@@ -1,5 +1,5 @@
 import useGoogleAnalytics from '../../hooks/useGoogleAnalytics';
-import ModConfig, { DEFAULT_CONFIG } from '../../types/Configuration';
+import ModConfig from '../../types/Configuration';
 
 import {
     Button,
@@ -19,8 +19,7 @@ import {
 import { invoke } from '@tauri-apps/api';
 import { useDispatch } from 'react-redux';
 import { addMod, setSelectedMod } from '../../redux/slices/mod';
-import { generateEmptyFloorSkills } from '../../utility/ConfigHelpers';
-import { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
+import { RefObject, useCallback, useEffect, useState } from 'react';
 
 export default function NewMod({ openRef }: { openRef: RefObject<HTMLButtonElement> }) {
     const dispatch = useDispatch();
@@ -29,51 +28,37 @@ export default function NewMod({ openRef }: { openRef: RefObject<HTMLButtonEleme
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [newModId, setNewModId] = useState<null | string>(null);
 
-    const canSave = useMemo(() => newModId !== null && name.trim().length !== 0, [name, newModId]);
-
-    const handleGetNewModId = useCallback(() => {
-        invoke<string>('get_new_mod_id')
-            .then((id) => setNewModId(id))
-            .then(onOpen)
-            .catch(console.error);
-    }, [onOpen, setNewModId]);
+    const canSave = name.trim().length !== 0;
 
     useEffect(() => {
-        const handler = () => handleGetNewModId();
+        const handler = () => onOpen();
         const current = openRef.current;
         current?.addEventListener('click', handler);
 
         return () => current?.removeEventListener('click', handler);
-    }, [openRef, handleGetNewModId]);
+    }, [openRef, onOpen]);
 
     const handleClose = useCallback(() => {
         setName('');
         setDescription('');
-        setNewModId(null);
         onClose();
     }, [onClose]);
 
-    const handleCreateMod = useCallback(() => {
-        // This is a sanity check and should never be called as the Create Mod
-        // button is disabled when newModId is null.
-        if (newModId === null) return;
+    const handleCreateMod = useCallback(async () => {
+        try {
+            const newMod = await invoke<ModConfig>('create_new_mod', { modInfo: { name, description } });
 
-        const newMod: ModConfig = {
-            id: newModId,
-            info: { name, description },
-            general: DEFAULT_CONFIG,
-            floorSkills: generateEmptyFloorSkills(),
-        };
+            dispatch(addMod(newMod));
+            dispatch(setSelectedMod(newMod.id));
 
-        dispatch(addMod(newMod));
-        dispatch(setSelectedMod(newModId));
-
-        GA.event({ category: 'mods', action: 'create mod' });
+            GA.event({ category: 'mods', action: 'create mod' });
+        } catch (error) {
+            console.error(error);
+        }
 
         handleClose();
-    }, [GA, name, newModId, description, dispatch, handleClose]);
+    }, [GA, name, description, dispatch, handleClose]);
 
     const handleDiscardMod = useCallback(() => {
         handleClose();

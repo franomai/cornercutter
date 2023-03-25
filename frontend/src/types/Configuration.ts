@@ -27,12 +27,3 @@ export interface GeneralConfig {
 export type FloorSkills = Record<Floor, Record<Room, WeightedSkill[]>>;
 
 export type Options = number & (ModOptions | GlobalOptions);
-
-export const DEFAULT_CONFIG: GeneralConfig = {
-    spawns: SpawnType.Consecutive,
-    curseSpawns: CurseSpawnType.Randomly,
-    pedestalSpawns: PedestalSpawnType.Randomly,
-    multiSpawners: MultiSpawnerType.Randomly,
-    options: ModOptions.SelectRandomItemOnEmpty,
-    startingSkills: [],
-};
