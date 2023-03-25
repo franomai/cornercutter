@@ -7,7 +7,7 @@ Cornercutter is a mod for the Steam version of the game [Going Under](https://ag
 Features include:
 * Create mods to control where skills spawn and what skills they are - All skills are Bomb Dropper? Sure! No items at all? Why not!
 * Modify dungeon rules, from blocking healing to having stores always stock skills.
-* Modify out-of-dungeon rules, like shop restocks and skill cubit costs. You can also turn off achievements and highscores to leave your saves factory new.
+* Modify out-of-dungeon rules, like shop restocks, skill cubit costs, or costume unlock requirements. You can also turn off achievements and highscores to leave your saves factory new.
 * Share your mods with your friends with easy to copy game codes. Make new friends by sharing the same codes as well!
 * Access extra Going Under features through the Debug menu, which lets you spawn in items, set enemy health to one, and more.
 
@@ -64,7 +64,9 @@ Hi there! You probably arrived here through the Cornercutter app, and you're thi
 
 The Cornercutter team (franomai/Squiddles & pumbas600) would like to thank and shout out:
 * Hotkoin (check them out at [their insta](https://www.instagram.com/hotkoin)) for the amazing art.
-* slyllama (check them out at [their website](https://www.slyllama.net/)) for their graphics help and artistic direction.
+* slyllama (check them out at [their website](https://www.slyllama.net)) for their graphics help and artistic direction.
+* snowy.night for their Cornercutter Christmas art and general Cornercutter functionality feedback.
+* Paige for their v1.0.5 art and helping out with everything directly Aggro Crab related, from comms to queries and everything in-between.
 * Sabertwooth, Jowee, Logan, and Boxness for their playtesting and feedback.
 * The Aggro Crab Discord community (especially #speefruns and #modding) for keeping a two year old game alive.
 * Jowee again, for the original inspiration for skill manipulation and their work in maintaining Going Under resources.
