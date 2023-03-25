@@ -54,9 +54,9 @@ pub fn decode_configuration(config_string: &String, id: &String) -> Result<ModCo
 fn build_mod_config(mod_info: &ModInfo,  config_array_original: &VecDeque<u32>, id: &String) -> Result<ModConfig, String> {
     let mut config_array = config_array_original.clone();
     config_array.pop_front();
-    let major = config_array.pop_front().unwrap();
-    let minor = config_array.pop_front().unwrap();
-    let patch = config_array.pop_front().unwrap();
+    let _major = config_array.pop_front().unwrap();
+    let _minor = config_array.pop_front().unwrap();
+    let _patch = config_array.pop_front().unwrap();
     let options = config_array.pop_front().unwrap();
     let spawns: SpawnType = FromPrimitive::from_u32(config_array.pop_front().unwrap()).unwrap();
     let curse_spawns: CurseSpawnType = FromPrimitive::from_u32(config_array.pop_front().unwrap()).unwrap();
