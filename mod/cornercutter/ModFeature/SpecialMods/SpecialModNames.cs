@@ -8,12 +8,14 @@ namespace cornercutter.ModFeature.SpecialMods
         {
             None,
             CornercutterChristmas,
-            FirstPerson
+            FirstPerson,
+            FirstPersonHardcore
         }
 
         static readonly Dictionary<string, SpecialMod> SpecialMods = new Dictionary<string, SpecialMod> {
             { "Cornercutter Christmas", SpecialMod.CornercutterChristmas},
-            { "Self-centered", SpecialMod.FirstPerson}
+            { "Self-centered", SpecialMod.FirstPerson},
+            { "Self-centered, hardcore", SpecialMod.FirstPersonHardcore}
         };
 
         public static SpecialMod GetModFromName(string modName)
