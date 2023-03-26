@@ -1,5 +1,6 @@
 ﻿using cornercutter.ModLoader;
 using HarmonyLib;
+using System.Linq;
 
 namespace cornercutter.ModFeature.SpecialMods.PermanentFirstPerson
 {
@@ -10,7 +11,8 @@ namespace cornercutter.ModFeature.SpecialMods.PermanentFirstPerson
         {
             CutterConfig cornercutter = CutterConfig.Instance;
             return cornercutter.CornercutterIsEnabled()
-                && cornercutter.IsSpecialModActive(ModNames.SpecialMod.FirstPerson);
+                && (cornercutter.IsSpecialModActive(ModNames.SpecialMod.FirstPerson)
+                || cornercutter.IsSpecialModActive(ModNames.SpecialMod.FirstPersonHardcore));
         }
 
         // SelfCentered methods *could* be accessed with reflection, but easier to do like this
@@ -67,6 +69,20 @@ namespace cornercutter.ModFeature.SpecialMods.PermanentFirstPerson
                 // Every standard fov change touches singlePlayer.firstPerson except for the Avie teleport
                 // which hard sets it to 30! This zooms you in way too far, so we have to prevent it.
                 fov = 60f;
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(PlayerViewAccessories), nameof(PlayerViewAccessories.AddHat))]
+    class MakeHatsInactiveOnEquip
+    {
+        static void Postfix(PlayerViewAccessories __instance)
+        {
+            CutterConfig cornercutter = CutterConfig.Instance;
+            // Here we are making sure FirstPersonHardcore doesn't remove the hat, but regular FirstPerson does
+            if (cornercutter.CornercutterIsEnabled() && cornercutter.IsSpecialModActive(ModNames.SpecialMod.FirstPerson))
+            {
+                __instance.hats.Last().SetActive(false);
             }
         }
     }
