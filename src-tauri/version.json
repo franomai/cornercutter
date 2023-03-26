@@ -1,11 +1,11 @@
 {
-    "version": "v1.0.5",
+    "version": "v1.0.6",
     "notes": "Added a permanent first person mode, new config options, and fixed a few bugs too! See the full release notes at the Cornercutter GitHub for more details.",
-    "pub_date": "2023-03-25T14:23:01Z",
+    "pub_date": "2023-03-26T01:27:45Z",
     "platforms": {
       "windows-x86_64": {
-        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcHltY1VDNG9ET25Fek53M3V4TUVoRGxPR1ZFazZjeTdrNDlTcS9FZ0FaRm9JU09ua2l3WFIvdWhIK2lSK3N3di9QMU5MaGNPeU9jc0F0TkxiODNvTDZJZHVjTnZ3MmdjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjc5NzU0MTAwCWZpbGU6Q29ybmVyY3V0dGVyXzEuMC41X3g2NF9lbi1VUy5tc2kuemlwCkE5UlpHWldwTi85aVo1dVBuZW1NYzF3aXVWTE1MNEdEbHNSUUxhMTdBaHJXa0Y2MUxFY2xxYkpjWXRlZ3ErRm1nMTh6bkszMzEwZWRxQUJkamRES0NBPT0K",
-        "url": "https://github.com/franomai/cornercutter/releases/download/v1.0.5/Cornercutter_1.0.5_x64_en-US.msi.zip"
+        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcHltY1VDNG9ET2xlbnlvclpqanF2d2lCSy9Pek5BT1gwQjI0bzY5dVh3N0d4YmRWMlh5R3pidWk4dEczMGIydmFsMGkrOGticTlQTHFkN0FXN3VaMTZiRHdZOHdOd0FNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjc5NzkzOTc3CWZpbGU6Q29ybmVyY3V0dGVyXzEuMC42X3g2NF9lbi1VUy5tc2kuemlwCkZFZmw5cHdEQ0w3cUwwd25RSjZiQWVOMkliSUp6ZkoxYTNvU0RnczFJTUpkdmVDa1A0UzNpbGg4cnduTDVMaG9lNzhxbElRaGxrSHBNamtPamlNNEJBPT0K",
+        "url": "https://github.com/franomai/cornercutter/releases/download/v1.0.6/Cornercutter_1.0.6_x64_en-US.msi.zip"
       }
     }
   }
