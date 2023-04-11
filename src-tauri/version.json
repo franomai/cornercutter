@@ -1,11 +1,11 @@
 {
-    "version": "v1.0.6",
-    "notes": "Added a permanent first person mode, new config options, and fixed a few bugs too! See the full release notes at the Cornercutter GitHub for more details.",
-    "pub_date": "2023-03-26T01:27:45Z",
+    "version": "v1.0.7",
+    "notes": "Added a new global flag to replay Co-Working Space after Going Under. Have you tried some of our special modes? Check our releases page for more details!",
+    "pub_date": "2023-04-11T08:55:47Z",
     "platforms": {
       "windows-x86_64": {
-        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcHltY1VDNG9ET2xlbnlvclpqanF2d2lCSy9Pek5BT1gwQjI0bzY5dVh3N0d4YmRWMlh5R3pidWk4dEczMGIydmFsMGkrOGticTlQTHFkN0FXN3VaMTZiRHdZOHdOd0FNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjc5NzkzOTc3CWZpbGU6Q29ybmVyY3V0dGVyXzEuMC42X3g2NF9lbi1VUy5tc2kuemlwCkZFZmw5cHdEQ0w3cUwwd25RSjZiQWVOMkliSUp6ZkoxYTNvU0RnczFJTUpkdmVDa1A0UzNpbGg4cnduTDVMaG9lNzhxbElRaGxrSHBNamtPamlNNEJBPT0K",
-        "url": "https://github.com/franomai/cornercutter/releases/download/v1.0.6/Cornercutter_1.0.6_x64_en-US.msi.zip"
+        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcHltY1VDNG9ET3F1bUg5YUVGdE5WUDBjQkNqOFB0ZWJTdEpZbzBOdXY3M0RUMlZSWmFHR2lERlNOak9rSDFYbkN5c1kwL0FEVm0xSDRlVCsyWDFGLzJ5NGQ5Z0hxUXdRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjgxMjAzMDE1CWZpbGU6Q29ybmVyY3V0dGVyXzEuMC43X3g2NF9lbi1VUy5tc2kuemlwCkR1RHhVWjh0ekFkVzFSanV0VEpjOXRycTBrY2JieUtvcWhwbW5iMUJKZFBPSDFpY0FWT2dhd3RUOUxldjEvNVhxdEFtYjdJdmpObEcrZzV2V2I3a0FBPT0K",
+        "url": "https://github.com/franomai/cornercutter/releases/download/v1.0.7/Cornercutter_1.0.7_x64_en-US.msi.zip"
       }
     }
   }
