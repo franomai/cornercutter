@@ -53,5 +53,6 @@ bitflags! {
         const ENSURE_ALWAYS_FIVE_CUBIT_SHOP_OPTIONS = 1 << 6;
         const ENABLE_FREE_CUBIT_SHOP = 1 << 7;
         const UNLOCK_ALL_COSTUMES = 1 << 8;
+        const SLIDE_TO_COWORKINGSPACE = 1 << 9;
     }
 }

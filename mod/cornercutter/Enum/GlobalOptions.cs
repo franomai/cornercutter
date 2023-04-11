@@ -16,5 +16,6 @@ namespace cornercutter.Enum
         EnsureAlwaysFiveCubitShopOptions = 1 << 6,
         EnableFreeCubitShop = 1 << 7,
         UnlockAllCostumes = 1 << 8,
+        SlideToCoWorkingSpace = 1 << 9,
     }
 }
