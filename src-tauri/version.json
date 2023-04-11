@@ -1,10 +1,10 @@
 {
     "version": "v1.0.7",
     "notes": "Added a new global flag to replay Co-Working Space after Going Under. Have you tried some of our special modes? Check our releases page for more details!",
-    "pub_date": "2023-04-11T08:55:47Z",
+    "pub_date": "2023-04-11T09:16:12Z",
     "platforms": {
       "windows-x86_64": {
-        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcHltY1VDNG9ET3F1bUg5YUVGdE5WUDBjQkNqOFB0ZWJTdEpZbzBOdXY3M0RUMlZSWmFHR2lERlNOak9rSDFYbkN5c1kwL0FEVm0xSDRlVCsyWDFGLzJ5NGQ5Z0hxUXdRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjgxMjAzMDE1CWZpbGU6Q29ybmVyY3V0dGVyXzEuMC43X3g2NF9lbi1VUy5tc2kuemlwCkR1RHhVWjh0ekFkVzFSanV0VEpjOXRycTBrY2JieUtvcWhwbW5iMUJKZFBPSDFpY0FWT2dhd3RUOUxldjEvNVhxdEFtYjdJdmpObEcrZzV2V2I3a0FBPT0K",
+        "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRcHltY1VDNG9ET2xYOGRURjAzTUNoc2l5eVFzMHptYlMxQU5iWW9iS3lnOVNudnBTUFpqS2pkS05IdDFaSEY1U1UzOEg1VkVTWVNvSkFMb05nWG9ZK01xVlAxU1B6OXdrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjgxMjA0NTQyCWZpbGU6Q29ybmVyY3V0dGVyXzEuMC43X3g2NF9lbi1VUy5tc2kuemlwCmtKYnh4d3o2TlVBN0pROHd5MktObEx6RDZ3dTl6bE95a2Y3M0xHN2VPM3dsaW5hT0lhaXlBWXExQ0psVGtnNEtIZ3J2TGtBbFg4SjZlK2krM0dpMEJBPT0K",
         "url": "https://github.com/franomai/cornercutter/releases/download/v1.0.7/Cornercutter_1.0.7_x64_en-US.msi.zip"
       }
     }
