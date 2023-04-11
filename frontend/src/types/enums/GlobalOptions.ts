@@ -11,7 +11,7 @@ export enum GlobalOptions {
     EnsureAlwaysFiveCubitShopOptions = 1 << 6,
     EnableFreeCubitShop = 1 << 7,
     UnlockAllCostumes = 1 << 8,
-    SlideToCWS = 1 << 9,
+    SlideToCoWorkingSpace = 1 << 9,
 }
 
 export const globalOptionDetails: Record<GlobalOptions, OptionDetails> = {
@@ -53,7 +53,7 @@ export const globalOptionDetails: Record<GlobalOptions, OptionDetails> = {
         label: 'Unlock all costumes',
         tooltip: 'Costumes in Jackie\'s wardrobe are all unlocked, regardless of overtime or main story progress.',
     },
-    [GlobalOptions.SlideToCWS]: {
+    [GlobalOptions.SlideToCoWorkingSpace]: {
         label: 'Fizzle slide goes to Co-Working Space',
         tooltip: 'After you\'ve gone under, the regular slide in Fizzle will instead enter Co-Working Space.',
     },

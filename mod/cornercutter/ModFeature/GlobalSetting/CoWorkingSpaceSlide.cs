@@ -14,9 +14,9 @@ namespace cornercutter.ModFeature.GlobalSetting
     {
         // Flag for checking if we have been inside the slide, and
         // so whether to run a special animation next time we go back to Fizzle
-        public static bool runAssociatedSlideAnimationNext = false;
+        public static bool RunAssociatedSlideAnimationNext { get; set; }  = false;
 
-        private static bool SlideGoesToCWS()
+        private static bool SlideGoesToCoWorkingSpace()
         {
             // This checks, amongst the other usual ones, that we are in the gone under Fizzle,
             // making sure you can't go to CWS unless it is actually unlocked and completed in game.
@@ -25,7 +25,7 @@ namespace cornercutter.ModFeature.GlobalSetting
             CutterConfig cornercutter = CutterConfig.Instance;
             GlobalOptions globals = cornercutter.GlobalOptions;
             return cornercutter.CornercutterIsEnabled()
-                && globals.HasFlag(GlobalOptions.SlideToCWS)
+                && globals.HasFlag(GlobalOptions.SlideToCoWorkingSpace)
                 && SaveData.instance.goneUnder;
         }
 
@@ -36,16 +36,16 @@ namespace cornercutter.ModFeature.GlobalSetting
 
             // If we are in the slide animation AT THE MOMENT, that means we want to complete it as usual
             // and the CWS teleport has already happened. Unset the flag and run the usual code.
-            if (runAssociatedSlideAnimationNext)
+            if (RunAssociatedSlideAnimationNext)
             {
-                runAssociatedSlideAnimationNext = false;
+                RunAssociatedSlideAnimationNext = false;
                 return true;
             }
 
-            if (!SlideGoesToCWS()) return true;
+            if (!SlideGoesToCoWorkingSpace()) return true;
 
             // Flags the slide as entered and runs the scene load code from the other in-game dungeon triggers
-            runAssociatedSlideAnimationNext = true;
+            RunAssociatedSlideAnimationNext = true;
             AudioManager.PlayOneShot("Jackie_Death");
             GUIManager.instance.LoadDungeonScene("Chaos", GlobalDungeons.dungeons.GetLoadingScreen(DungeonCompany.Chaos));
             GUIManager.instance.tasks.HideAll();
@@ -58,13 +58,13 @@ namespace cornercutter.ModFeature.GlobalSetting
     [HarmonyPatch(typeof(EndgameScreen), "KilledBy")]
     class RunStatus
     {
-        public static bool? runWon = null;
+        public static bool? RunWon { get; set; } = null;
         static void Prefix()
         {
             // If the next run won isn't from the slide, we don't need to record it
             // This check is not strictly required but makes it clear this check is only to be used for the slide logic
-            if (!CoWorkingSpaceSlide.runAssociatedSlideAnimationNext) return;
-            runWon = Singleton<DungeonManager>.instance.currentRun.won;
+            if (!CoWorkingSpaceSlide.RunAssociatedSlideAnimationNext) return;
+            RunWon = Singleton<DungeonManager>.instance.currentRun.won;
         }
     }
 
@@ -74,14 +74,14 @@ namespace cornercutter.ModFeature.GlobalSetting
         static void Postfix()
         {
             // If we didn't go into the slide OR we did go in but we exited out to menu and came back in, skip the logic
-            if (CoWorkingSpaceSlide.runAssociatedSlideAnimationNext && RunStatus.runWon != null)
+            if (CoWorkingSpaceSlide.RunAssociatedSlideAnimationNext && RunStatus.RunWon != null)
             {
                 SillySlide slideInfo = GameObject.Find("SillySlide").GetComponent<SillySlide>();
                 Player player = Player.singlePlayer;
 
                 // If the run is won, complete the slide animation as normal
                 // If the run is lost or abandoned, drop Jackie from the sky
-                if ((bool) RunStatus.runWon)
+                if ((bool) RunStatus.RunWon)
                 {
                     player.inputVector = -slideInfo.transform.right;
                     player.lookVector = -slideInfo.transform.right;
@@ -99,8 +99,8 @@ namespace cornercutter.ModFeature.GlobalSetting
                 }
             }
             // Unset the won state and slide entry
-            CoWorkingSpaceSlide.runAssociatedSlideAnimationNext = false;
-            RunStatus.runWon = null;
+            CoWorkingSpaceSlide.RunAssociatedSlideAnimationNext = false;
+            RunStatus.RunWon = null;
         }
 
         // This is the logic that runs at the end of SillySlide.AdvanceRoutine usually,
